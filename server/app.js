@@ -18,7 +18,7 @@ app.use("/api/v1", webRouter, superadminrouter, adminRouter);
 app.get("/test", (req, res, next) => {
   res.status(200).json({
     success: true,
-    message: "API is Workingg",
+    message: "API is Working",
   });
 });
 
