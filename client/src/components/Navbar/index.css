@@ -1,0 +1,110 @@
+.navbar-sub-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .navbar-main-container {
+    height: 80px;
+    background-color: #194373;
+    position: relative;
+  }
+  
+  .navbar-company-logo-container{
+     width:80px;
+     height:80px;
+     display:flex;
+     justify-content: center;
+     align-items: center;
+  }
+  .navbar-company-logo{
+    width:100%;
+    height:100%;
+  }
+  .navbar-menu-icon {
+    display: none;
+  }
+  
+  .nav-elements {
+  }
+  
+  .nav-elements ul {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    margin:0px;
+  }
+  
+  .nav-elements ul li:not(:last-child) {
+    margin-right: 60px;
+  }
+  
+  .nav-elements ul a {
+    font-size: 16px;
+    font-weight: 400;
+    color: #bcbcbc;
+    text-decoration: none;
+  }
+  .nav-elements ul a:hover {
+    color: #60c2d3;
+    font-weight: 500;
+    position: relative;
+  }
+  .nav-elements ul a.nav-active {
+    color: #60c2d3;
+    font-weight: 500;
+    position: relative;
+  }
+  
+  .nav-elements ul a.nav-active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #574c4c;
+  }
+  
+  @media (max-width: 768px) {
+    .nav-elements ul li:not(:last-child) {
+      margin-right: 30px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .navbar-menu-icon {
+      display: block;
+      cursor: pointer;
+      color:#fff;
+    }
+  
+    .nav-elements {
+      position: absolute;
+      right: 0;
+      top: 80px;
+      background-color: #3b4044;
+      width: 0px;
+      height: max-content;
+      transition: all 0.3s ease-in;
+      overflow: hidden;
+    }
+  
+    .nav-elements.nav-active {
+      width: 270px;
+    }
+  
+    .nav-elements ul {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .nav-elements ul li {
+      margin-right: unset;
+      margin-top: 22px;
+    }
+  }

@@ -1,0 +1,25 @@
+.hijri-para{
+    font-weight: 300;
+    margin-bottom: 15px;
+    color: #bcc3d3;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+}
+.hijri-heading{
+    color: #455a64;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+    font-size: 25px;
+}
+.hijri-container{
+    margin: 50px;
+}
+ 
+.hijri-option{
+    color: #67757c;
+    display: initial;
+    font-size: 14px;
+    min-height: 38px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+}

@@ -1,0 +1,63 @@
+.masid-form-main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
+  .masid-regiser-form{
+    background-color: #194373;
+    color: white;
+     padding: 35px;
+     margin-top:1px;
+  }
+  .masid-register-heading{
+    padding: 5px;
+  }
+ 
+ 
+  .masid-form-container {
+    width: 80%;
+    padding: 20px;
+  }
+ 
+  .masid-form-field {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+ 
+  .masid-form-lable {
+    margin-bottom: 5px;
+  }
+ 
+  .masid-form-input,
+  .masid-form-input,
+  textarea {
+    
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline:none;
+  }
+  .file-input-container {
+    display: flex;
+    align-items: center;
+  }
+  ::file-selector-button{
+    background-color: #194373;
+    font-size: 14px;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .masid-form-button{
+    background-color: #60c2d3;
+    font-size: 16px;
+    color: white;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+  }

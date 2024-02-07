@@ -1,0 +1,185 @@
+
+  .masid-mani-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+   
+  .masid-sub-container {
+    width: 100%;
+  }
+   
+  .salah-masid-container {
+    display: flex;
+    justify-content: center;
+    gap:40px;
+  }
+   
+  .salah-masid-left-container {
+    width:40%;
+    margin-top: 80px;
+  }
+  .masid-screen-display-container{
+    background-color:   #f5f5f5;
+    padding: 30px;
+    text-align: center;
+    margin: 20px;
+  }
+  .masid-video-container{
+    width:100%;
+  }
+  .app-para-text span {
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+  }
+   
+  .salah-masid-right-container {
+    width:40%;
+  }
+   
+  .salah-image {
+    width: 100%;
+    max-height:500px;
+  }
+   
+  .masid-card-contaner {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+   
+  .masid-3-in-1-conatainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+   
+  .masid-whole-card-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+   
+  .masid-card1,
+  .masid-card2,
+  .masid-card3 {
+    width: 30%;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 8px;
+  }
+   
+  .masid-card-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+  .masid-android-feature-container{
+    display: flex;
+  flex-direction: column;
+  align-items: center;
+  }
+  .masid-androd-container{
+    display: flex;
+    width:80%;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .masid-android-video{
+    width:90%;
+  }
+  .My-Masjid-container {
+    background-color:   #f5f5f5;
+    padding: 30px;
+    text-align: center;
+    margin: 20px;
+  }
+   
+   
+  @media (max-width: 768px) {
+    .masid-whole-card-container {
+      flex-direction: column;
+    }
+   
+    .masid-card1,
+    .masid-card2,
+    .masid-card3 {
+      width: 100%;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+  }
+  .masid-smart-screen-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+    gap:30px;
+  }
+   
+  .masid-smart-tv {
+    width:40%;
+   
+  }
+   
+  .masid-smart-image {
+   width:100%;
+  }
+   
+  .masid-smart-checkmark {
+    width:45%;
+  }
+   
+  .masid-checkmark {
+    color: rgba(34,147,215,1);
+    margin-right: 5px;
+  }
+   
+   
+  .masid-smart-checkmark span {
+    color:  #60c2d3;
+  }
+   
+  @media (max-width: 768px) {
+    .salah-masid-container {
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+    .salah-masid-left-container{
+      width:90%;
+    }
+    .salah-masid-right-container {
+      width:90%;
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .salah-image{
+      width:80%;
+      height:300px;
+    }
+    .masid-androd-container{
+      flex-direction: column;
+      align-items: center;
+      width:90%;
+    }
+    .masid-android-video{
+      width:90%;
+      text-align: center;
+    }
+    .masid-smart-screen-container{
+      flex-direction: column;
+      align-items: center;
+    }
+    .masid-smart-tv {
+      width:90%;
+    }
+    .masid-smart-checkmark{
+      width:90%;
+    }
+
+  }

@@ -1,0 +1,15 @@
+.neweditor-heading{
+    color: #455a64;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+ 
+.neweditor-label{
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    padding: 10px;
+    color: #67757c;
+}

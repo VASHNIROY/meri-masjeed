@@ -1,0 +1,79 @@
+.masjid-message-whole-container {
+    width: 100%;
+    margin: auto;
+    background-color:lightgray ;
+   
+  }
+ 
+  .masjid-message-form-container {
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #f0f0f0;
+    padding: 20px;
+   
+  }
+ 
+  .masjid-message-sub-contaner {
+    display: flex;
+    gap: 10px;
+  }
+ 
+  .masjid-message-field-container {
+    padding-right: 5px;
+    padding-left: 5px;
+    flex: 1;
+  }
+ 
+  .masjid-message-lable {
+    display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  }
+ 
+  .masjid-message-input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  .masjid-toggle-left-icon{
+    font-size: 30px;
+    color: lightgray;
+    width:50px;
+    height:50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+ 
+  }
+  .masjid-toggle-right-icon{
+    font-size: 30px;
+    color: #1e88e5;
+    width:50px;
+    height:50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+ 
+  }
+  .masjid-message-button-container {
+    text-align: right;
+    margin-top: 20px;
+  }
+ 
+  .masjid-message-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }

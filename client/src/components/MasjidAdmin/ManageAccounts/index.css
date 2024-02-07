@@ -1,0 +1,39 @@
+.manage-heading1{
+    color: #1e88e5 !important;
+    line-height: 30px;
+    font-size: 21px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+ 
+}
+.edit-button-manage{
+    background: #24d2b5;
+    border: 1px solid #24d2b5;
+    color: white;
+    font-family: "Montserrat", sans-serif;
+    border-radius: 5px;
+    width: 60px;
+    padding: 5px;
+}
+.manage-th{
+    border-top: 1px solid #dee2e6;
+}
+.manage-para{
+    font-weight: 300;
+    margin-bottom: 15px;
+    color: #bcc3d3 !important;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+}
+.manage-heading{
+    color:#67757c !important;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+}
+.manage-whole-container{
+    background-color: white;
+}
+.table-manage-body{
+   background-color:#dee2e6 ;
+}

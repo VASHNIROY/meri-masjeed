@@ -1,0 +1,13 @@
+.banner-main-container{
+    background-color: #194373;
+    width:100%;
+    display:flex;
+    justify-content: center;
+    padding:30px 0px;
+}
+.banner-sub-container{
+    text-align: center;
+}
+.banner-android-app-image{
+    width:250px;
+}

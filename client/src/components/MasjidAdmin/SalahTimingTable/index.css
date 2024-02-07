@@ -1,0 +1,33 @@
+
+.header-red-background .MuiDataGrid-columnHeader,
+.header-red-background .MuiDataGrid-columnHeaderTitleContainer,
+.header-red-background .MuiDataGrid-columnHeaderCheckbox {
+  background-color: #67757c;
+  color: white;
+}
+.masjid-add-icon{
+    font-size:24px;
+    margin-left:10px;
+    cursor:pointer;
+}
+.vertical-dot-icon{
+  color:#20aee3;
+  font-size:24px;
+}
+.time-edit-input{
+  border:none !important;
+}
+.select-month-type-container{
+  display:flex;
+  justify-content: flex-end;
+  
+  width:100%;
+}
+.selct-month-container{
+  padding:10px;
+  width:max-content;
+  border-radius:6px;
+  margin-right:20px;
+  cursor:pointer;
+  
+}

@@ -1,0 +1,86 @@
+*{
+  font-family:"calibri" !important;
+}
+.app-main-heading{
+  font-size:32px;
+  margin:0px;
+  color:#39454d;
+}
+.app-main-heading-1{
+  font-size:28px;
+  margin:0px;
+  color:#39454d;
+}
+.app-main-heading-2{
+  font-size:24px;
+  margin:0px;
+  color:#39454d;
+}
+.app-main-heading-3{
+  font-size:18px;
+  margin:0px;
+  color:#39454d;
+}
+.app-para-text{
+  font-size:18px;
+  margin:0px;
+  color:#808080;
+}
+.app-description{
+  font-size:16px;
+  margin:0px;
+  color:#808080;
+}
+.app-description-1{
+  font-size:14px;
+  margin:0px;
+  color:#808080;
+}
+
+.app-container-button{
+  border:none;
+  padding:8px 30px;
+  font-size:14px;
+  color:#fff;
+  cursor:pointer;
+  background-color: #194373;
+  border-radius:50px;
+  letter-spacing: 0.5px;
+}
+
+.app-container-button-1{
+  border:none;
+  padding:8px 30px;
+  font-size:14px;
+  color:#fff;
+  cursor:pointer;
+  background-color: #DB9e3e;
+  border-radius:50px;
+  letter-spacing: 0.5px;
+}
+.home-information-icon-color{
+    color:rgba(56,183,59,1);
+    font-size:24px;
+}
+.handle-close-icon{
+  font-size:24px;
+  cursor:pointer;
+  margin-bottom:10px;
+}
+@media (max-width:768px){
+  .app-main-heading{
+    font-size:24px;
+    margin:0px;
+    color:#39454d;
+  }
+  .app-para-heading{
+    font-size:16px;
+    margin:0px;
+    color:#39454d;
+  }
+  .app-para-text{
+    font-size:14px;
+    margin:0px;
+    color:#808080;
+  }
+}

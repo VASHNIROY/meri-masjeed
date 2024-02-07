@@ -1,0 +1,168 @@
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap");
+ 
+body {
+  margin: 0;
+}
+ 
+.App {
+  font-family: "Source Sans Pro", sans-serif;
+}
+.next-prayer-heading{
+    font-size:28px;
+    font-weight:600;
+    color:#194373;
+}
+.clock-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.clock {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 2px 30px rgba(0, 0, 0, 0.2);
+  font-size: 24px;
+  color: #444;
+  text-align: center;
+}
+ 
+.clock::after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid #fff;
+  background: #aaa;
+  z-index: 2;
+}
+ 
+.hour_hand {
+  position: absolute;
+  width: 6px;
+  height: 60px;
+  background: #222;
+  top: 30%;
+  left: 49%;
+  transform-origin: bottom;
+}
+ 
+.min_hand {
+  position: absolute;
+  width: 4px;
+  height: 80px;
+  background: #444;
+  top: 22.5%;
+  left: 49%;
+  transform-origin: bottom;
+}
+ 
+.sec_hand {
+  position: absolute;
+  width: 2px;
+  height: 118px;
+  background: red;
+  top: 10.5%;
+  left: 50%;
+  transform-origin: bottom;
+}
+ 
+.clock span {
+  position: absolute;
+  font-weight: 700;
+}
+ 
+.twelve {
+  top: 10px;
+  left: 46%;
+  z-index:999;
+}
+ 
+.one {
+  top: 10%;
+  right: 26%;
+  z-index:999;
+}
+ 
+.eleven {
+  top: 10%;
+  left: 26%;
+  z-index:999;
+}
+ 
+.two {
+  top: 25%;
+  right: 10%;
+  z-index:999;
+}
+ 
+.three {
+  right: 10px;
+  top: 46%;
+  z-index:999;
+}
+ 
+.four {
+  right: 30px;
+  top: 67%;
+  z-index:999;
+}
+ 
+.five {
+  right: 78px;
+  top: 80%;
+  z-index:999;
+}
+ 
+.six {
+  bottom: 10px;
+  left: 50%;
+  z-index:999;
+}
+ 
+.seven {
+  left: 80px;
+  top: 82%;
+  z-index:999;
+}
+ 
+.eight {
+  left: 30px;
+  top: 67%;
+  z-index:999;
+}
+ 
+.nine {
+  left: 10px;
+  top: 46%;
+  z-index:999;
+}
+ 
+.ten {
+  top: 25%;
+  left: 10%;
+  z-index:999;
+}
+ 
+.name {
+  position: absolute;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 700;
+  transform-origin: bottom;
+  color: black;
+  border-radius: 5px;
+  padding: 0 10px;
+  z-index: -99;
+}
+.active-time{
+    background-color:#194373;
+    color:#fff;
+    font-weight:600;
+}

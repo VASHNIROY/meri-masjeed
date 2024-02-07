@@ -1,0 +1,44 @@
+.select-masjid-main-container{
+    display:flex;
+    justify-content: center;
+    width:100%;
+}
+.select-masjid-sub-container{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    width:80%;
+}
+.select-masjid-heading-container{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    gap:6px;
+    margin-bottom: 20px;
+}
+.select-masjid-seach-input{
+    width:100%;
+    border:0.5px solid #808080;
+    outline:none;
+    border-radius:50px;
+    padding:10px;
+}
+.select-masjid-list-container{
+    border:0.5px solid #808080;
+    width:100%;
+    border-radius:10px;
+    padding:10px;
+    margin-top:20px;
+    text-align: center;
+    list-style-type: none;
+}
+.select-masjid-category-hover{
+    padding:10px 0px;
+    font-weight:600;
+}
+.select-masjid-category-hover:hover{
+    background-color: #194373;
+    color:#fff;
+    cursor:pointer;
+    border-radius:20px;
+}

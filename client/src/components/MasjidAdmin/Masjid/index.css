@@ -1,0 +1,209 @@
+
+
+@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Caveat:wght@400;700&family=Lobster&family=Monoton&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:ital,wght@0,400;0,700;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,700&family=Work+Sans:ital,wght@0,400;0,700;1,700&display=swap");
+.mosque-form-container {
+    max-width: 90vw;
+    margin: 20px auto;
+    padding: 20px;
+    border: 0px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+ 
+  .form-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;  
+    max-width: 90vw;
+   
+  }  
+  .form-row label {
+    display: inline-block;
+    width: 50%; 
+    box-sizing: border-box; 
+    margin-right: 1%; 
+  }
+ 
+  .form-row input {
+      width: 100%; 
+      box-sizing: border-box; 
+      background-color: rgb(233, 236, 239); 
+  }
+ 
+  @media (max-width: 768px) {
+      .form-row label {
+          width: 100%; 
+          margin-right: 0; 
+      }
+  }
+   
+    .dashboard-input-textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    border: 1px solid  #495057;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 40px;
+  } 
+   
+ 
+  .first-masjid-part{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+ 
+  .first-masjid-part-two{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .first-part-heading{
+     color: #20aee3;
+     font-family: 'Roboto';
+     font-size: 35px;
+     font-weight: bold;
+  }
+  .first-part-timing{
+    background: #ff5c6c;
+   
+    color: #ffffff;
+    margin: 0px 10px 10px 0px;
+    padding: 5px;
+    width: 120px !important;
+    height: 40px;
+    border-radius: 5px;
+  }
+  .first-part-info{
+    background: #20aee3;
+    -webkit-transition: 0.2s ease-in;
+    -o-transition: 0.2s ease-in;
+    transition: 0.2s ease-in;
+    color: #ffffff;
+    margin: 0px 10px 10px 0px;
+    padding: 5px;
+    border-radius: 5px;
+    width: 120px !important;
+    height: 40px;
+   
+  }
+  .first-part-timing-info{
+    background-color: #6772e5;
+    -webkit-transition: 0.2s ease-in;
+    -o-transition: 0.2s ease-in;
+    transition: 0.2s ease-in;
+    color: #ffffff;
+    margin: 0px 10px 10px 0px;
+    padding: 5px;
+    border-radius: 5px;
+    width: 120px !important;
+    height: 40px;
+   
+  }
+  .first-part-salah{
+    background: #ff9041;
+    color: #ffffff;
+    border: 1px solid #ff9041;
+    -webkit-transition: 0.2s ease-in;
+    -o-transition: 0.2s ease-in;
+    transition: 0.2s ease-in;
+    color: #ffffff;
+    margin: 0px 10px 10px 0px;
+    padding: 5px;
+    border-radius: 5px;
+    width: 120px !important;
+    height: 40px;
+  }
+  .first-part-share{
+    background: #24d2b5;
+    border: 1px solid #24d2b5;
+    -webkit-transition: 0.2s ease-in;
+    -o-transition: 0.2s ease-in;
+    transition: 0.2s ease-in;
+    color: #ffffff;
+    margin: 0px 10px 10px 0px;
+    padding: 5px;
+    border-radius: 5px;
+    width: 120px !important;
+    height: 40px;
+   
+  }
+  .form-row-single{
+    max-width: 99%;
+  }
+  .first-part-image{
+    height: 140px;
+    width: 140px;
+    border: #67757c 2px solid;
+    padding: 30px;
+    border-radius: 5px;
+   
+  }
+  .first-masjid-part-one{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .form-control {
+    color: #67757c;
+    display: initial;
+    font-size: 14px;
+    min-height: 38px;
+    
+   
+}
+.form-control-double {
+    color: #67757c;
+    display: initial;
+    font-size: 14px;
+    min-height: 38px;
+    min-width: 400px;
+}
+.form-control-double-multiple {
+    color: #67757c;
+    display: initial;
+    font-size: 14px;
+    min-height: 38px;
+    min-width: 500px;
+}
+.save-button{
+    display: flex;
+    flex-direction: row-reverse;
+   
+}
+.save-button-color{
+    background: #20aee3;
+    border: 1px solid #20aee3;
+   
+    color: #ffffff;
+    height: 50px;
+    border-radius: 10px;
+    width: 100px;
+}
+.form-control-title {
+    color: #67757c;
+    display: initial;
+    font-size: 14px;
+    min-height: 38px;
+    min-width: 62vw;
+}
+ 
+.full-width-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+ 
+.full-width-container label {
+  flex: 1;
+  box-sizing: border-box;
+  margin-right: 10px;
+}
+ 
+.full-width-container input {
+  flex: 2; 
+  width: 84%;
+  box-sizing: border-box;
+  background-color: rgb(233, 236, 239);
+}

@@ -1,0 +1,39 @@
+.select-masjid-time-flex-container{
+    display:flex;
+    align-items: center;
+    justify-content:center;
+    height:100vh;
+    width:100%;
+    flex-wrap:wrap;
+    gap:100px;
+}
+.single-masjid-header{
+    width:100%;
+    background-color:#f2f2f2;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    height:36px;
+}
+.single-masjid-header-name{
+    width:30%;
+    margin:0px;
+    font-size:16px;
+    color:#39454d;
+    text-align: center;
+    font-weight:600;
+}
+.single-masjid-content{
+    width:100%;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    height:36px;
+}
+.single-masjid-content-name{
+    width:30%;
+    margin:0px;
+    font-size:16px;
+    color:#808080;
+    text-align: center;
+}

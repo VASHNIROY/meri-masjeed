@@ -1,0 +1,33 @@
+.form-control {  
+    color: #67757c;
+   display: initial;
+   font-size: 14px;
+   min-height: 38px;        
+
+}  
+
+.Iqamah-rows{
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+}
+.Iqamah-heading{
+color: #455a64;
+font-family: "Montserrat", sans-serif;
+font-weight: 400;
+line-height: 18px;
+font-size: 20px;
+margin-bottom: .75rem;
+}
+.Iqamah-para{
+font-weight: 300;
+margin-bottom: 15px;
+color: #bcc3d3;
+line-height: 16px;
+font-size: 14px;
+font-weight: 400;
+}
+.iqamah-input{
+width: calc(33.33% - 10px);
+margin-top: 5px;
+}

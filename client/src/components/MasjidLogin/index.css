@@ -1,0 +1,68 @@
+.masid-singin-main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.masid-signin-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+
+.masid-signin-heading {
+  
+  padding: 10px;
+  font-size: 14px;
+  color: #455a64;
+  border-bottom: 1px solid #e6e8e8;
+  font-weight: 400;
+  letter-spacing: .2em;
+  text-align: center;
+}
+
+.masid-singin-sub-heading {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333333;
+}
+
+.masid-singin-form {
+  display: flex;
+  flex-direction: column;
+  width:100%;
+}
+
+.masid-login-form-field {
+  margin-bottom: 15px;
+  display:flex;
+  flex-direction: column;
+  
+}
+
+.masid-login-form-input {
+  
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+.app-para-text {
+  font-size: 14px;
+  color: #333333;
+  margin-bottom: 5px;
+}
+
+.masid-singin-image-container {
+  width: 100%;
+  }
+
+.masid-singin-image {
+  width: 100%;
+  height: 100px;
+}

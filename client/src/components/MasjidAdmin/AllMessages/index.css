@@ -1,0 +1,22 @@
+.masjid-message-container {
+    padding: 20px;
+  }
+  .masjid-message-sub-container{
+    display: flex;
+    justify-content: space-between;
+    
+  }
+  .masjid-message-heading{
+    color: #1e88e5;
+  }
+  .masjid-message-button{
+    background-color: #20aee3;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    
+  }
+  .masjid-message-textarea {
+    margin-top: 10px;
+    width:100%;
+  }

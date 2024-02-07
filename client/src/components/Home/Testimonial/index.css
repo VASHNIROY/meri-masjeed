@@ -1,0 +1,80 @@
+.home-carousel-main-container{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    
+}
+.home-carousel-sub-container{
+    width: 50%;
+}
+.testimonial-main-container{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+.testimonial-card{
+    display:flex;
+    flex-direction:column !important;
+    align-items: center !important;
+    width:100% !important;
+    gap:10px;
+    text-align: center;
+}
+.testimonial-icon{
+    font-size:50px;
+    color:#808080;
+    width:50px;
+    height:50px;
+}
+.testmonial-flex-container{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    gap:50px;
+}
+.testmonial-image{
+    width:80px;
+    height:80px;
+    border-radius: 50%;
+}
+.carousel-width{
+    width:50%;
+    margin: 0px auto;
+    display:flex;
+    justify-content: center;
+}
+.carousel{
+    width:50% !important;
+}
+.carousel .control-dots .dot {
+    background-color:#000 !important;
+}
+.carousel .carousel-status{
+    color:#000 !important;
+}
+.carousel.carousel-slider .control-arrow{
+    color:#000 !important;;
+}
+
+
+@media(max-width:768px){
+    .carousel-width{
+        width:80%;
+    }
+   
+}
+
+
+ 
+@media (max-width: 768px) {
+    
+    .home-carousel-main-container{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+   
+    .home-carousel-sub-container{
+        width: 80%;
+    }
+}
