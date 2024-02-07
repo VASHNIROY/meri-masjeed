@@ -573,7 +573,7 @@ export const addAdminStaff = CatchAsyncError(async (req, res, next) => {
   const useremail = req.user.email;
 
   try {
-    const getmasjeedidQuery = `SELECT masjeedid FROM masjeed WHERE email = ?`;
+    const getmasjeedidQuery = `SELECT id FROM masjeed WHERE email = ? AND status = 1`;
 
     connection.query(getmasjeedidQuery, [useremail], (error, results) => {
       if (error) {
@@ -662,6 +662,7 @@ export const addAdminStaff = CatchAsyncError(async (req, res, next) => {
 export const editAdminStaffMember = CatchAsyncError(async (req, res, next) => {
   try {
     const useremail = req.user.email;
+    const { email } = req.body;
 
     const getmasjeedidQuery = `SELECT id FROM masjeed WHERE email = ? AND status = 1`;
 
@@ -683,10 +684,10 @@ export const editAdminStaffMember = CatchAsyncError(async (req, res, next) => {
           return next(new ErrorHandler(error.message, 500));
         }
 
-        if (results.length > 0) {
-          return next(new ErrorHandler("Email already exists", 400));
+        if (results.length === 0) {
+          return next(new ErrorHandler("Email Does not exists", 400));
         }
-        const { name, email, phonenumber, comment, roleid } = req.body;
+        const { name, phonenumber, comment, roleid } = req.body;
 
         const editAdminStaffMember = `UPDATE adminstaff SET name = ?, phonenumber = ?, comment = ?, roleid = ? WHERE email = ? AND masjeedid = ?`;
 
