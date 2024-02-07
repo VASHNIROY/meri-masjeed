@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import Cookies from "js-cookie";
+import Toast from "../../utils/Toast";
 
 const Iqamah = () => {
   const [inputs, setInputs] = useState({
@@ -39,6 +40,10 @@ const Iqamah = () => {
       }
 
       const data = await response.json();
+      Toast.fire({
+        icon: "success",
+        title: data.message,
+      });
 
       const IqamahTimings = data.data;
 

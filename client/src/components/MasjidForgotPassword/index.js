@@ -29,6 +29,7 @@ const ForgotPassword = () => {
         if (data.success) {
           navigate("/otpverification")
           setMessage('Password reset link sent to your email.');
+          
         } else {
           setMessage('Failed to send reset link. Please check your email and try again.');
         }

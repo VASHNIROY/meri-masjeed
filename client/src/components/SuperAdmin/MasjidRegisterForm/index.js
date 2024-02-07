@@ -259,6 +259,18 @@ const MasjidRegisterForm = () => {
 
         body: form,
       });
+      setFormData({
+      masjeedname: "",
+      adminname: "",
+      email: "",
+      phonenumber: "",
+      country: "",
+      state: "",
+      city: "",
+      postalcode: "",
+      address: "",
+      file: null,
+    })
 
       if (response.ok) {
         console.log("Form submitted successfully!");

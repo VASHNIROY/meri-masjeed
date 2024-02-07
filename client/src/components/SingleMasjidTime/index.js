@@ -7,6 +7,8 @@ import { MdToggleOff } from "react-icons/md";
 import { MdAddToPhotos } from "react-icons/md";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 
+import Spinner from "../Loader";
+
 import {
   GridToolbar,
   selectedGridRowsSelector,
@@ -19,6 +21,7 @@ import Cookies from "js-cookie";
 import { useParams } from 'react-router-dom';
 import { FaCheck, FaTimes } from "react-icons/fa";
 import Clock from "../Home/Clock";
+import Toast from "../utils/Toast";
 
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
@@ -38,12 +41,13 @@ function SingleMasjidTime() {
   const {id} = useParams()
   
   const [masjidTimingList, setMasjidTimingList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchData = async (
    
   ) => {
     const token = Cookies.get("user");
-    
+    setLoading(true)
     
     
     const options = {
@@ -52,19 +56,25 @@ function SingleMasjidTime() {
         Authorization: `Bearer ${token}`,
       }, 
     };
-    const api = `http://localhost:3009/api/v1//getTodaySchedule/${id}`;
+    const api = `http://localhost:3009/api/v1/getTodaySchedule/${id}`;
     try {
       const response = await fetch(api, options);
 
       if (!response.ok) {
         throw new Error(`Request failed with status: ${response.status}`);
       }
+      setLoading(false)
 
       const data = await response.json();
+        Toast.fire({
+          icon: "success",
+          title: data.message,
+        });
       console.log(data,"kapil");
       setMasjidTimingList(data.todayTimings);
       console.log(data.todayTimings,"kkkkk")
     } catch (error) {
+      setLoading(false)
       console.error("Error fetching data:", error);
     }
   };
@@ -154,7 +164,10 @@ function SingleMasjidTime() {
   console.log(masjidTimingList,"masjidTimingList")
 
   return (
-    <div className="select-masjid-time-flex-container">
+    <>
+       { loading ?
+    
+    <Spinner/>:(<div className="select-masjid-time-flex-container">
 
       <Clock masjidTimingList={masjidTimingList}/>
       {masjidTimingList.length>0 && 
@@ -207,7 +220,9 @@ function SingleMasjidTime() {
         
       </Box>
 }
-    </div>
+    </div>)
+    }
+    </>
   );
 }
 export default SingleMasjidTime;

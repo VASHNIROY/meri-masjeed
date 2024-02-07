@@ -353,6 +353,10 @@ const MosqueForm = () => {
         }
   
         const data = await response.json();
+        Toast.fire({
+          icon: "success",
+          title: data.message,
+        });
        
         const masjeedData = data.data[0]
 

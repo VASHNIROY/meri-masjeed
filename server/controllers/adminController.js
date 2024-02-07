@@ -3,7 +3,6 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import { connection } from "../utils/db.js";
 import nodemailerConfig from "../utils/nodemailer.js";
 import jwt from "jsonwebtoken";
-
 import bcrypt from "bcrypt";
 
 import { fileURLToPath } from "url";

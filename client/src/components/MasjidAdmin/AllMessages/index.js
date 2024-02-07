@@ -13,6 +13,7 @@ import {
 
 import { FaCheck, FaTimes } from "react-icons/fa";
 import Cookies from 'js-cookie';
+import Toast from '../../utils/Toast';
  
 const AllMessages = () => {
   const [messages, setMessages] = useState([]);
@@ -49,10 +50,15 @@ const AllMessages = () => {
         }
   
         const data = await response.json();
+        Toast.fire({
+          icon: "success",
+          title: data.message,
+        });
         console.log(data,"kapil");
         setMessages(data.data);
         console.log(data.data,"kkkkk")
       } catch (error) {
+        
         console.error("Error fetching data:", error);
       }
     };

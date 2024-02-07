@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import Toast from "../../utils/Toast";
+import Spinner from "../../Loader";
 
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
@@ -43,6 +44,7 @@ const CustomCheckboxHeader = (props) => {
 function MasjidRequestList() {
   // Move this line to the top
   const [masjidList, setMasjidList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   
   const [selectedRow, setSelectedRow] = React.useState(null);
@@ -66,6 +68,7 @@ function MasjidRequestList() {
    
     ) => {
       const token = Cookies.get("user");
+      setLoading(true)
       
       console.log(token)
       
@@ -83,12 +86,13 @@ function MasjidRequestList() {
         if (!response.ok) {
           throw new Error(`Request failed with status: ${response.status}`);
         }
-  
+        setLoading(false)
         const data = await response.json();
         console.log(data,"kapil");
         setMasjidList(data.data);
         console.log(data.data,"kkkkk")
       } catch (error) {
+        setLoading(false)
         console.error("Error fetching data:", error);
       }
     };
@@ -120,14 +124,14 @@ function MasjidRequestList() {
           throw new Error(`Request Failed with status: ${response.status}`);
         }
 
-
+        fetchData()
         const data = await response.json();
         Toast.fire({
             icon: "success",
             title: data.message,
           });
        
-        fetchData()
+        
         setSelectedRow(row);
       } catch (error) {
         console.error("Error Enabling row:", error);
@@ -290,8 +294,9 @@ function MasjidRequestList() {
 
   return (
     <>
-      
-      <Box
+    {loading?<Spinner/>
+      :
+      (<Box
         sx={{
           height: "100vh",
           width: "100%",
@@ -363,7 +368,8 @@ function MasjidRequestList() {
             />
           </Box>
         </Modal> */}
-      </Box>
+      </Box>)
+      }
     </>
   );
 }

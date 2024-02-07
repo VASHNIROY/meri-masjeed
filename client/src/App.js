@@ -25,6 +25,7 @@ import MasjidOtpVerification from './components/MasjidOtp';
 import ProtectedRoute from './components/protectedRoute';
 import SuperAdminProtectedRoute from './components/SuperadminProtectedRoute';
 import Clock from './components/Home/Clock';
+import NotFound from './components/NotFound';
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
       <Route path="/singlemasjid/:id" element={<SingleMasjidTime/>}/>
 
       <Route path="/clock" element={<Clock/>}/>
+      <Route path="*" element={<NotFound />} />
       
     </Routes>
   )

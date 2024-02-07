@@ -16,6 +16,8 @@ import {
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import Toast from "../../utils/Toast";
+import Spinner from "../../Loader";
 
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
@@ -42,6 +44,7 @@ const CustomCheckboxHeader = (props) => {
 function AllMasjids() {
   // Move this line to the top
   const [masjidList, setMasjidList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   
   const [selectedRow, setSelectedRow] = React.useState(null);
@@ -60,79 +63,16 @@ function AllMasjids() {
   
   console.log("kapil")
   
-  const handleEnableClick = (id) => {
-    const row = masjidList.find(
-      (r) => r.id === id
-    );
+ 
 
-    const enableRow = async () => {
-      const token = Cookies.get("user");
-
-      console.log(token,"token")
-
-      const enableUrl = `http://localhost:3009/api/v1/approvemasjeed/${id}`;
-      const options = {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      try {
-        const response = await fetch(enableUrl, options);
-        console.log(response,"ram")
-
-        if (!response.ok) {
-          throw new Error(`Request Failed with status: ${response.status}`);
-        }
-
-        const data = await response.json();
-       
-        fetchData()
-        setSelectedRow(row);
-      } catch (error) {
-        console.error("Error Enabling row:", error);
-      }
-    };
-    enableRow();
-  };
-
-  const handleDeleteClick = (id) => {
-    const row = masjidList.find(
-      (r) => r.id === id
-    );
-
-    const DeleteRow = async () => {
-      const token = Cookies.get("_a_p_k");
-      const disableUrl = `http://localhost:3009/api/v1/rejectmasjeed/${id}`;
-      const options = {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      try {
-        const response = await fetch(disableUrl, options);
-
-        if (!response.ok) {
-          throw new Error(`Reqeust Failed with status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        fetchData()
-        setSelectedRow(row);
-      } catch (error) {
-        console.error("Error Deleting row:", error);
-      }
-    };
-    DeleteRow();
-  };
+  
 
   
   const fetchData = async (
    
   ) => {
     const token = Cookies.get("user");
-    
+    setLoading(true)
     
     
     const options = {
@@ -148,12 +88,18 @@ function AllMasjids() {
       if (!response.ok) {
         throw new Error(`Request failed with status: ${response.status}`);
       }
+      setLoading(false)
 
       const data = await response.json();
+        Toast.fire({
+          icon: "success",
+          title: data.message,
+        });
       console.log(data,"kapil");
       setMasjidList(data.data);
       console.log(data.data,"kkkkk")
     } catch (error) {
+      setLoading(false)
       console.error("Error fetching data:", error);
     }
   };
@@ -277,7 +223,7 @@ function AllMasjids() {
 
   return (
     <>
-     
+     {loading?<Spinner/>:
       <Box
         sx={{
           height: "100vh",
@@ -351,6 +297,7 @@ function AllMasjids() {
           </Box>
         </Modal> */}
       </Box>
+}
     </>
   );
 }

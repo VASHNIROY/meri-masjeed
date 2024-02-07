@@ -16,6 +16,8 @@ import { PiDotsThreeVerticalFill } from "react-icons/pi";
 import { FiEdit } from "react-icons/fi";
 import { Menu, MenuItem, TextField } from '@mui/material';
 import Cookies from 'js-cookie';
+import Toast from '../../utils/Toast';
+import Spinner from '../../Loader';
 
 
 function SalahTimingTable() {
@@ -29,7 +31,7 @@ function SalahTimingTable() {
   const [selectedMonth, setSelectedMonth] = useState('1');
   const [filteredRows, setFilteredRows] = useState([]);
 
-
+  const [loading, setLoading] = useState(false);
 
   
 
@@ -72,6 +74,7 @@ function SalahTimingTable() {
       if (!response.ok) {
         throw new Error('Failed to update row');
       }
+      setLoading(false)
   
       // Update the state after a successful save
       const updatedRow = await response.json();
@@ -84,6 +87,7 @@ function SalahTimingTable() {
         [id]: { mode: GridRowModes.View },
       }));
     } catch (error) {
+      setLoading(false)
       console.error('Error updating row:', error);
       
     }
@@ -92,9 +96,7 @@ function SalahTimingTable() {
   
   
 
-  const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
+ 
 
   const handleCancelClick = (id) => () => {
     setRowModesModel({
@@ -107,18 +109,13 @@ function SalahTimingTable() {
       setRows(rows.filter((row) => row.id !== id));
     }
   };
-  // const processRowUpdate = (newRow) => {
-  //       const updatedRow = { ...newRow, isNew: false };
-  //       setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-  //       return updatedRow;
-  //     };
-  
+ 
   const processRowUpdate = async (newRow) => {
     console.log('New row:', newRow);  
     
   
     try {
-      
+      console.log(newRow)
       const response = await fetch(`http://localhost:3009/api/v1/updateTimingRow`, {
         method: 'PUT',
         headers: {
@@ -175,6 +172,7 @@ function SalahTimingTable() {
   };
 
   const fetchProducts = async () => {
+    setLoading(true)
     try {
       
       const response = await fetch(`http://localhost:3009/api/v1/getmasjeedtimings`, {
@@ -185,15 +183,18 @@ function SalahTimingTable() {
         
       }); 
       if (response.ok) {
+        setLoading(false)
         const data = await response.json();
         setRows(data.data);
         console.log('Row IDs:', data.data.map(row => row.id));
         console.log('Row structure:', data.data[0]); 
         console.log(data.data,data.data)
       } else {
+        setLoading(false)
         setRows("");
       }
     } catch (error) {
+      setLoading(false)
       setRows("");
     }
   };
@@ -321,14 +322,20 @@ function SalahTimingTable() {
       if (!response.ok) {
         throw new Error('Failed to perform Action 1');
       }
-  
+      const data = await response.json();
+        Toast.fire({
+          icon: "success",
+          title: data.message,
+        });
+        fetchProducts()
+        handleMenuClose();
       // Update the state after a successful operation
       const updatedData = await response.json();
       // You may need to update the state or perform any other actions based on the response.
   
       // Close the menu
-      handleMenuClose();
-      fetchProducts()
+     
+      
     } catch (error) {
       console.error('Error performing Action 1:', error);
     }
@@ -558,6 +565,8 @@ function SalahTimingTable() {
 
   return (
     <>
+    {loading?<Spinner/>:
+    (<>
     <div className="select-month-type-container">
     <select onChange={(e) => setSelectedMonth(e.target.value)} className="selct-month-container">
       <option value='1'>January 2024</option>
@@ -612,6 +621,8 @@ function SalahTimingTable() {
         
       </Menu>
     </Box>
+    </>)
+}
     </>
   );
 }
