@@ -10,6 +10,7 @@ import {
   editIqamah,
   forgotPassword,
   getAdminStaff,
+  getAdminStaffMember,
   getIqamahDetails,
   getMasjeedDetails,
   getMasjeedTimings,
@@ -73,6 +74,8 @@ adminRouter.put(
 );
 
 adminRouter.get("/getadminstaffdetails", isAuthenticatedAdmin, getAdminStaff);
+
+adminRouter.get("/getadminstaffmember/:id", getAdminStaffMember);
 
 adminRouter.put("/editIqamah", isAuthenticatedAdmin, editIqamah);
 

@@ -695,6 +695,46 @@ export const getAdminStaff = CatchAsyncError(async (req, res, next) => {
   }
 });
 
+export const getAdminStaffMember = CatchAsyncError(async (req, res, next) => {
+  try {
+    const useremail = req.user.email;
+
+    const getmasjeedidQuery = `SELECT id FROM masjeed WHERE email = ? AND status = 1`;
+
+    connection.query(getmasjeedidQuery, [useremail], (error, results) => {
+      if (error) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+
+      if (results.length === 0) {
+        return next(new ErrorHandler("Masjeed Not Found", 404));
+      }
+
+      const masjeedid = results[0].id;
+
+      const getAdminStaffMemberQuery = `SELECT * FROM adminstaff WHERE masjeedid = ? AND id = ?`;
+
+      connection.query(
+        getAdminStaffMemberQuery,
+        [masjeedid, req.params.id],
+        (error, results) => {
+          if (error) {
+            return next(new ErrorHandler(error.message, 500));
+          }
+
+          if (results.length === 0) {
+            return next(new ErrorHandler("Admin Staff Not Found", 404));
+          }
+
+          res.json({ success: true, data: results[0] });
+        }
+      );
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
+
 export const editAdminStaffMember = CatchAsyncError(async (req, res, next) => {
   try {
     const useremail = req.user.email;
