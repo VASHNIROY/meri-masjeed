@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { Box, Modal } from "@mui/material";
 import NewEditor from './Editor';
 import EditButton from './EditButton';
+import Toast from '../../utils/Toast';
+import Cookies from 'js-cookie';
  
 const Manageaccounts = () => {
+
+    const [users,setUsers] = useState([])
  
-    const users = [
-        { id: 1, email: 'user1@example.com', phone: '123-456-7890', createdAt: '2022-01-01', lastLoggedIn: '2022-01-15' },
-        { id: 2, email: 'user2@example.com', phone: '987-654-3210', createdAt: '2022-01-05', lastLoggedIn: '2022-01-20' },
-        // Add more user data as needed
-    ];
+    // const users = [
+    //     { id: 1, email: 'user1@example.com', phone: '123-456-7890', createdAt: '2022-01-01', lastLoggedIn: '2022-01-15' },
+    //     { id: 2, email: 'user2@example.com', phone: '987-654-3210', createdAt: '2022-01-05', lastLoggedIn: '2022-01-20' },
+    //     // Add more user data as needed
+    // ];
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [editModel, setEditModel] = useState(false);
@@ -30,6 +34,48 @@ const Manageaccounts = () => {
         setSelectedUser(user);
         setEditModel(true);
     };
+
+    const token = Cookies.get("user");
+
+  const fetchData = async (
+   
+    ) => {
+  
+      
+      console.log(token)
+      
+      const options = {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        
+      };
+      const api = `http://localhost:3009/api/v1/getadminstaffdetails`;
+      try {
+        const response = await fetch(api, options);
+  
+        if (!response.ok) {
+          throw new Error(`Request failed with status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        Toast.fire({
+          icon: "success",
+          title: data.message,
+        });
+        console.log(data,"kapil");
+        setUsers(data.data);
+        console.log(data.data,"kkkkk")
+      } catch (error) {
+        
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    useEffect(() => {
+      fetchData();
+    }, []);
  
     return (
         <>
@@ -44,10 +90,10 @@ const Manageaccounts = () => {
                         <thead>
                             <tr>
                                 <th className='manage-th manage-heading'>ID</th>
+                                <th className='manage-th manage-heading'>Name</th>
                                 <th className='manage-th manage-heading'>Email Address</th>
                                 <th className='manage-th manage-heading'>Phone</th>
-                                <th className='manage-th manage-heading'>Created At</th>
-                                <th className='manage-th manage-heading'>Last Logged In</th>
+                               
                                 <th className='manage-th manage-heading'>Actions</th>
                             </tr>
                         </thead>
@@ -55,10 +101,10 @@ const Manageaccounts = () => {
                             {users.map(user => (
                                 <tr key={user.id}>
                                     <td className='manage-para'>{user.id}</td>
+                                    <td className='manage-para'>{user.name}</td>
                                     <td className='manage-para'>{user.email}</td>
-                                    <td className='manage-para'>{user.phone}</td>
-                                    <td className='manage-para'>{user.createdAt}</td>
-                                    <td className='manage-para'>{user.lastLoggedIn}</td>
+                                    <td className='manage-para'>{user.phonenumber}</td>
+                                   
                                     <td>
                                         {/* Add your action buttons here */}
                                         <button className="edit-button-manage" onClick={() => handleEditButton(user)}>Edit</button>

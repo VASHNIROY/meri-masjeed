@@ -8,7 +8,7 @@ const NewEditor = ({ onClose }) => {
   const [formData, setFormData] = useState({
     name:'',
     email: '',
-    phoneNumber: '',
+    phonenumber: '',
     roleid: parseInt('0'),
     comment: ''
   });
@@ -42,7 +42,7 @@ const NewEditor = ({ onClose }) => {
         setFormData({
           name:'',
           email: '',
-          phoneNumber: '',
+          phonenumber: '',
           roleid: parseInt('0'),
           comment: ''
         })
@@ -103,8 +103,8 @@ const NewEditor = ({ onClose }) => {
                 type="tel"
                 className="form-control"
                 id="inputPhoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
+                name="phonenumber"
+                value={formData.phonenumber}
                 onChange={handleChange}
                 placeholder="Enter your phone number"
               />
