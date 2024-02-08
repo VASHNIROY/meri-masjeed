@@ -763,13 +763,13 @@ export const editAdminStaffMember = CatchAsyncError(async (req, res, next) => {
         if (results.length === 0) {
           return next(new ErrorHandler("Email Does not exists", 400));
         }
-        const { name, phonenumber, comment, roleid } = req.body;
+        const { name, phonenumber, comment } = req.body;
 
-        const editAdminStaffMember = `UPDATE adminstaff SET name = ?, phonenumber = ?, comment = ?, roleid = ? WHERE email = ? AND masjeedid = ?`;
+        const editAdminStaffMember = `UPDATE adminstaff SET name = ?, phonenumber = ?, comment = ? WHERE email = ? AND masjeedid = ?`;
 
         connection.query(
           editAdminStaffMember,
-          [name, phonenumber, comment, roleid, email, masjeedid],
+          [name, phonenumber, comment, email, masjeedid],
           (error, results) => {
             if (error) {
               return next(new ErrorHandler(error.message, 500));
