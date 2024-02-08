@@ -700,7 +700,7 @@ export const getAdminStaffMember = CatchAsyncError(async (req, res, next) => {
     const useremail = req.user.email;
 
     const getmasjeedidQuery = `SELECT id FROM masjeed WHERE email = ? AND status = 1`;
-
+    console.log(useremail);
     connection.query(getmasjeedidQuery, [useremail], (error, results) => {
       if (error) {
         return next(new ErrorHandler(error.message, 500));

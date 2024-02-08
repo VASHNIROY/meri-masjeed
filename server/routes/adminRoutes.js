@@ -75,7 +75,11 @@ adminRouter.put(
 
 adminRouter.get("/getadminstaffdetails", isAuthenticatedAdmin, getAdminStaff);
 
-adminRouter.get("/getadminstaffmember/:id", getAdminStaffMember);
+adminRouter.get(
+  "/getadminstaffmember/:id",
+  isAuthenticatedAdmin,
+  getAdminStaffMember
+);
 
 adminRouter.put("/editIqamah", isAuthenticatedAdmin, editIqamah);
 
