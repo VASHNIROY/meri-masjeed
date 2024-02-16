@@ -1,9 +1,7 @@
-
-
 import React, { useEffect, useState } from "react";
 import "./index.css";
 import Navbar from "../Navbar";
-import Toast from '../utils/Toast'
+import Toast from "../utils/Toast";
 
 const MasidRegister = () => {
   const [formData, setFormData] = useState({
@@ -25,6 +23,8 @@ const MasidRegister = () => {
   const [cId, setCountryId] = useState("");
   const [selectedCountryIso2, setSelectedCountryIso2] = useState("");
   const [selectedStateIso2, setSelectedStateIso2] = useState("");
+
+  const url = process.env.REACT_APP_BASE_URL;
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -53,7 +53,7 @@ const MasidRegister = () => {
     console.log(form, "formData");
 
     try {
-      const response = await fetch("http://localhost:3009/api/v1/addmasjeed", {
+      const response = await fetch(`${url}addmasjeed`, {
         method: "POST",
 
         body: form,
@@ -78,7 +78,6 @@ const MasidRegister = () => {
           icon: "success",
           title: data.message,
         });
-       
       } else {
         console.error(
           "Failed to submit form:",
@@ -178,8 +177,6 @@ const MasidRegister = () => {
     }
   };
 
-  
-
   const handleCountryChange = (e) => {
     const selectedCountryId = e.target.value;
     const selectedCountry = countries.find(
@@ -212,7 +209,6 @@ const MasidRegister = () => {
       setCities([]);
     }
   };
-
 
   const handleCityChange = (e) => {
     const selectedCityId = e.target.value;

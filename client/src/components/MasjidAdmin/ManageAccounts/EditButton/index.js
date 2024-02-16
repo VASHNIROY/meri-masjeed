@@ -5,14 +5,16 @@ import { ImCancelCircle } from "react-icons/im";
 import Cookies from "js-cookie";
 import Toast from "../../../utils/Toast";
 
-const EditButton = ({ onClose, user }) => {
+const EditButton = ({ onClose, user, fetchStaff }) => {
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
-    phoneNumber: "",
+    phonenumber: "",
     comment: "",
   });
 
   const id = user.id;
+  const url = process.env.REACT_APP_BASE_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,7 +38,7 @@ const EditButton = ({ onClose, user }) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const api = `http://localhost:3009/api/v1/getadminstaffmember/${id}`;
+    const api = `${url}getadminstaffmember/${id}`;
     try {
       const response = await fetch(api, options);
 
@@ -50,8 +52,14 @@ const EditButton = ({ onClose, user }) => {
         title: data.message,
       });
       console.log(data, "kapil");
-      setFormData(data.data, "data");
-      console.log(data.data, "kkkkk");
+
+      const Data = data.data;
+      setFormData({
+        name: Data.name,
+        email: Data.email,
+        phonenumber: Data.phonenumber,
+        comment: Data.comment,
+      });
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -62,21 +70,20 @@ const EditButton = ({ onClose, user }) => {
   }, []);
 
   const handleSubmit = async () => {
+    console.log(formData, "ram");
     try {
-      const response = await fetch(
-        "http://localhost:3009/api/v1/editadminstaffmember",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch(`${url}editadminstaffmember`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
       if (response.ok) {
         console.log("Data submitted successfully");
-        // Handle success, e.g., show a success message to the user
+        fetchStaff();
+        onClose();
       } else {
         console.error("Failed to submit data");
         // Handle failure, e.g., show an error message to the user
@@ -99,7 +106,23 @@ const EditButton = ({ onClose, user }) => {
         <h1 className="neweditor-heading">Editor</h1>
         <div className="container">
           <div className="row">
-            <div className="col-md-6">
+            <div className="col-md-4">
+              <label
+                htmlFor="inputEmail"
+                className="form-label neweditor-label"
+              >
+                Name:
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+              />
+            </div>
+            <div className="col-md-4">
               <label
                 htmlFor="inputEmail"
                 className="form-label neweditor-label"
@@ -110,14 +133,13 @@ const EditButton = ({ onClose, user }) => {
                 type="email"
                 className="form-control"
                 id="inputEmail"
-                name="email"
+                name="name"
                 value={formData.email}
-                onChange={handleChange}
                 placeholder="Enter your email"
               />
             </div>
 
-            <div className="col-md-6">
+            <div className="col-md-4">
               <label
                 htmlFor="inputPhoneNumber"
                 className="form-label neweditor-label"
@@ -128,8 +150,8 @@ const EditButton = ({ onClose, user }) => {
                 type="tel"
                 className="form-control"
                 id="inputPhoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
+                name="phonenumber"
+                value={formData.phonenumber}
                 onChange={handleChange}
                 placeholder="Enter your phone number"
               />
@@ -156,9 +178,9 @@ const EditButton = ({ onClose, user }) => {
                 margin: "30px 0px",
               }}
             >
-              <button className="btn btn-outline-info">
+              {/* <button className="btn btn-outline-info">
                 Resend account confirmation email
-              </button>
+              </button> */}
               <button
                 className="btn btn-info"
                 style={{ color: "white" }}

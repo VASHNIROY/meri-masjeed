@@ -12,8 +12,10 @@ const Iqamah = () => {
     maghribiqamah: "",
     ishaiqamah: "",
     jumahadhan: "",
-    jumahkhutbaduration:""
+    jumahkhutbaduration: "",
   });
+
+  const url = process.env.REACT_APP_BASE_URL;
 
   const handleInputChange = (name, value) => {
     setInputs({
@@ -24,14 +26,13 @@ const Iqamah = () => {
 
   const token = Cookies.get("user");
   const fetchData = async () => {
-    
     const options = {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    const api = `http://localhost:3009/api/v1/getiqamahtimigs`;
+    const api = `${url}getiqamahtimigs`;
     try {
       const response = await fetch(api, options);
 
@@ -56,11 +57,9 @@ const Iqamah = () => {
         maghribiqamah: IqamahTimings.maghribiqamah,
         ishaiqamah: IqamahTimings.ishaiqamah,
         jumahkhutbaduration: IqamahTimings.jumahkhutbaduration,
-        jumahadhan: IqamahTimings.jumahadhan
-
-        
+        jumahadhan: IqamahTimings.jumahadhan,
       });
-      console.log(inputs,"ram")
+      console.log(inputs, "ram");
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -70,12 +69,16 @@ const Iqamah = () => {
     fetchData();
   }, []);
 
-  console.log(inputs,"inputs")
+  console.log(inputs, "inputs");
 
   const handleSave = async () => {
-    console.log(typeof(inputs.jumahkhutbaduration),inputs,"jumahkhutbaduration")
+    console.log(
+      typeof inputs.jumahkhutbaduration,
+      inputs,
+      "jumahkhutbaduration"
+    );
     try {
-      const response = await fetch("http://localhost:3009/api/v1/editIqamah", {
+      const response = await fetch(`${url}editIqamah`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +88,7 @@ const Iqamah = () => {
       });
 
       if (response.ok) {
-        fetchData()
+        fetchData();
         console.log("Data saved successfully");
       } else {
         console.error("Failed to save data");
@@ -111,7 +114,9 @@ const Iqamah = () => {
                 id="fajrInput"
                 className="form-control"
                 value={inputs.fajriqamah}
-                onChange={(e) => handleInputChange("fajriqamah", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("fajriqamah", e.target.value)
+                }
               />
             </div>
           </div>
@@ -123,7 +128,9 @@ const Iqamah = () => {
                 id="dhuhrInput"
                 className="form-control"
                 value={inputs.dhuhriqamah}
-                onChange={(e) => handleInputChange("dhuhriqamah", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("dhuhriqamah", e.target.value)
+                }
               />
             </div>
           </div>
@@ -150,7 +157,9 @@ const Iqamah = () => {
                 id="maghribInput"
                 className="form-control"
                 value={inputs.maghribiqamah}
-                onChange={(e) => handleInputChange("maghribiqamah", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("maghribiqamah", e.target.value)
+                }
               />
             </div>
           </div>
@@ -162,7 +171,9 @@ const Iqamah = () => {
                 id="ishaInput"
                 className="form-control"
                 value={inputs.ishaiqamah}
-                onChange={(e) => handleInputChange("ishaiqamah", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("ishaiqamah", e.target.value)
+                }
               />
             </div>
           </div>
@@ -173,9 +184,10 @@ const Iqamah = () => {
                 type="time"
                 id="jumahInputTime"
                 className="form-control"
-                value={inputs.jumahadhan
-                  }
-                onChange={(e) => handleInputChange("jumahadhan", e.target.value)}
+                value={inputs.jumahadhan}
+                onChange={(e) =>
+                  handleInputChange("jumahadhan", e.target.value)
+                }
               />
             </div>
           </div>
@@ -187,7 +199,9 @@ const Iqamah = () => {
                 id="jumahInput"
                 className="form-control"
                 value={inputs.jumahkhutbaduration}
-                onChange={(e) => handleInputChange("jumahkhutbaduration", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("jumahkhutbaduration", e.target.value)
+                }
               />
             </div>
           </div>

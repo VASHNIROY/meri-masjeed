@@ -12,7 +12,6 @@ import {
   gridFilteredSortedRowIdsSelector,
 } from "@mui/x-data-grid";
 
-
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { FaCheck, FaTimes } from "react-icons/fa";
@@ -46,60 +45,49 @@ function AllMasjids() {
   const [masjidList, setMasjidList] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  
   const [selectedRow, setSelectedRow] = React.useState(null);
   const [selectedStatus, setSelectedStatus] = useState([
     { id: 1, name: "Active" },
   ]);
 
   const handleEditClick = (subscriptionId) => {
-    const row = masjidList.find(
-      (r) => r.id === subscriptionId
-    ); // Find the correct row by subscriptionId
+    const row = masjidList.find((r) => r.id === subscriptionId); // Find the correct row by subscriptionId
     setSelectedRow(row);
-   
   };
 
-  
-  console.log("kapil")
-  
- 
+  console.log("kapil");
 
-  
+  const url = process.env.REACT_APP_BASE_URL;
 
-  
-  const fetchData = async (
-   
-  ) => {
+  const fetchData = async () => {
     const token = Cookies.get("user");
-    setLoading(true)
-    
-    
+    setLoading(true);
+
     const options = {
-      method: "GET", 
+      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
-      }, 
+      },
     };
-    const api = `http://localhost:3009/api/v1/getmasjeeds`;
+    const api = `${url}getmasjeeds`;
     try {
       const response = await fetch(api, options);
 
       if (!response.ok) {
         throw new Error(`Request failed with status: ${response.status}`);
       }
-      setLoading(false)
+      setLoading(false);
 
       const data = await response.json();
-        Toast.fire({
-          icon: "success",
-          title: data.message,
-        });
-      console.log(data,"kapil");
+      Toast.fire({
+        icon: "success",
+        title: data.message,
+      });
+      console.log(data, "kapil");
       setMasjidList(data.data);
-      console.log(data.data,"kkkkk")
+      console.log(data.data, "kkkkk");
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -147,36 +135,36 @@ function AllMasjids() {
       flex: 1,
     },
     {
-        field: "adminname",
-        headerName: "Responsible Person",
-        type: "number",
-        headerClassName: "super-app-theme--header",
-        minWidth: 110,
-        align: "center",
-        headerAlign: "center",
-        flex: 1,
-      },
+      field: "adminname",
+      headerName: "Responsible Person",
+      type: "number",
+      headerClassName: "super-app-theme--header",
+      minWidth: 110,
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
     {
-        field: "email",
-        headerName: "Email",
-        type: "number",
-        headerClassName: "super-app-theme--header",
-        minWidth: 150,
-        align: "center",
-        headerAlign: "center",
-        flex: 1,
-      },
-      {
-        field: "phonenumber",
-        headerName: "Number",
-        type: "number",
-        headerClassName: "super-app-theme--header",
-        minWidth: 110,
-        align: "center",
-        headerAlign: "center",
-        flex: 1,
-      },
-      
+      field: "email",
+      headerName: "Email",
+      type: "number",
+      headerClassName: "super-app-theme--header",
+      minWidth: 150,
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "phonenumber",
+      headerName: "Number",
+      type: "number",
+      headerClassName: "super-app-theme--header",
+      minWidth: 110,
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+
     // {
     //   field: "actions",
     //   type: "actions",
@@ -208,8 +196,7 @@ function AllMasjids() {
     //           onClick={() => handleDeleteClick(id)}
     //           color="red"
     //         />
-          
-          
+
     //     ];
     //   },
     // },
@@ -223,53 +210,55 @@ function AllMasjids() {
 
   return (
     <>
-     {loading?<Spinner/>:
-      <Box
-        sx={{
-          height: "100vh",
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-          "& .super-app-theme--header": {
-            backgroundColor: "#194373",
-            color: "#fff",
-          },
-          "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
-            outline: "none !important",
-            border: "none !important", 
-            boxShadow: "none !important", 
-          },
-          "& .even-row:hover, & .odd-row:hover": {
-            backgroundColor: "#f2f2f2",
-          },
-        }}
-      >
-        <DataGrid
-          rows={masjidList}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {},
+      {loading ? (
+        <Spinner />
+      ) : (
+        <Box
+          sx={{
+            height: "100vh",
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            "& .super-app-theme--header": {
+              backgroundColor: "#194373",
+              color: "#fff",
+            },
+            "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
+              outline: "none !important",
+              border: "none !important",
+              boxShadow: "none !important",
+            },
+            "& .even-row:hover, & .odd-row:hover": {
+              backgroundColor: "#f2f2f2",
             },
           }}
-          getRowId={getRowId}
-          getRowClassName={getRowClassName}
-          headerCheckboxSelectionComponent={CustomCheckboxHeader}
-          pageSizeOptions={[5, 10, 15, 20, 100]}
-          disableSelectionOnClick 
-          selectionModel={{}}
-          disableRowSelectionOnClick
-          slots={{
-            toolbar: GridToolbar,
-            printOptions: {
-              getRowsToExport: getSelectedRowsToExport,
-              hideFooter: true,
-              hideToolbar: true,
-              includeCheckboxes: true,
-            },
-          }}
-        />
-        {/* <Modal
+        >
+          <DataGrid
+            rows={masjidList}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {},
+              },
+            }}
+            getRowId={getRowId}
+            getRowClassName={getRowClassName}
+            headerCheckboxSelectionComponent={CustomCheckboxHeader}
+            pageSizeOptions={[5, 10, 15, 20, 100]}
+            disableSelectionOnClick
+            selectionModel={{}}
+            disableRowSelectionOnClick
+            slots={{
+              toolbar: GridToolbar,
+              printOptions: {
+                getRowsToExport: getSelectedRowsToExport,
+                hideFooter: true,
+                hideToolbar: true,
+                includeCheckboxes: true,
+              },
+            }}
+          />
+          {/* <Modal
           open={isModalOpen}
           onClose={handleCloseModal}
           style={{ width: "100%" }}
@@ -296,8 +285,8 @@ function AllMasjids() {
             />
           </Box>
         </Modal> */}
-      </Box>
-}
+        </Box>
+      )}
     </>
   );
 }

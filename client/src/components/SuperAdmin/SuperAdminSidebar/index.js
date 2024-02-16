@@ -1,17 +1,13 @@
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 
-
 import { IoLogOut } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
-
 import { TbBuildingMosque } from "react-icons/tb";
 import { LiaMosqueSolid } from "react-icons/lia";
 import { TfiAlarmClock } from "react-icons/tfi";
-
 
 import AdminNavbar from "../../MasjidAdmin/AdminNavbar";
 import MasidRegisterForm from "../MasjidRegisterForm";
@@ -38,7 +34,7 @@ function SuperAdminSidebar() {
   });
 
   const handleLogout = () => {
-    Cookies.remove("user")
+    Cookies.remove("user");
     navigate("/superadminlogin");
   };
 
@@ -60,7 +56,6 @@ function SuperAdminSidebar() {
     sessionStorage.setItem("status", status);
     sessionStorage.setItem("prevStatus", prevStatus);
   }, [status]);
-
 
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
@@ -99,7 +94,9 @@ function SuperAdminSidebar() {
             onMouseLeave={handleMouseLeave}
             icon={<TbBuildingMosque fontSize="25px" />}
             onClick={() => handleSidebarItemClick(1)}
-            style={status === 1 ? { backgroundColor: "#fff", color: "#212d45" } : {}}
+            style={
+              status === 1 ? { backgroundColor: "#fff", color: "#212d45" } : {}
+            }
           >
             Masjid List
           </MenuItem>
@@ -108,7 +105,9 @@ function SuperAdminSidebar() {
             onMouseLeave={handleMouseLeave}
             icon={<LiaMosqueSolid fontSize="25px" />}
             onClick={() => handleSidebarItemClick(2)}
-            style={status === 2 ? { backgroundColor: "#fff", color: "#212d45" } : {}}
+            style={
+              status === 2 ? { backgroundColor: "#fff", color: "#212d45" } : {}
+            }
           >
             Masjid Requests
           </MenuItem>
@@ -117,11 +116,13 @@ function SuperAdminSidebar() {
             onMouseLeave={handleMouseLeave}
             icon={<TfiAlarmClock fontSize="25px" />}
             onClick={() => handleSidebarItemClick(3)}
-            style={status === 3 ? { backgroundColor: "#fff", color: "#212d45" } : {}}
+            style={
+              status === 3 ? { backgroundColor: "#fff", color: "#212d45" } : {}
+            }
           >
             Add Masjid
           </MenuItem>
-          
+
           <MenuItem
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -145,16 +146,14 @@ function SuperAdminSidebar() {
 
         {parseInt(status) === 1 ? (
           <AllMasjids />
-        ):parseInt(status) === 2 ? (
+        ) : parseInt(status) === 2 ? (
           <MasjidRequestList />
         ) : parseInt(status) === 3 ? (
           <MasidRegisterForm />
-        )  : null}
+        ) : null}
       </div>
     </div>
   );
 }
 
 export default SuperAdminSidebar;
-
-

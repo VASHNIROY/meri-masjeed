@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.css';
-import { ImCancelCircle } from 'react-icons/im';
-import Cookies from 'js-cookie';
+import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.css";
+import { ImCancelCircle } from "react-icons/im";
+import Cookies from "js-cookie";
 
 const NewEditor = ({ onClose }) => {
   const [formData, setFormData] = useState({
-    name:'',
-    email: '',
-    phonenumber: '',
-    roleid: parseInt('0'),
-    comment: ''
+    name: "",
+    email: "",
+    phonenumber: "",
+    roleid: parseInt("0"),
+    comment: "",
   });
+
+  const url = process.env.REACT_APP_BASE_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,57 +25,60 @@ const NewEditor = ({ onClose }) => {
   };
 
   const token = Cookies.get("user");
-      
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`http://localhost:3009/api/v1/addadminstaff`, {
-        method: 'POST',
+      const response = await fetch(`${url}addadminstaff`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
       if (response.ok) {
-        console.log('Data submitted successfully');
+        console.log("Data submitted successfully");
         // Handle success, e.g., show a success message to the us
 
         setFormData({
-          name:'',
-          email: '',
-          phonenumber: '',
-          roleid: parseInt('0'),
-          comment: ''
-        })
-
+          name: "",
+          email: "",
+          phonenumber: "",
+          roleid: parseInt("0"),
+          comment: "",
+        });
       } else {
-        console.error('Failed to submit data');
+        console.error("Failed to submit data");
         // Handle failure, e.g., show an error message to the user
       }
     } catch (error) {
-      console.error('Error occurred while submitting data:', error);
+      console.error("Error occurred while submitting data:", error);
       // Handle error, e.g., show an error message to the user
     }
   };
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <ImCancelCircle className="handle-close-icon" onClick={handleCloseModel} />
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <ImCancelCircle
+          className="handle-close-icon"
+          onClick={handleCloseModel}
+        />
       </div>
-      <div style={{ margin: '70px' }}>
+      <div style={{ margin: "70px" }}>
         <h1 className="neweditor-heading">Add New Editor</h1>
         <div className="container">
           <div className="row">
-          <div className="col-md-3">
-              <label htmlFor="inputEmail" className="form-label neweditor-label">
+            <div className="col-md-3">
+              <label
+                htmlFor="inputEmail"
+                className="form-label neweditor-label"
+              >
                 Name:
               </label>
               <input
                 type="text"
                 className="form-control"
-               
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
@@ -81,7 +86,10 @@ const NewEditor = ({ onClose }) => {
               />
             </div>
             <div className="col-md-3">
-              <label htmlFor="inputEmail" className="form-label neweditor-label">
+              <label
+                htmlFor="inputEmail"
+                className="form-label neweditor-label"
+              >
                 Email:
               </label>
               <input
@@ -96,7 +104,10 @@ const NewEditor = ({ onClose }) => {
             </div>
 
             <div className="col-md-3">
-              <label htmlFor="inputPhoneNumber" className="form-label neweditor-label">
+              <label
+                htmlFor="inputPhoneNumber"
+                className="form-label neweditor-label"
+              >
                 Phone Number:
               </label>
               <input
@@ -111,7 +122,10 @@ const NewEditor = ({ onClose }) => {
             </div>
 
             <div className="col-md-3">
-              <label htmlFor="selectRole" className="form-label neweditor-label">
+              <label
+                htmlFor="selectRole"
+                className="form-label neweditor-label"
+              >
                 Role:
               </label>
               <select
@@ -144,8 +158,18 @@ const NewEditor = ({ onClose }) => {
                 placeholder="Enter your comment"
               ></textarea>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'row-reverse', margin: '30px 0px' }}>
-              <button className="btn btn-info" style={{ color: 'white' }} onClick={handleSubmit}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row-reverse",
+                margin: "30px 0px",
+              }}
+            >
+              <button
+                className="btn btn-info"
+                style={{ color: "white" }}
+                onClick={handleSubmit}
+              >
                 Add Editor
               </button>
             </div>

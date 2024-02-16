@@ -12,14 +12,13 @@ import {
   gridFilteredSortedRowIdsSelector,
 } from "@mui/x-data-grid";
 
-
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import Toast from "../../utils/Toast";
 import Spinner from "../../Loader";
 
-const baseUrl = process.env.REACT_APP_BASE_URL;
+const url = process.env.REACT_APP_BASE_URL;
 
 const getSelectedRowsToExport = ({ apiRef }) => {
   const selectedRowIds = selectedGridRowsSelector(apiRef);
@@ -46,70 +45,59 @@ function MasjidRequestList() {
   const [masjidList, setMasjidList] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  
   const [selectedRow, setSelectedRow] = React.useState(null);
   const [selectedStatus, setSelectedStatus] = useState([
     { id: 1, name: "Active" },
   ]);
 
   const handleEditClick = (subscriptionId) => {
-    const row = masjidList.find(
-      (r) => r.id === subscriptionId
-    ); // Find the correct row by subscriptionId
+    const row = masjidList.find((r) => r.id === subscriptionId); // Find the correct row by subscriptionId
     setSelectedRow(row);
-   
   };
 
-  
-  console.log("kapil")
+  console.log("kapil");
 
+  const fetchData = async () => {
+    const token = Cookies.get("user");
+    setLoading(true);
 
-  const fetchData = async (
-   
-    ) => {
-      const token = Cookies.get("user");
-      setLoading(true)
-      
-      console.log(token)
-      
-      const options = {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        
-      };
-      const api = `http://localhost:3009/api/v1/newmasjeeds`;
-      try {
-        const response = await fetch(api, options);
-  
-        if (!response.ok) {
-          throw new Error(`Request failed with status: ${response.status}`);
-        }
-        setLoading(false)
-        const data = await response.json();
-        console.log(data,"kapil");
-        setMasjidList(data.data);
-        console.log(data.data,"kkkkk")
-      } catch (error) {
-        setLoading(false)
-        console.error("Error fetching data:", error);
-      }
+    console.log(token);
+
+    const options = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     };
-  
-    useEffect(() => {
-      fetchData(selectedStatus);
-    }, [selectedStatus]);
-  
+    const api = `${url}newmasjeeds`;
+    try {
+      const response = await fetch(api, options);
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status: ${response.status}`);
+      }
+      setLoading(false);
+      const data = await response.json();
+      console.log(data, "kapil");
+      setMasjidList(data.data);
+      console.log(data.data, "kkkkk");
+    } catch (error) {
+      setLoading(false);
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(selectedStatus);
+  }, [selectedStatus]);
+
   const handleEnableClick = (id) => {
-    const row = masjidList.find(
-      (r) => r.id === id
-    );
+    const row = masjidList.find((r) => r.id === id);
 
     const enableRow = async () => {
       const token = Cookies.get("user");
-      console.log(token,"enable")
-      const enableUrl = `http://localhost:3009/api/v1/approvemasjeed/${id}`;
+      console.log(token, "enable");
+      const enableUrl = `${url}approvemasjeed/${id}`;
       const options = {
         method: "PUT",
         headers: {
@@ -118,20 +106,19 @@ function MasjidRequestList() {
       };
       try {
         const response = await fetch(enableUrl, options);
-        console.log(response,"ram")
+        console.log(response, "ram");
 
         if (!response.ok) {
           throw new Error(`Request Failed with status: ${response.status}`);
         }
 
-        fetchData()
+        fetchData();
         const data = await response.json();
         Toast.fire({
-            icon: "success",
-            title: data.message,
-          });
-       
-        
+          icon: "success",
+          title: data.message,
+        });
+
         setSelectedRow(row);
       } catch (error) {
         console.error("Error Enabling row:", error);
@@ -141,13 +128,11 @@ function MasjidRequestList() {
   };
 
   const handleDeleteClick = (id) => {
-    const row = masjidList.find(
-      (r) => r.id === id
-    );
+    const row = masjidList.find((r) => r.id === id);
 
     const DeleteRow = async () => {
       const token = Cookies.get("user");
-      const disableUrl = `http://localhost:3009/api/v1/rejectmasjeed/${id}`;
+      const disableUrl = `${url}rejectmasjeed/${id}`;
       const options = {
         method: "PUT",
         headers: {
@@ -160,14 +145,14 @@ function MasjidRequestList() {
         if (!response.ok) {
           throw new Error(`Reqeust Failed with status: ${response.status}`);
         }
-        fetchData()
+        fetchData();
         const data = await response.json();
-        
+
         Toast.fire({
-            icon: "success",
-            title: data.message,
-          });
-        
+          icon: "success",
+          title: data.message,
+        });
+
         setSelectedRow(row);
       } catch (error) {
         console.error("Error Deleting row:", error);
@@ -175,9 +160,6 @@ function MasjidRequestList() {
     };
     DeleteRow();
   };
-
-  
- 
 
   const columns = [
     {
@@ -218,36 +200,36 @@ function MasjidRequestList() {
       flex: 1,
     },
     {
-        field: "adminname",
-        headerName: "Responsible Person",
-        type: "number",
-        headerClassName: "super-app-theme--header",
-        minWidth: 110,
-        align: "center",
-        headerAlign: "center",
-        flex: 1,
-      },
+      field: "adminname",
+      headerName: "Responsible Person",
+      type: "number",
+      headerClassName: "super-app-theme--header",
+      minWidth: 110,
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
     {
-        field: "email",
-        headerName: "Email",
-        type: "number",
-        headerClassName: "super-app-theme--header",
-        minWidth: 150,
-        align: "center",
-        headerAlign: "center",
-        flex: 1,
-      },
-      {
-        field: "phonenumber",
-        headerName: "Number",
-        type: "number",
-        headerClassName: "super-app-theme--header",
-        minWidth: 110,
-        align: "center",
-        headerAlign: "center",
-        flex: 1,
-      },
-      
+      field: "email",
+      headerName: "Email",
+      type: "number",
+      headerClassName: "super-app-theme--header",
+      minWidth: 150,
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "phonenumber",
+      headerName: "Number",
+      type: "number",
+      headerClassName: "super-app-theme--header",
+      minWidth: 110,
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+
     {
       field: "actions",
       type: "actions",
@@ -272,15 +254,11 @@ function MasjidRequestList() {
             color="yellow"
           />,
           <GridActionsCellItem
-              icon={
-                <FaTimes style={{ color: "#ff0000", fontSize: "24px" }} />
-              }
-              label="Disable"
-              onClick={() => handleDeleteClick(id)}
-              color="red"
-            />
-          
-          
+            icon={<FaTimes style={{ color: "#ff0000", fontSize: "24px" }} />}
+            label="Disable"
+            onClick={() => handleDeleteClick(id)}
+            color="red"
+          />,
         ];
       },
     },
@@ -294,54 +272,55 @@ function MasjidRequestList() {
 
   return (
     <>
-    {loading?<Spinner/>
-      :
-      (<Box
-        sx={{
-          height: "100vh",
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-          "& .super-app-theme--header": {
-            backgroundColor: "#194373",
-            color: "#fff",
-          },
-          "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
-            outline: "none !important", // Remove the focus outline
-            border: "none !important", // Remove the border when the cell is focused
-            boxShadow: "none !important", // Remove any box shadow
-          },
-          "& .even-row:hover, & .odd-row:hover": {
-            backgroundColor: "#f2f2f2", // Remove the background color on hover
-          },
-        }}
-      >
-        <DataGrid
-          rows={masjidList}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {},
+      {loading ? (
+        <Spinner />
+      ) : (
+        <Box
+          sx={{
+            height: "100vh",
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            "& .super-app-theme--header": {
+              backgroundColor: "#194373",
+              color: "#fff",
+            },
+            "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
+              outline: "none !important", // Remove the focus outline
+              border: "none !important", // Remove the border when the cell is focused
+              boxShadow: "none !important", // Remove any box shadow
+            },
+            "& .even-row:hover, & .odd-row:hover": {
+              backgroundColor: "#f2f2f2", // Remove the background color on hover
             },
           }}
-          getRowId={getRowId}
-          getRowClassName={getRowClassName}
-          headerCheckboxSelectionComponent={CustomCheckboxHeader}
-          pageSizeOptions={[5, 10, 15, 20, 100]}
-          disableSelectionOnClick // Add this line to disable cell selection
-          selectionModel={{}}
-          disableRowSelectionOnClick
-          slots={{
-            toolbar: GridToolbar,
-            printOptions: {
-              getRowsToExport: getSelectedRowsToExport,
-              hideFooter: true,
-              hideToolbar: true,
-              includeCheckboxes: true,
-            },
-          }}
-        />
-        {/* <Modal
+        >
+          <DataGrid
+            rows={masjidList}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {},
+              },
+            }}
+            getRowId={getRowId}
+            getRowClassName={getRowClassName}
+            headerCheckboxSelectionComponent={CustomCheckboxHeader}
+            pageSizeOptions={[5, 10, 15, 20, 100]}
+            disableSelectionOnClick // Add this line to disable cell selection
+            selectionModel={{}}
+            disableRowSelectionOnClick
+            slots={{
+              toolbar: GridToolbar,
+              printOptions: {
+                getRowsToExport: getSelectedRowsToExport,
+                hideFooter: true,
+                hideToolbar: true,
+                includeCheckboxes: true,
+              },
+            }}
+          />
+          {/* <Modal
           open={isModalOpen}
           onClose={handleCloseModal}
           style={{ width: "100%" }}
@@ -368,8 +347,8 @@ function MasjidRequestList() {
             />
           </Box>
         </Modal> */}
-      </Box>)
-      }
+        </Box>
+      )}
     </>
   );
 }

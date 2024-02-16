@@ -2,7 +2,7 @@
 // import './index.css';
 // import logo from '../../utils/masjidImage.png';
 // import 'bootstrap/dist/css/bootstrap.min.css';
-       
+
 //         const MosqueForm = () => {
 //           const [formData, setFormData] = useState({
 //             name: '',
@@ -19,14 +19,14 @@
 //             subTitle: '',
 //             adminNotes: '',
 //           });
-       
+
 //           const handleChange = (e) => {
 //             setFormData({
 //               ...formData,
 //               [e.target.name]: e.target.value,
 //             });
 //           };
-       
+
 //           return (
 //             <div className="mosque-form-container">
 //                 <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
@@ -48,7 +48,7 @@
 //                   Name:
 //                   <input className='form-control dashboard-input-textarea form-row-single' style={{backgroundColor:"#e9ecef"}} type="text" name="name" value={formData.name} onChange={handleChange} />
 //                 </label>
-               
+
 //               </div>
 //               <div className="form-row">
 //               <label>
@@ -78,7 +78,7 @@
 //                   Country:
 //                   <input className='form-control-double dashboard-input-textarea' type="text" name="country" style={{backgroundColor:"#e9ecef"}} value={formData.country} onChange={handleChange} />
 //                 </label>
-               
+
 //               </div>
 //               <div className="form-row">
 //               <label>
@@ -89,7 +89,7 @@
 //                   Longitude:
 //                   <input className='form-control-double dashboard-input-textarea' type="text" name="longitude" value={formData.longitude} onChange={handleChange} />
 //                 </label>
-               
+
 //               </div>
 //               <div className="form-row">
 //               <label>
@@ -112,7 +112,7 @@
 //                     onChange={handleChange}
 //                   />
 //                 </label>
-               
+
 //               </div>
 //               <div className="form-row">
 //               <label>
@@ -135,7 +135,7 @@
 //                     onChange={handleChange}
 //                   />
 //                 </label>
-               
+
 //               </div>
 //               <div style = {{width: "100"}}>
 //               <label>
@@ -143,7 +143,7 @@
 //                   <input className='form-control-title dashboard-input-textarea' type="text" name="subTitle" value={formData.subTitle} onChange={handleChange} />
 //                 </label>
 //               </div>
-             
+
 //               <div className="form-row">
 //                 <label>
 //                   Admin Notes:
@@ -161,20 +161,20 @@
 //               <button className='save-button-color'>Save</button>
 //               </div>
 //             </div>
-           
+
 //           );
 //         };
-       
+
 // export default MosqueForm;
 
-import React, { useEffect, useState } from 'react';
-import './index.css';
-import logo from '../../utils/masjidImage.png';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Toast from '../../utils/Toast';
-import Cookies from 'js-cookie';
+import React, { useEffect, useState } from "react";
+import "./index.css";
+import logo from "../../utils/masjidImage.png";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Toast from "../../utils/Toast";
+import Cookies from "js-cookie";
 import { AiOutlineFilePdf } from "react-icons/ai";
- 
+
 const MosqueForm = () => {
   const [formData, setFormData] = useState({
     masjeedname: "",
@@ -197,8 +197,8 @@ const MosqueForm = () => {
   const [selectedStateIso2, setSelectedStateIso2] = useState("");
   const [selectedCountryName, setSelectedCountryName] = useState("");
 
-  const [editMode,setEditMode] = useState(false)
- 
+  const [editMode, setEditMode] = useState(false);
+
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     const file = type === "file" ? files[0] : null;
@@ -208,6 +208,8 @@ const MosqueForm = () => {
       [name]: type === "file" ? file : value,
     });
   };
+
+  const url = process.env.REACT_APP_BASE_URL;
 
   const fetchCountries = async () => {
     const headers = new Headers();
@@ -288,8 +290,6 @@ const MosqueForm = () => {
     }
   };
 
-  
-
   const handleCountryChange = (e) => {
     const selectedCountryId = e.target.value;
     const selectedCountry = countries.find(
@@ -323,7 +323,6 @@ const MosqueForm = () => {
     }
   };
 
-
   const handleCityChange = (e) => {
     const selectedCityId = e.target.value;
     const name = e.target.name;
@@ -334,186 +333,184 @@ const MosqueForm = () => {
       setCities([]);
     }
   };
- 
+
   const token = Cookies.get("user");
   const fetchData = async () => {
-      
-      const options = {
-        method: "GET", 
+    const options = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const api = `${url}getmasjeeddetails`;
+    try {
+      const response = await fetch(api, options);
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      Toast.fire({
+        icon: "success",
+        title: data.message,
+      });
+
+      const masjeedData = data.data[0];
+
+      console.log(masjeedData, "data");
+
+      setFormData({
+        masjeedname: masjeedData.masjeedname,
+        adminname: masjeedData.adminname,
+        email: masjeedData.email,
+        phonenumber: masjeedData.phonenumber,
+        country: masjeedData.country,
+        state: masjeedData.state,
+        city: masjeedData.city,
+        postalcode: masjeedData.postalcode,
+        address: masjeedData.address,
+        file: masjeedData.prayerdetails,
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    fetchCountries();
+  }, []);
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    const form = new FormData();
+    form.append("masjeedname", formData.masjeedname);
+    form.append("adminname", formData.adminname);
+    form.append("email", formData.email);
+    form.append("phonenumber", formData.phonenumber);
+    form.append("country", selectedCountryIso2);
+    form.append("state", selectedStateIso2);
+    form.append("city", formData.city);
+    form.append("postalcode", formData.postalcode);
+    form.append("address", formData.address);
+    form.append("file", formData.file);
+
+    console.log(form, "kakaj");
+
+    try {
+      const response = await fetch(`${url}updatemasjeeddetails`, {
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
-        }, 
-      };
-      const api = `http://localhost:3009/api/v1/getmasjeeddetails`;
-      try {
-        const response = await fetch(api, options);
-  
-        if (!response.ok) {
-          throw new Error(`Request failed with status: ${response.status}`);
-        }
-  
+        },
+
+        body: form,
+      });
+
+      if (response.ok) {
+        setFormData({
+          masjeedname: "",
+          adminname: "",
+          email: "",
+          phonenumber: "",
+          country: "",
+          state: "",
+          city: "",
+          postalcode: "",
+          address: "",
+          file: null,
+        });
+        setEditMode(false);
+        fetchData();
         const data = await response.json();
         Toast.fire({
           icon: "success",
           title: data.message,
         });
-       
-        const masjeedData = data.data[0]
-
-        console.log(masjeedData,"data")
-        
-
-        
-        setFormData({
-          masjeedname: masjeedData.masjeedname,
-          adminname: masjeedData.adminname,
-          email: masjeedData.email,
-          phonenumber: masjeedData.phonenumber,
-          country:masjeedData.country,
-          state: masjeedData.state,
-          city:masjeedData.city,
-          postalcode: masjeedData.postalcode,
-          address: masjeedData.address,
-          file:masjeedData.prayerdetails
+      } else {
+        console.error(
+          "Failed to submit form:",
+          response.status,
+          response.statusText
+        );
+        const data = await response.json();
+        Toast.fire({
+          icon: "error",
+          title: data.message,
         });
-        
-      } catch (error) {
-        console.error("Error fetching data:", error);
       }
-    };
-  
-    useEffect( () => {
-      fetchData();
-      fetchCountries()
-      
-    }, []);
-     
-  const handleSave=async (e)=>{
-      e.preventDefault();
-      const form = new FormData();
-      form.append("masjeedname", formData.masjeedname);
-      form.append("adminname", formData.adminname);
-      form.append("email", formData.email);
-      form.append("phonenumber", formData.phonenumber);
-      form.append("country", selectedCountryIso2);
-      form.append("state", selectedStateIso2);
-      form.append("city", formData.city);
-      form.append("postalcode", formData.postalcode);
-      form.append("address", formData.address);
-      form.append("file", formData.file);
-
-      console.log(form,"kakaj")
-  
-      try {
-        const response = await fetch("http://localhost:3009/api/v1/updatemasjeeddetails", {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }, 
-  
-          body: form,
-        });
-  
-        if (response.ok) {
-          setFormData({
-            masjeedname: "",
-            adminname: "",
-            email: "",
-            phonenumber: "",
-            country: "",
-            state: "",
-            city: "",
-            postalcode: "",
-            address: "",
-            file: null,
-          });
-          setEditMode(false)
-          fetchData()
-          const data = await response.json();
-          Toast.fire({
-            icon: "success",
-            title: data.message,
-          });
-         
-        } else {
-          console.error(
-            "Failed to submit form:",
-            response.status,
-            response.statusText
-          );
-          const data = await response.json();
-          Toast.fire({
-            icon: "error",
-            title: data.message,
-          });
-        }
-      } catch (error) {
-        console.error("Error submitting form:", error.message);
-      }
-    };
-
-    const handleEdit=()=>{
-      setEditMode(true)
+    } catch (error) {
+      console.error("Error submitting form:", error.message);
     }
+  };
 
-    const openFileInNewTab = (fileURL) => {
-      if (fileURL) {
-        window.open(`http://localhost:3009/${fileURL}`, "_blank");
-      }
-    };
- 
+  const handleEdit = () => {
+    setEditMode(true);
+  };
+
+  const openFileInNewTab = (fileURL) => {
+    if (fileURL) {
+      window.open(`http://localhost:3009/${fileURL}`, "_blank");
+    }
+  };
+
   return (
     <div className="container mosque-form-container">
       <div className="row">
-        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-            <div>
-                <h1 className='first-part-heading'>Edit Masjid</h1>
-            </div>
-            <div className='first-masjid-part-two'>
-                <p className='first-part-timing'>Timing screen</p>
-                <p className='first-part-info'>info screen</p>
-                <p className='first-part-timing-info'>Timing info screen</p>
-                <p className='first-part-salah'>Multiple salah screen</p>
-                <p className='first-part-share'>Share screen</p>
-            </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <div>
+            <h1 className="first-part-heading">Edit Masjid</h1>
+          </div>
+          <div className="first-masjid-part-two">
+            <p className="first-part-timing">Timing screen</p>
+            <p className="first-part-info">info screen</p>
+            <p className="first-part-timing-info">Timing info screen</p>
+            <p className="first-part-salah">Multiple salah screen</p>
+            <p className="first-part-share">Share screen</p>
+          </div>
         </div>
       </div>
-      <div className="row" >
+      <div className="row">
         <div>
           <div className="col-md-6 col-12">
-          <div className="form-group">
-            <label>Masjid Name:</label>
-            <input
-              className="form-control"
-              style={{ backgroundColor: '#e9ecef' }}
-              type="text"
-              placeholder='Enter Your Masjid Name'
-              name="masjeedname"
-              value={formData.masjeedname}
-              onChange={handleChange}
-            />
-          </div>
+            <div className="form-group">
+              <label>Masjid Name:</label>
+              <input
+                className="form-control"
+                style={{ backgroundColor: "#e9ecef" }}
+                type="text"
+                placeholder="Enter Your Masjid Name"
+                name="masjeedname"
+                value={formData.masjeedname}
+                onChange={handleChange}
+              />
+            </div>
           </div>
           <div className="col-md-6 col-12">
-          <div className="form-group">
-            <label>Admin Name:</label>
-            <input
-              className="form-control"
-              style={{ backgroundColor: '#e9ecef' }}
-              type="text"
-              placeholder='Enter Your Admin Name'
-              name="adminname"
-              value={formData.adminname}
-              onChange={handleChange}
-            />
+            <div className="form-group">
+              <label>Admin Name:</label>
+              <input
+                className="form-control"
+                style={{ backgroundColor: "#e9ecef" }}
+                type="text"
+                placeholder="Enter Your Admin Name"
+                name="adminname"
+                value={formData.adminname}
+                onChange={handleChange}
+              />
+            </div>
           </div>
-          </div>
-          </div>
-          </div>
-          <div className="row">
- 
- 
-          <div className="col-md-6 col-12">
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-6 col-12">
           <div className="form-group">
             <label>Email:</label>
             <input
@@ -525,48 +522,53 @@ const MosqueForm = () => {
               onChange={handleChange}
             />
           </div>
-          </div>
-         
- 
-          <div className="col-md-6 col-12">
-            <label>Phone Number</label>
+        </div>
+
+        <div className="col-md-6 col-12">
+          <label>Phone Number</label>
+          <input
+            type="text"
+            placeholder="Enter Your phone Number"
+            className="form-control"
+            name="phoneNumber"
+            value={formData.phonenumber}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-6 col-12">
+          <label>Country:</label>
+          {editMode ? (
+            <select
+              onChange={handleCountryChange}
+              className="form-control"
+              name="country"
+              value={formData.country}
+            >
+              <option value="">Select Country</option>
+              {countries.map((country) => (
+                <option key={country.id} value={country.iso2}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
+          ) : (
             <input
               type="text"
-              placeholder="Enter Your phone Number"
               className="form-control"
-              name="phoneNumber"
-              value={formData.phonenumber}
-              onChange={handleChange}
+              value={formData.country}
             />
-          </div>
-          </div>
-          <div className="row">
-          <div className="col-md-6 col-12">
-            <label>Country:</label>
-            {editMode?
-            <select
-            onChange={handleCountryChange}
-            className="form-control"
-            name="country"
-            value={formData.country}
-          >
-            <option value="">Select Country</option>
-            {countries.map((country) => (
-              <option key={country.id} value={country.iso2}>
-                {country.name}
-              </option>
-            ))}
-          </select>:<input type="text" className="form-control" value={formData.country}/>}
-          </div>
-          <div className="col-12 col-md-6">
-            <label>State:</label>
-            {editMode?
+          )}
+        </div>
+        <div className="col-12 col-md-6">
+          <label>State:</label>
+          {editMode ? (
             <select
               onChange={handleStateChange}
               className="form-control"
               name="state"
               value={formData.state}
-              
             >
               <option value="">Select State</option>
               {states.map((state) => (
@@ -574,15 +576,20 @@ const MosqueForm = () => {
                   {state.name}
                 </option>
               ))}
-            </select>:<input type="text" className="form-control" value={formData.state}/>}
-          </div>
-         
-          </div>
-          <div className="row">
-          <div className="col-12 col-md-6">
-            <label>City:</label>
-            {editMode?
-           
+            </select>
+          ) : (
+            <input
+              type="text"
+              className="form-control"
+              value={formData.state}
+            />
+          )}
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-12 col-md-6">
+          <label>City:</label>
+          {editMode ? (
             <select
               onChange={handleCityChange}
               className="form-control"
@@ -595,51 +602,46 @@ const MosqueForm = () => {
                   {city.name}
                 </option>
               ))}
-            </select>: <input type="text" className="form-control" value={formData.city}/>
-      }
-          </div>
-          <div className="col-12 col-md-6">
-            <label>Postal Code:</label>
-            <input
-              className="form-control"
-              type="text"
-              name="postalcode"
-              placeholder="Enter Your Postal Code"
-              value={formData.postalcode}
-              onChange={handleChange}
-            />
-          </div>
-          </div>
-       
-       
- 
-       
-     
- 
+            </select>
+          ) : (
+            <input type="text" className="form-control" value={formData.city} />
+          )}
+        </div>
+        <div className="col-12 col-md-6">
+          <label>Postal Code:</label>
+          <input
+            className="form-control"
+            type="text"
+            name="postalcode"
+            placeholder="Enter Your Postal Code"
+            value={formData.postalcode}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
       <div className="row">
-      <div className="col-12 col-md-6">
-            <label>Street Address:</label>
-            <input
-              className="form-control"
-              type="text"
-              name="address"
-              placeholder="Enter Your Street Address"
-              value={formData.address}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-12 col-md-6">
-            <label>Timing Sheet</label>
-            <input
-              className="form-control"
-              type="file"
-              name="file"
-              required
-              onChange={handleChange}
-              
-            />
-          </div>
-       
+        <div className="col-12 col-md-6">
+          <label>Street Address:</label>
+          <input
+            className="form-control"
+            type="text"
+            name="address"
+            placeholder="Enter Your Street Address"
+            value={formData.address}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-12 col-md-6">
+          <label>Timing Sheet</label>
+          <input
+            className="form-control"
+            type="file"
+            name="file"
+            required
+            onChange={handleChange}
+          />
+        </div>
       </div>
       {/* <div style={{ display: "flex", margin: "20px" }}>
                 <p onClick={() => openFileInNewTab(formData.file)}
@@ -651,14 +653,35 @@ const MosqueForm = () => {
               </div>
  */}
       <div className="row">
-        <div className="col-12" style={{display:"flex", flexDirection:"row-reverse", color:"white"}}>
-          {editMode ?
-          <button className="btn btn-info mt-2" style={{color:"#ffffff"}} onClick={handleSave}>Save</button>:
-          <button className="btn btn-warning mt-2" style={{color:"#ffffff"}} onClick={handleEdit}>Edit</button>}
+        <div
+          className="col-12"
+          style={{
+            display: "flex",
+            flexDirection: "row-reverse",
+            color: "white",
+          }}
+        >
+          {editMode ? (
+            <button
+              className="btn btn-info mt-2"
+              style={{ color: "#ffffff" }}
+              onClick={handleSave}
+            >
+              Save
+            </button>
+          ) : (
+            <button
+              className="btn btn-warning mt-2"
+              style={{ color: "#ffffff" }}
+              onClick={handleEdit}
+            >
+              Edit
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 };
- 
+
 export default MosqueForm;

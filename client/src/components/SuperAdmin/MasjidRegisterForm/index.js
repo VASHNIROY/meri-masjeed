@@ -252,25 +252,26 @@ const MasjidRegisterForm = () => {
     form.append("file", formData.file);
 
     console.log(form, "formData");
+    const url = process.env.REACT_APP_BASE_URL;
 
     try {
-      const response = await fetch("http://localhost:3009/api/v1/addmasjeed", {
+      const response = await fetch(`${url}addmasjeed`, {
         method: "POST",
 
         body: form,
       });
       setFormData({
-      masjeedname: "",
-      adminname: "",
-      email: "",
-      phonenumber: "",
-      country: "",
-      state: "",
-      city: "",
-      postalcode: "",
-      address: "",
-      file: null,
-    })
+        masjeedname: "",
+        adminname: "",
+        email: "",
+        phonenumber: "",
+        country: "",
+        state: "",
+        city: "",
+        postalcode: "",
+        address: "",
+        file: null,
+      });
 
       if (response.ok) {
         console.log("Form submitted successfully!");
@@ -456,7 +457,6 @@ const MasjidRegisterForm = () => {
 
   return (
     <>
-      
       <div className="masid-regiser-form">
         <h1 className="masid-register-heading">Register your Masjid!</h1>
       </div>

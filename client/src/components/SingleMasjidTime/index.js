@@ -1,5 +1,5 @@
 import * as React from "react";
-import './index.css'
+import "./index.css";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import { MdToggleOn } from "react-icons/md";
@@ -15,10 +15,9 @@ import {
   gridFilteredSortedRowIdsSelector,
 } from "@mui/x-data-grid";
 
-
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import Clock from "../Home/Clock";
 import Toast from "../utils/Toast";
@@ -34,47 +33,43 @@ const getSelectedRowsToExport = ({ apiRef }) => {
   return gridFilteredSortedRowIdsSelector(apiRef);
 };
 
-
-
 function SingleMasjidTime() {
+  const { id } = useParams();
 
-  const {id} = useParams()
-  
   const [masjidTimingList, setMasjidTimingList] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchData = async (
-   
-  ) => {
+  const url = process.env.REACT_APP_BASE_URL;
+
+  const fetchData = async () => {
     const token = Cookies.get("user");
-    setLoading(true)
-    
-    
+    setLoading(true);
+
     const options = {
-      method: "GET", 
+      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
-      }, 
+      },
     };
-    const api = `http://localhost:3009/api/v1/getTodaySchedule/${id}`;
+    const api = `${url}getTodaySchedule/${id}`;
     try {
       const response = await fetch(api, options);
 
       if (!response.ok) {
         throw new Error(`Request failed with status: ${response.status}`);
       }
-      setLoading(false)
+      setLoading(false);
 
       const data = await response.json();
-        Toast.fire({
-          icon: "success",
-          title: data.message,
-        });
-      console.log(data,"kapil");
+      Toast.fire({
+        icon: "success",
+        title: data.message,
+      });
+      console.log(data, "kapil");
       setMasjidTimingList(data.todayTimings);
-      console.log(data.todayTimings,"kkkkk")
+      console.log(data.todayTimings, "kkkkk");
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -115,8 +110,7 @@ function SingleMasjidTime() {
       flex: 1,
       sortable: false,
     },
-    
-      
+
     // {
     //   field: "actions",
     //   type: "actions",
@@ -148,8 +142,7 @@ function SingleMasjidTime() {
     //           onClick={() => handleDeleteClick(id)}
     //           color="red"
     //         />
-          
-          
+
     //     ];
     //   },
     // },
@@ -161,67 +154,63 @@ function SingleMasjidTime() {
     return params.row.id % 2 === 1 ? "even-row" : "odd-row";
   };
 
-  console.log(masjidTimingList,"masjidTimingList")
+  console.log(masjidTimingList, "masjidTimingList");
 
   return (
     <>
-       { loading ?
-    
-    <Spinner/>:(<div className="select-masjid-time-flex-container">
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="select-masjid-time-flex-container">
+          <Clock masjidTimingList={masjidTimingList} />
+          {masjidTimingList.length > 0 && (
+            <Box
+              sx={{
+                marginTop: "20px",
 
-      <Clock masjidTimingList={masjidTimingList}/>
-      {masjidTimingList.length>0 && 
-      <Box
-        sx={{
-          marginTop:"20px",
-          
-          display: "flex",
-          justifyContent: "space-between",
-          "& .super-app-theme--header": {
-            backgroundColor: "#194373",
-            color: "#fff",
-          },
-          "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
-            outline: "none !important", // Remove the focus outline
-            border: "none !important", // Remove the border when the cell is focused
-            boxShadow: "none !important", // Remove any box shadow
-          },
-          "& .even-row:hover, & .odd-row:hover": {
-            backgroundColor: "#f2f2f2", // Remove the background color on hover
-          },
-        }}
-      >
-        <DataGrid
-          rows={masjidTimingList}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {},
-            },
-          }}
-          getRowId={getRowId}
-          getRowClassName={getRowClassName}
-          
-          pageSizeOptions={[5, 10, 15, 20, 100]}
-          disableSelectionOnClick // Add this line to disable cell selection
-          selectionModel={{}}
-          disableRowSelectionOnClick
-          slots={{
-            
-            printOptions: {
-              getRowsToExport: getSelectedRowsToExport,
-              hideFooter: true,
-              hideToolbar: true,
-              includeCheckboxes: true,
-            },
-          }}
-        />
-
-        
-      </Box>
-}
-    </div>)
-    }
+                display: "flex",
+                justifyContent: "space-between",
+                "& .super-app-theme--header": {
+                  backgroundColor: "#194373",
+                  color: "#fff",
+                },
+                "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
+                  outline: "none !important", // Remove the focus outline
+                  border: "none !important", // Remove the border when the cell is focused
+                  boxShadow: "none !important", // Remove any box shadow
+                },
+                "& .even-row:hover, & .odd-row:hover": {
+                  backgroundColor: "#f2f2f2", // Remove the background color on hover
+                },
+              }}
+            >
+              <DataGrid
+                rows={masjidTimingList}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {},
+                  },
+                }}
+                getRowId={getRowId}
+                getRowClassName={getRowClassName}
+                pageSizeOptions={[5, 10, 15, 20, 100]}
+                disableSelectionOnClick // Add this line to disable cell selection
+                selectionModel={{}}
+                disableRowSelectionOnClick
+                slots={{
+                  printOptions: {
+                    getRowsToExport: getSelectedRowsToExport,
+                    hideFooter: true,
+                    hideToolbar: true,
+                    includeCheckboxes: true,
+                  },
+                }}
+              />
+            </Box>
+          )}
+        </div>
+      )}
     </>
   );
 }
