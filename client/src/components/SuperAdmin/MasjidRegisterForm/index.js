@@ -272,6 +272,10 @@ const MasjidRegisterForm = () => {
         address: "",
         file: null,
       });
+      setCountries([]);
+      setStates([]);
+      setCities([]);
+      document.querySelector('input[type="file"]').value = "";
 
       if (response.ok) {
         console.log("Form submitted successfully!");

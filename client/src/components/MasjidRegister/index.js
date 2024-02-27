@@ -73,6 +73,10 @@ const MasidRegister = () => {
           address: "",
           file: null,
         });
+        setCountries([]);
+        setStates([]);
+        setCities([]);
+        document.querySelector('input[type="file"]').value = "";
         const data = await response.json();
         Toast.fire({
           icon: "success",
