@@ -8,10 +8,15 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install project dependencies
-RUN npm install --force
+RUN npm install --production
 
 # Copy all project files to the working directory
 COPY . .
 
 # Expose the port that the app will run on
 EXPOSE 8000
+
+#run application
+CMD ["node", "server.js"]
+
+

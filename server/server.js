@@ -11,5 +11,5 @@ app.listen(port, () => {
 connection.connect((err) => {
   if (err) throw err;
   console.log("connected to DB");
-  createTables();
+  //createTables();
 });
