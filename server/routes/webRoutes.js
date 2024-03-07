@@ -8,8 +8,10 @@ import {
   databaseCountries,
   databaseMasjeeds,
   databaseStates,
+  getWebMessages,
   todaySchedule,
 } from "../controllers/webControllers.js";
+import { getmessages } from "../controllers/adminController.js";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -38,3 +40,5 @@ webRouter.get("/getStates", databaseStates);
 webRouter.get("/getCities", databaseCities);
 
 webRouter.get("/getwebmasjeeds", databaseMasjeeds);
+
+webRouter.get("/getwebmessages", getWebMessages);

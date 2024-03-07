@@ -90,11 +90,9 @@ export const superAdminLogin = CatchAsyncError(async (req, res, next) => {
 });
 
 export const masjeedsList = CatchAsyncError(async (req, res, next) => {
-  console.log("triggered");
   try {
     const getMasjeedsQuery = `SELECT * FROM masjeed WHERE status = 1`;
     connection.query(getMasjeedsQuery, (selectErr, results) => {
-      console.log("triggered2");
       if (selectErr) {
         console.log("Error fetching masjeeds from Database", selectErr);
         return next(new ErrorHandler("Internal Server Error", 500));
@@ -162,7 +160,6 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
               return next(new ErrorHandler("Internal Server Error", 500));
             }
 
-            console.log("masjeedDetails", masjeedDetails);
             if (masjeedDetails.length === 0) {
               return next(new ErrorHandler("masjeed not found", 404));
             }
@@ -170,7 +167,6 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
             const name = masjeedDetails[0].adminname;
             const email = masjeedDetails[0].email;
             const phonenumber = masjeedDetails[0].phonenumber;
-            console.log(name, email, phonenumber);
 
             const addadminQuery = `INSERT INTO admin(name,email,password,status,phonenumber) VALUES(?,?,?,?,?)`;
             const password = "123456";
@@ -416,6 +412,135 @@ export const rejectMasjeed = CatchAsyncError(async (req, res, next) => {
     );
 
     res.json({ success: true, message: "Rejected Masjeed" });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
+
+export const addMasjeedToFavourite = CatchAsyncError(async (req, res, next) => {
+  try {
+    const { id } = req.body;
+
+    // Check if the id already exists in the favouritemasjeeds table
+    const checkExistenceQuery =
+      "SELECT * FROM favouritemasjeeds WHERE favouritemasjeddid = ?";
+    connection.query(checkExistenceQuery, [id], (selectErr, results) => {
+      if (selectErr) {
+        console.error("Error checking existence:", selectErr);
+        return next(new ErrorHandler("Internal Server Error", 500));
+      }
+
+      if (results.length > 0) {
+        return next(
+          new ErrorHandler("Masjeed already added to favourites", 400)
+        );
+      }
+
+      // If the id doesn't exist, insert it into the favouritemasjeeds table
+      const insertMasjeedIdQuery =
+        "INSERT INTO favouritemasjeeds(favouritemasjeddid) VALUES (?)";
+      connection.query(insertMasjeedIdQuery, [id], (error) => {
+        if (error) {
+          console.error("Error adding masjeed to favourites:", error);
+          return next(new ErrorHandler("Internal Server Error", 500));
+        }
+        res.status(201).json({
+          success: true,
+          message: "Added to Favourite List",
+        });
+      });
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
+
+export const getFavouriteMasjeeds = CatchAsyncError(async (req, res, next) => {
+  try {
+    const favouriteMasjeedsQuery = "SELECT * FROM favouritemasjeeds";
+
+    // Execute the query to get favourite masjeed IDs
+    const favouriteMasjeeds = await new Promise((resolve, reject) => {
+      connection.query(favouriteMasjeedsQuery, (selectErr, results) => {
+        if (selectErr) {
+          console.log("Error fetching masjeeds from favourites", selectErr);
+          reject(new ErrorHandler("Internal Server Error", 500));
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    // Check if there are no favourite masjeeds
+    if (favouriteMasjeeds.length === 0) {
+      return next(new ErrorHandler("Masjeeds Not Found", 404));
+    }
+
+    // Fetch masjeed details for each favourite masjeed ID
+    for (const favouritemasjeddid of favouriteMasjeeds) {
+      const masjeedDetails = await new Promise((resolve, reject) => {
+        connection.query(
+          "SELECT * FROM masjeed WHERE id = ?",
+          [favouritemasjeddid.id],
+          (error, output) => {
+            if (error) {
+              console.error("Error fetching data:", error);
+              reject(new ErrorHandler("Internal Server Error", 500));
+            } else {
+              resolve(output);
+            }
+          }
+        );
+      });
+
+      // Attach masjeed details to the favourite masjeed object
+      if (masjeedDetails.length === 0) {
+        return next(new ErrorHandler("No data found for this ID", 400));
+      } else {
+        favouritemasjeddid.masjeedDetails = masjeedDetails[0];
+      }
+    }
+
+    res.json({
+      success: true,
+      message: "Fetched masjeed",
+      data: favouriteMasjeeds,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
+
+
+export const deleteFavouriteMasjeed = CatchAsyncError(async (req, res, next) => {
+  try {
+    const { id } = req.body;
+
+    // Check if the favouritemasjeedid exists
+    const checkExistenceQuery = "SELECT * FROM favouritemasjeeds WHERE favouritemasjeddid = ?";
+    connection.query(checkExistenceQuery, [id], (selectErr, results) => {
+      if (selectErr) {
+        console.error("Error checking existence:", selectErr);
+        return next(new ErrorHandler("Internal Server Error", 500));
+      }
+
+      if (results.length === 0) {
+        return next(new ErrorHandler("Masjeed not found in favourites", 404));
+      }
+
+      // If the favouritemasjeedid exists, delete it from the favouritemasjeeds table
+      const deleteQuery = "DELETE FROM favouritemasjeeds WHERE favouritemasjeddid = ?";
+      connection.query(deleteQuery, [id], (deleteErr, _) => {
+        if (deleteErr) {
+          console.error("Error deleting masjeed from favourites:", deleteErr);
+          return next(new ErrorHandler("Internal Server Error", 500));
+        }
+        res.status(200).json({
+          success: true,
+          message: "Masjeed removed from favourites",
+        });
+      });
+    });
   } catch (error) {
     return next(new ErrorHandler(error.message, 400));
   }

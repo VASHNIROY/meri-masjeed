@@ -22,11 +22,18 @@ const MessageForm = ({ onClose, fetchMessage }) => {
   const [showContent, setShowContent] = useState(false);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    const { name, value, files } = e.target;
+    if (files) {
+      setFormData({
+        ...formData,
+        file: files[0],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const url = process.env.REACT_APP_BASE_URL;
@@ -35,7 +42,7 @@ const MessageForm = ({ onClose, fetchMessage }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("called...");
+
     const form = new FormData();
     form.append("title", formData.title);
     form.append("type", formData.type);
@@ -45,7 +52,11 @@ const MessageForm = ({ onClose, fetchMessage }) => {
     form.append("enddate", formData.enddate);
     form.append("status", formData.status);
 
-    console.log(form, "formData");
+    // Append files if type is audio or image
+    if (formData.type === "audio" || formData.type === "image") {
+      // Assuming you have a file input named 'file'
+      form.append("file", e.target.file.files[0]);
+    }
 
     try {
       const response = await fetch(`${url}addmessage`, {
@@ -198,27 +209,13 @@ const MessageForm = ({ onClose, fetchMessage }) => {
               ""
             )}
           </div>
-          {formData.type === "image" && (
-            <div className="masjid-message-field-container">
-              <label className="masjid-message-lable">
-                Upload Image
-                <input
-                  type="file"
-                  name="description"
-                  onChange={handleInputChange}
-                  accept="image/*"
-                  className="masjid-message-input"
-                />
-              </label>
-            </div>
-          )}
           {formData.type === "audio" && (
             <div className="masjid-message-field-container">
               <label className="masjid-message-lable">
                 Upload Audio
                 <input
                   type="file"
-                  name="description"
+                  name="file"
                   onChange={handleInputChange}
                   accept="audio/*"
                   className="masjid-message-input"
@@ -226,6 +223,22 @@ const MessageForm = ({ onClose, fetchMessage }) => {
               </label>
             </div>
           )}
+          {formData.type === "image" && (
+  <div className="masjid-message-field-container">
+    <label className="masjid-message-lable">
+      Upload Image
+      <input
+        type="file"
+        name="file"
+        onChange={handleInputChange}
+        accept="image/*"
+        className="masjid-message-input"
+      />
+    </label>
+  </div>
+)}
+
+
           {formData.type === "text" && (
             <div className="masjid-message-field-container">
               <textarea

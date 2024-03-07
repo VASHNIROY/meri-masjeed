@@ -1,6 +1,9 @@
 import express from "express";
 import {
+  addMasjeedToFavourite,
   approveMasjeed,
+  deleteFavouriteMasjeed,
+  getFavouriteMasjeeds,
   masjeedsList,
   newMasjeeds,
   rejectMasjeed,
@@ -29,4 +32,22 @@ superadminrouter.put(
   "/rejectmasjeed/:id",
   isAuthenticatedSuperAdmin,
   rejectMasjeed
+);
+
+superadminrouter.post(
+  "/addtofavourite",
+  isAuthenticatedSuperAdmin,
+  addMasjeedToFavourite
+);
+
+superadminrouter.get(
+  "/favouritemasjeeds",
+  isAuthenticatedSuperAdmin,
+  getFavouriteMasjeeds
+);
+
+superadminrouter.post(
+  "/removefavourite",
+  isAuthenticatedSuperAdmin,
+  deleteFavouriteMasjeed
 );

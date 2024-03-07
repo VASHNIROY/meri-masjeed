@@ -82,39 +82,6 @@ export const addMasjeed = CatchAsyncError(async (req, res, next) => {
   }
 });
 
-// export const todaySchedule = CatchAsyncError(async (req, res, next) => {
-//   try {
-//     const masjeedid = req.params.id;
-//     // Fetch filename from the database
-//     const selectQuery = "SELECT * FROM prayertimingstable WHERE masjeedid = ?";
-
-//     connection.query(selectQuery, [masjeedid], (selectError, results) => {
-//       if (selectError) {
-//         console.error(
-//           "Error fetching prayerdetails from the database:",
-//           selectError
-//         );
-//         return next(new ErrorHandler("Internal Server Error", 500));
-//       }
-
-//       // Get today's date
-//       const today = new Date();
-//       const todayMonth = today.getMonth() + 1; // Month is 0-indexed in JavaScript
-//       const todayDay = today.getDate();
-//       // Filter data for today's month and day
-
-//       const todaySchedule = results.filter((row) => {
-//         return row.month == todayMonth && row.day == todayDay;
-//       });
-
-//       res.json({ todaySchedule });
-//     });
-//   } catch (error) {
-//     console.log("Error:", error);
-//     return next(new ErrorHandler(error.message, 400));
-//   }
-// });
-
 export const todaySchedule = CatchAsyncError(async (req, res, next) => {
   try {
     const masjeedid = req.params.id;
@@ -136,13 +103,9 @@ export const todaySchedule = CatchAsyncError(async (req, res, next) => {
       const todayDay = today.getDate();
       // Filter data for today's month and day
 
-      console.log(results, todayMonth, todayDay, "kapil");
-
       const todayTimeSchedule = results.filter(
         (row) => row.month == todayMonth && row.day == todayDay
       );
-
-      console.log(todaySchedule, "ram");
 
       const todayTimings = [
         ...todayTimeSchedule.map((row) => ({
@@ -177,7 +140,101 @@ export const todaySchedule = CatchAsyncError(async (req, res, next) => {
         })),
       ];
 
-      res.json({ todayTimings });
+      const masjeedDetailsQuery = "SELECT * FROM masjeed WHERE id = ?";
+
+      connection.query(
+        masjeedDetailsQuery,
+        [masjeedid],
+        (fetchError, results) => {
+          if (fetchError) {
+            console.error(
+              "Error fetching prayer details from the database:",
+              selectError
+            );
+            return next(new ErrorHandler("Internal Server Error", 500));
+          }
+
+          if (results.length === 0) {
+            return next(new ErrorHandler("Masjeed Not Found", 404));
+          }
+
+          const today = new Date();
+
+          const options = {
+            weekday: "long",
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          };
+
+          const formattedDate = new Intl.DateTimeFormat(
+            "en-US",
+            options
+          ).format(today);
+
+          const now = new Date(); // Current time
+
+          let nearestPrayer = null;
+          let nearestTimeDifference = Infinity;
+
+          todayTimings.forEach(({ name, starttime }) => {
+            const [prayerHour, prayerMinute] = starttime.split(":").map(Number);
+            let prayerTime = new Date(
+              now.getFullYear(),
+              now.getMonth(),
+              now.getDate(),
+              prayerHour,
+              prayerMinute
+            );
+
+            // If the prayer time has already passed for today, set it to the next day
+            if (prayerTime < now) {
+              prayerTime = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate() + 1,
+                prayerHour,
+                prayerMinute
+              );
+            }
+
+            const timeDifference = prayerTime - now;
+            if (timeDifference < nearestTimeDifference) {
+              nearestTimeDifference = timeDifference;
+              nearestPrayer = {
+                name,
+                hours: Math.floor(timeDifference / (1000 * 60 * 60)),
+                minutes: Math.floor(
+                  (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+                ),
+              };
+            }
+          });
+
+          results.forEach((result) => {
+            result.date = formattedDate;
+          });
+
+          if (nearestPrayer) {
+            results.forEach((result) => {
+              result.nearestPrayer = ` ${nearestPrayer.name} in ${nearestPrayer.hours} hours and ${nearestPrayer.minutes} minutes.`;
+            });
+          } else {
+            results.forEach((result) => {
+              result.nearestPrayer = "There are no more prayers today.";
+            });
+          }
+
+          results = results[0];
+
+          res.json({
+            success: true,
+            message: "fetched Majeed details",
+            results,
+            todayTimings,
+          });
+        }
+      );
     });
   } catch (error) {
     console.log("Error:", error);
@@ -281,6 +338,32 @@ export const databaseMasjeeds = CatchAsyncError(async (req, res, next) => {
         res.json({ success: true, message: "Fetched masjeeds", data: results });
       }
     );
+  } catch (error) {
+    return next(new ErrorHandler("Internal Server Error", 500));
+  }
+});
+
+export const getWebMessages = CatchAsyncError(async (req, res, next) => {
+  try {
+    const { id } = req.body;
+
+    const getmasjeedmessagesQuery = `SELECT * FROM message WHERE masjeedid = ?`;
+
+    connection.query(getmasjeedmessagesQuery, [id], (error, results) => {
+      if (error) {
+        return next(new ErrorHandler("Internal Server Error", 500));
+      }
+
+      if (results.length === 0) {
+        return next(new ErrorHandler("Messages Not Found", 404));
+      }
+
+      res.json({
+        success: true,
+        message: "Messages Fetched",
+        data: results,
+      });
+    });
   } catch (error) {
     return next(new ErrorHandler("Internal Server Error", 500));
   }

@@ -88,7 +88,7 @@ adminRouter.get("/getiqamahtimigs", isAuthenticatedAdmin, getIqamahDetails);
 adminRouter.post(
   "/addmessage",
   upload.single("file"),
-  isAuthenticatedAdmin, 
+  isAuthenticatedAdmin,
   addmessage
 );
 
