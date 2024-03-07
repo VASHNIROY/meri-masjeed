@@ -8,6 +8,7 @@ import { MdAddToPhotos } from "react-icons/md";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 
 import Spinner from "../Loader";
+import mobileImage from '../utils/mobileImage2.png'
 
 import {
   GridToolbar,
@@ -38,6 +39,12 @@ function SingleMasjidTime() {
 
   const [masjidTimingList, setMasjidTimingList] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [time, setTime] = useState(new Date());
+   const [showBanner, setShowBanner] = useState(false);
+   const [names, setNames] = useState([]);
+   const [remainingMinutes, setRemainingMinutes] = useState(0);
+
 
   const url = process.env.REACT_APP_BASE_URL;
 
@@ -156,59 +163,130 @@ function SingleMasjidTime() {
 
   console.log(masjidTimingList, "masjidTimingList");
 
+
+   useEffect(() => {
+     if (masjidTimingList && masjidTimingList.length > 0) {
+       const updatedNames = masjidTimingList.map(({ name, starttime }) => {
+         const [hours, minutes] = starttime.split(":");
+         return {
+           text: name,
+           dynamicHours: parseInt(hours, 10),
+           dynamicMinutes: parseInt(minutes, 10),
+         };
+       });
+       setNames(updatedNames);
+     }
+   }, [masjidTimingList]);
+
+   useEffect(() => {
+     const currentMinutes = time.getHours() * 60 + time.getMinutes();
+     const nextPrayerIndex = names.findIndex(
+       ({ dynamicHours, dynamicMinutes }) =>
+         currentMinutes < dynamicHours * 60 + dynamicMinutes
+     );
+
+     if (nextPrayerIndex !== -1) {
+       const nextPrayerTime = names[nextPrayerIndex];
+       const remaining =
+         nextPrayerTime.dynamicHours * 60 +
+         nextPrayerTime.dynamicMinutes -
+         currentMinutes;
+
+       setRemainingMinutes(remaining);
+       console.log(remaining, "remaining");
+
+       if (remaining > 0 && remaining < 2) {
+         console.log("kapil");
+         setShowBanner(true);
+         const bannerTimeout = setTimeout(() => {
+           setShowBanner(false);
+         }, 1000);
+
+         return () => clearTimeout(bannerTimeout);
+       }
+     }
+
+     setShowBanner(false); // If remainingMinutes is not 1, hide the banner
+   }, [time, names]);
+
+   const hour = time.getHours();
+   const minute = time.getMinutes();
+   const second = time.getSeconds();
+
+   console.log(showBanner,"showBanner")
+
+   const handleShowBannerChange = (value) => {
+     setShowBanner(value);
+   };
+
+
   return (
     <>
       {loading ? (
         <Spinner />
       ) : (
-        <div className="select-masjid-time-flex-container">
-          <Clock masjidTimingList={masjidTimingList} />
-          {masjidTimingList.length > 0 && (
-            <Box
-              sx={{
-                marginTop: "20px",
-
-                display: "flex",
-                justifyContent: "space-between",
-                "& .super-app-theme--header": {
-                  backgroundColor: "#194373",
-                  color: "#fff",
-                },
-                "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
-                  outline: "none !important", // Remove the focus outline
-                  border: "none !important", // Remove the border when the cell is focused
-                  boxShadow: "none !important", // Remove any box shadow
-                },
-                "& .even-row:hover, & .odd-row:hover": {
-                  backgroundColor: "#f2f2f2", // Remove the background color on hover
-                },
-              }}
-            >
-              <DataGrid
-                rows={masjidTimingList}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: {},
-                  },
-                }}
-                getRowId={getRowId}
-                getRowClassName={getRowClassName}
-                pageSizeOptions={[5, 10, 15, 20, 100]}
-                disableSelectionOnClick // Add this line to disable cell selection
-                selectionModel={{}}
-                disableRowSelectionOnClick
-                slots={{
-                  printOptions: {
-                    getRowsToExport: getSelectedRowsToExport,
-                    hideFooter: true,
-                    hideToolbar: true,
-                    includeCheckboxes: true,
-                  },
-                }}
-              />
-            </Box>
+        <div className="select-masjid-warning-container">
+          {showBanner && (
+            <div className="warningScroll">
+              <div className="warning-scroll-image-container">
+              <img src={mobileImage} alt="" className="warning-scroll-image"/>
+              </div>
+              <p className="warning-text">Please Switch off the mobile phones</p>
+            </div>
           )}
+          <div className="select-masjid-time-flex-container">
+            <Clock
+              masjidTimingList={masjidTimingList}
+              onShowBannerChange={handleShowBannerChange}
+            />
+            {masjidTimingList.length > 0 && (
+              <Box
+                sx={{
+                  marginTop: "20px",
+
+                  display: "flex",
+                  justifyContent: "space-between",
+                  "& .super-app-theme--header": {
+                    backgroundColor: "#194373",
+                    color: "#fff",
+                  },
+                  "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within":
+                    {
+                      outline: "none !important", // Remove the focus outline
+                      border: "none !important", // Remove the border when the cell is focused
+                      boxShadow: "none !important", // Remove any box shadow
+                    },
+                  "& .even-row:hover, & .odd-row:hover": {
+                    backgroundColor: "#f2f2f2", // Remove the background color on hover
+                  },
+                }}
+              >
+                <DataGrid
+                  rows={masjidTimingList}
+                  columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {},
+                    },
+                  }}
+                  getRowId={getRowId}
+                  getRowClassName={getRowClassName}
+                  pageSizeOptions={[5, 10, 15, 20, 100]}
+                  disableSelectionOnClick // Add this line to disable cell selection
+                  selectionModel={{}}
+                  disableRowSelectionOnClick
+                  slots={{
+                    printOptions: {
+                      getRowsToExport: getSelectedRowsToExport,
+                      hideFooter: true,
+                      hideToolbar: true,
+                      includeCheckboxes: true,
+                    },
+                  }}
+                />
+              </Box>
+            )}
+          </div>
         </div>
       )}
     </>
