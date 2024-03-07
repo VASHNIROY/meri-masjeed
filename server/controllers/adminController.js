@@ -879,6 +879,7 @@ export const addmessage = CatchAsyncError(async (req, res, next) => {
     const useremail = req.user.email;
 
     let filename = req.file ? req.file.filename : null;
+    console.log("filename", filename);
 
     if (!filename) {
       filename = req.body.description;

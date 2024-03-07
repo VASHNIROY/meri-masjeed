@@ -342,3 +342,29 @@ export const databaseMasjeeds = CatchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Internal Server Error", 500));
   }
 });
+
+export const getWebMessages = CatchAsyncError(async (req, res, next) => {
+  try {
+    const { id } = req.body;
+
+    const getmasjeedmessagesQuery = `SELECT * FROM message WHERE masjeedid = ?`;
+
+    connection.query(getmasjeedmessagesQuery, [id], (error, results) => {
+      if (error) {
+        return next(new ErrorHandler("Internal Server Error", 500));
+      }
+
+      if (results.length === 0) {
+        return next(new ErrorHandler("Messages Not Found", 404));
+      }
+
+      res.json({
+        success: true,
+        message: "Messages Fetched",
+        data: results,
+      });
+    });
+  } catch (error) {
+    return next(new ErrorHandler("Internal Server Error", 500));
+  }
+});
