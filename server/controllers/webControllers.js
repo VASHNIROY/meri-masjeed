@@ -82,39 +82,6 @@ export const addMasjeed = CatchAsyncError(async (req, res, next) => {
   }
 });
 
-// export const todaySchedule = CatchAsyncError(async (req, res, next) => {
-//   try {
-//     const masjeedid = req.params.id;
-//     // Fetch filename from the database
-//     const selectQuery = "SELECT * FROM prayertimingstable WHERE masjeedid = ?";
-
-//     connection.query(selectQuery, [masjeedid], (selectError, results) => {
-//       if (selectError) {
-//         console.error(
-//           "Error fetching prayerdetails from the database:",
-//           selectError
-//         );
-//         return next(new ErrorHandler("Internal Server Error", 500));
-//       }
-
-//       // Get today's date
-//       const today = new Date();
-//       const todayMonth = today.getMonth() + 1; // Month is 0-indexed in JavaScript
-//       const todayDay = today.getDate();
-//       // Filter data for today's month and day
-
-//       const todaySchedule = results.filter((row) => {
-//         return row.month == todayMonth && row.day == todayDay;
-//       });
-
-//       res.json({ todaySchedule });
-//     });
-//   } catch (error) {
-//     console.log("Error:", error);
-//     return next(new ErrorHandler(error.message, 400));
-//   }
-// });
-
 export const todaySchedule = CatchAsyncError(async (req, res, next) => {
   try {
     const masjeedid = req.params.id;
@@ -187,6 +154,10 @@ export const todaySchedule = CatchAsyncError(async (req, res, next) => {
             return next(new ErrorHandler("Internal Server Error", 500));
           }
 
+          if (results.length === 0) {
+            return next(new ErrorHandler("Masjeed Not Found", 404));
+          }
+
           const today = new Date();
 
           const options = {
@@ -254,7 +225,14 @@ export const todaySchedule = CatchAsyncError(async (req, res, next) => {
             });
           }
 
-          res.json({ results, todayTimings });
+          results = results[0];
+
+          res.json({
+            success: true,
+            message: "fetched Majeed details",
+            results,
+            todayTimings,
+          });
         }
       );
     });

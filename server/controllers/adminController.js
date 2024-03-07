@@ -240,8 +240,6 @@ export const updateTimingRow = CatchAsyncError(async (req, res, next) => {
                 return next(new ErrorHandler("Updated Timings Not Found", 404));
               }
 
-              console.log(selectResults);
-
               const updatedRow = selectResults[0];
 
               // Send the updated row as a response
@@ -479,9 +477,7 @@ export const substractTimingRowToHr = CatchAsyncError(
 
 export const getMasjeedDetails = CatchAsyncError(async (req, res, next) => {
   try {
-    const masjeedid = req.params.id;
     const email = req.user.email;
-    console.log("email", email);
     const masjeedDetailsQuery = `SELECT * FROM masjeed WHERE email = ? AND status = 1`;
     connection.query(masjeedDetailsQuery, [email], (selectErr, results) => {
       if (selectErr) {
@@ -700,7 +696,6 @@ export const getAdminStaffMember = CatchAsyncError(async (req, res, next) => {
     const useremail = req.user.email;
 
     const getmasjeedidQuery = `SELECT id FROM masjeed WHERE email = ? AND status = 1`;
-    console.log(useremail);
     connection.query(getmasjeedidQuery, [useremail], (error, results) => {
       if (error) {
         return next(new ErrorHandler(error.message, 500));
@@ -891,8 +886,6 @@ export const addmessage = CatchAsyncError(async (req, res, next) => {
 
     const { title, startdate, expirydate, status, type, enddate } = req.body;
 
-    console.log(req.body, filename, "kapil");
-
     const getmasjeedidQuery = `SELECT id FROM masjeed WHERE email = ? AND status = 1`;
 
     connection.query(getmasjeedidQuery, [useremail], (error, results) => {
@@ -947,7 +940,6 @@ export const getmessages = CatchAsyncError(async (req, res, next) => {
 
     connection.query(getmasjeedidQuery, [useremail], (error, results) => {
       if (error) {
-        console.log("entered");
         return next(new ErrorHandler("Internal Server Error", 500));
       }
 
