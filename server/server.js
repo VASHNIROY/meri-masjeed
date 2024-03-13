@@ -31,7 +31,7 @@ pool.getConnection((err, connection) => {
   }
 
   // Execute table creation queries
-  createTables(connection);
+  createTables();
 
   connection.release(); // Release the connection back to the pool
 });
