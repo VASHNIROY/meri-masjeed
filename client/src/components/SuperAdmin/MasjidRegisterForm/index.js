@@ -205,6 +205,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Toast } from "bootstrap";
+import ExcelDownloadLink from "../../ExcelDownload";
 
 const MasjidRegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -599,6 +600,7 @@ const MasjidRegisterForm = () => {
               will ask you later. Max size should be 1mb. File formats are XLSX,
               CSV)
             </label>
+            <ExcelDownloadLink/>
             <div className="file-input-container">
               <input
                 type="file"

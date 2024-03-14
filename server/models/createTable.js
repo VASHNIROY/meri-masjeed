@@ -10,6 +10,7 @@ import { pool } from "../utils/db.js";
 import { ramzanTable } from "./ramzantimings.js";
 import { ramzanFile } from "./ramzanfile.js";
 
+
 const tableToCreate = [
   { tableName: "Super Admin", sql: createSuperAdminTable },
   {
@@ -44,6 +45,7 @@ const tableToCreate = [
     tableName: "Ramzan file table",
     sql: ramzanFile,
   },
+ 
 ];
 
 // export const createTables = () => {
