@@ -1,4 +1,4 @@
-import { connection } from "../utils/db.js";
+// import { connection } from "../utils/db.js";
 import { createSuperAdminTable } from "./superadminTable.js";
 import { createMasjeedTable } from "./masjeedTable.js";
 import { createAdminTable } from "./adminTable.js";
@@ -6,6 +6,7 @@ import { createPrayerTimingsTable } from "./prayerTimingsTable.js";
 import { adminStaffTable } from "./adminStaffTable.js";
 import { messageTable } from "./messageTable.js";
 import { favouriteMasjeedsTable } from "./favouritemasjeeds.js";
+import { pool } from "../utils/db.js";
 
 
 const tableToCreate = [
@@ -37,11 +38,32 @@ const tableToCreate = [
  
 ];
 
+// export const createTables = () => {
+//   for (const table of tableToCreate) {
+//     connection.query(table.sql, (err) => {
+//       if (err) throw err;
+//       console.log(`${table.tableName} table created successfully!`);
+//     });
+//   }
+// };
+
 export const createTables = () => {
-  for (const table of tableToCreate) {
-    connection.query(table.sql, (err) => {
-      if (err) throw err;
-      console.log(`${table.tableName} table created successfully!`);
-    });
-  }
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error("Database Connection Error:", err);
+      return;
+    }
+
+    for (const table of tableToCreate) {
+      connection.query(table.sql, (queryErr) => {
+        if (queryErr) {
+          console.error(`Error creating ${table.tableName} table:`, queryErr);
+        } else {
+          console.log(`${table.tableName} table created successfully!`);
+        }
+      });
+    }
+
+    connection.release(); // Release the connection back to the pool
+  });
 };

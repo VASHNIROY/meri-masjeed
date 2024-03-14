@@ -41,4 +41,4 @@ webRouter.get("/getCities", databaseCities);
 
 webRouter.get("/getwebmasjeeds", databaseMasjeeds);
 
-webRouter.get("/getwebmessages", getWebMessages);
+webRouter.post("/getwebmessages", getWebMessages);
