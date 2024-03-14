@@ -436,25 +436,39 @@ export const getRamzanTimings = CatchAsyncError(async (req, res, next) => {
         return next(new ErrorHandler("Database Connection Error", 500));
       }
 
-      const selectRamzanQuery = `SELECT * FROM ramzan`;
+      const checkRamzanStatus = `SELECT ramzanstatus from masjeed LIMIT 1`;
 
-      connection.query(selectRamzanQuery, (selectErr, results) => {
-        connection.release(); // Release the connection back to the pool
-
+      connection.query(checkRamzanStatus, (selectErr, output) => {
         if (selectErr) {
-          console.error("Error fetching ramzan timings:", selectErr);
+          console.error("Error fetching ramzan status", selectErr);
           return next(new ErrorHandler("Internal Server Error", 500));
         }
+        console.log(output);
 
-        if (results.length === 0) {
-          return next(new ErrorHandler("Timings Not Found", 404));
+        if (output[0].ramzanstatus === 0) {
+          return next(new ErrorHandler("status Not Found", 404));
         }
 
-        res.status(200).json({
-          success: true,
-          message: "Timings Fetched Successfully",
+        const selectRamzanQuery = `SELECT * FROM ramzan`;
 
-          data: results,
+        connection.query(selectRamzanQuery, (selectErr, results) => {
+          connection.release(); // Release the connection back to the pool
+
+          if (selectErr) {
+            console.error("Error fetching ramzan timings:", selectErr);
+            return next(new ErrorHandler("Internal Server Error", 500));
+          }
+
+          if (results.length === 0) {
+            return next(new ErrorHandler("Timings Not Found", 404));
+          }
+
+          res.status(200).json({
+            success: true,
+            message: "Timings Fetched Successfully",
+
+            data: results,
+          });
         });
       });
     });
