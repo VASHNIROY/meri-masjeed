@@ -428,3 +428,38 @@ export const getWebMessages = CatchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Internal Server Error", 500));
   }
 });
+
+export const getRamzanTimings = CatchAsyncError(async (req, res, next) => {
+  try {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        return next(new ErrorHandler("Database Connection Error", 500));
+      }
+
+      const selectRamzanQuery = `SELECT * FROM ramzan`;
+
+      connection.query(selectRamzanQuery, (selectErr, results) => {
+        connection.release(); // Release the connection back to the pool
+
+        if (selectErr) {
+          console.error("Error fetching ramzan timings:", selectErr);
+          return next(new ErrorHandler("Internal Server Error", 500));
+        }
+
+        if (results.length === 0) {
+          return next(new ErrorHandler("Timings Not Found", 404));
+        }
+
+        res.status(200).json({
+          success: true,
+          message: "Timings Fetched Successfully",
+
+          data: results,
+        });
+      });
+    });
+  } catch (error) {
+    console.log("Error:", error);
+    return next(new ErrorHandler(error.message, 400));
+  }
+});

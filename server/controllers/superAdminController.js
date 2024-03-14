@@ -5,6 +5,7 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import nodemailerConfig from "../utils/nodemailer.js";
 // import { connection } from "../utils/db.js";
 import { pool } from "../utils/db.js";
+import moment from "moment";
 
 import { fileURLToPath } from "url";
 
@@ -724,3 +725,219 @@ export const deleteFavouriteMasjeed = CatchAsyncError(
     }
   }
 );
+
+export const turnonRamzan = CatchAsyncError(async (req, res, next) => {
+  try {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        // Handle connection error
+        console.error("Error acquiring connection:", err);
+        return next(new ErrorHandler("Database Connection Error", 500));
+      }
+      const updateMasjeedStatusQuery = `UPDATE masjeed SET ramzanstatus = 1`;
+
+      // Update masjeed status
+      connection.query(updateMasjeedStatusQuery, (updateError) => {
+        connection.release(); // Release the connection back to the pool
+
+        if (updateError) {
+          console.log("Error while updating status");
+          return next(new ErrorHandler("Internal Server Error", 500));
+        }
+
+        res.status(200).json({
+          success: true,
+          message: "Turned ON",
+        });
+      });
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
+
+export const turnoffRamzan = CatchAsyncError(async (req, res, next) => {
+  try {
+    const masjeedId = req.params.id;
+    pool.getConnection((err, connection) => {
+      if (err) {
+        // Handle connection error
+        console.error("Error acquiring connection:", err);
+        return next(new ErrorHandler("Database Connection Error", 500));
+      }
+      const updateMasjeedStatusQuery = `UPDATE masjeed SET ramzanstatus = 0`;
+
+      // Update masjeed status
+      connection.query(updateMasjeedStatusQuery, [masjeedId], (updateError) => {
+        connection.release(); // Release the connection back to the pool
+
+        if (updateError) {
+          console.log("Error while updating status");
+          return next(new ErrorHandler("Internal Server Error", 500));
+        }
+
+        res.status(200).json({
+          success: true,
+          message: "Turned OFF",
+        });
+      });
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
+// export const toggleRamzan = CatchAsyncError(async (req, res, next) => {
+//   try {
+//     pool.getConnection((err, connection) => {
+//       if (err) {
+//         console.error("Error acquiring connection:", err);
+//         return next(new ErrorHandler("Database Connection Error", 500));
+//       }
+
+//       // Retrieve current ramzanstatus
+//       const getStatusQuery = `SELECT ramzanstatus FROM masjeed`;
+//       connection.query(getStatusQuery, (statusError, results) => {
+//         if (statusError) {
+//           console.log("Error while getting current status");
+//           connection.release();
+//           return next(new ErrorHandler("Internal Server Error", 500));
+//         }
+
+//         console.log(results);
+
+//         // Determine the new ramzanstatus (toggle between 0 and 1)
+//         const newStatus = results[0].ramzanstatus === 1 ? 0 : 1;
+
+//         // Update all rows in the masjeed table with the new ramzanstatus
+//         const updateMasjeedStatusQuery = `UPDATE masjeed SET ramzanstatus = ?`;
+//         connection.query(
+//           updateMasjeedStatusQuery,
+//           [newStatus],
+//           (updateError) => {
+//             connection.release();
+//             if (updateError) {
+//               console.log("Error while updating status");
+//               return next(new ErrorHandler("Internal Server Error", 500));
+//             }
+
+//             res.status(200).json({
+//               success: true,
+//               message: newStatus === 1 ? "All turned ON" : "All turned OFF",
+//             });
+//           }
+//         );
+//       });
+//     });
+//   } catch (error) {
+//     return next(new ErrorHandler(error.message, 400));
+//   }
+// });
+
+export const uploadRamzanExcel = CatchAsyncError(async (req, res, next) => {
+  try {
+    const filename = req.file ? req.file.filename : null;
+
+    if (!filename) {
+      res.status(400).json({ error: "No file uploaded" });
+      return;
+    }
+
+    pool.getConnection((err, connection) => {
+      if (err) {
+        return next(new ErrorHandler("Database Connection Error", 500));
+      }
+
+      const checkRamzanfileQuery = `SELECT * FROM ramzanfile`;
+
+      connection.query(checkRamzanfileQuery, (selectErr, results) => {
+        if (selectErr) {
+          connection.release();
+          console.error("Error getting data", selectErr);
+          return next(new ErrorHandler("Internal Server Error", 500));
+        }
+
+        if (results.length > 0) {
+          connection.release();
+          return next(new ErrorHandler("File already exists", 400));
+        }
+
+        const addMasjeedQuery = `INSERT INTO ramzanfile (ramzanfilename) VALUES (?)`;
+
+        connection.query(addMasjeedQuery, [filename], (insertError) => {
+          if (insertError) {
+            connection.release();
+            console.error(
+              "Error inserting filename into the database:",
+              insertError
+            );
+            return next(new ErrorHandler("Internal Server Error", 500));
+          }
+
+          console.log("Ramzan file inserted into the database");
+
+          const selectQuery =
+            "SELECT ramzanfilename FROM ramzanfile WHERE id = 1";
+
+          connection.query(selectQuery, (selectError, results) => {
+            if (selectError) {
+              connection.release();
+              console.error(
+                "Error fetching ramzanfile from the database:",
+                selectError
+              );
+              return next(new ErrorHandler("Internal Server Error", 500));
+            }
+
+            if (results.length === 0) {
+              connection.release();
+              return next(new ErrorHandler("File not found", 404));
+            }
+
+            const filename = results[0].ramzanfilename;
+            console.log("Filename:", filename);
+
+            const filePath = path.join(__dirname, "../uploads", filename);
+            const workbook = xlsx.readFile(filePath);
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+
+            const prayertimingsData = xlsx.utils.sheet_to_json(sheet, {
+              raw: false,
+            });
+
+            const insertQuery = `
+              INSERT INTO ramzan (date, day, sehar, iftar)
+              VALUES (?, ?, ?, ?)
+            `;
+
+            prayertimingsData.forEach((item) => {
+              const date = moment(item.date, "M/D/YY").format("YYYY-MM-DD");
+              connection.query(
+                insertQuery,
+                [date, item.day, item.sehar, item.iftar],
+                (insertError) => {
+                  if (insertError) {
+                    console.error(
+                      "Error inserting data into ramzan table:",
+                      insertError
+                    );
+                    return next(new ErrorHandler("Internal Server Error", 500));
+                  }
+                }
+              );
+            });
+
+            connection.release();
+            res.json({
+              success: true,
+              message: "Data inserted into the database successfully",
+            });
+          });
+        });
+      });
+    });
+  } catch (error) {
+    console.log("Error:", error);
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
