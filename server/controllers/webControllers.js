@@ -463,12 +463,30 @@ export const getRamzanTimings = CatchAsyncError(async (req, res, next) => {
             return next(new ErrorHandler("Timings Not Found", 404));
           }
 
+          console.log(results);
+          const today = new Date(); // Get current date and time
+          const todayDate = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate()
+          ); // Get date without time
+
+          const filteredResults = results.filter((item) => {
+            // Check if the date part of the 'date' property matches today's date
+            const itemDate = new Date(item.date); // Convert the 'date' property to a Date object
+            const itemDateWithoutTime = new Date(
+              itemDate.getFullYear(),
+              itemDate.getMonth(),
+              itemDate.getDate()
+            ); // Get date without time
+            return itemDateWithoutTime.getTime() === todayDate.getTime(); // Compare the dates
+          });
+
           res.status(200).json({
             success: true,
             message: "Timings Fetched Successfully",
-
-            data: results,
-          });
+            data: filteredResults
+        });
         });
       });
     });
