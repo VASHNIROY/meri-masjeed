@@ -112,6 +112,19 @@ const AllMessages = () => {
       align: "center",
       headerAlign: "center",
       flex: 1,
+      valueGetter: (params) => {
+         if (!params.value) return "";
+        const startTime = new Date(params.value);
+        const options = {
+          timeZone: "Asia/Kolkata",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        };
+        return startTime.toLocaleString("en-IN", options);
+      },
     },
     {
       field: "enddate",
@@ -122,6 +135,19 @@ const AllMessages = () => {
       align: "center",
       headerAlign: "center",
       flex: 1,
+      valueGetter: (params) => {
+         if (!params.value) return "";
+        const startTime = new Date(params.value);
+        const options = {
+          timeZone: "Asia/Kolkata",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        };
+        return startTime.toLocaleString("en-IN", options);
+      },
     },
 
     // {

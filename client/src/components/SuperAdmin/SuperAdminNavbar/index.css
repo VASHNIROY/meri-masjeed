@@ -1,0 +1,23 @@
+.super-admin-toggle-container{
+    display:flex;
+    align-items: center;
+    gap:10px;
+}
+.super-admin-ramzan-timing-text{
+    color:#fff;
+    margin:0px;
+    font-size:16px;
+}
+.right-toggle{
+    color:#4CAF50;
+   
+    font-size:36px;
+    cursor:pointer;
+   
+}
+.left-toggle{
+    color:#9E9E9E;
+   
+     font-size:36px;
+    cursor:pointer;
+}

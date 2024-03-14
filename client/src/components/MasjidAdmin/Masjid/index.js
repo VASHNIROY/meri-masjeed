@@ -468,13 +468,13 @@ const MosqueForm = () => {
           <div>
             <h1 className="first-part-heading">Edit Masjid</h1>
           </div>
-          <div className="first-masjid-part-two">
+          {/* <div className="first-masjid-part-two">
             <p className="first-part-timing">Timing screen</p>
             <p className="first-part-info">info screen</p>
             <p className="first-part-timing-info">Timing info screen</p>
             <p className="first-part-salah">Multiple salah screen</p>
             <p className="first-part-share">Share screen</p>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="row">

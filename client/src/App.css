@@ -1,5 +1,6 @@
 *{
-  font-family:"calibri" !important;
+  /* font-family:"calibri" !important; */
+  font-family: 'Poppins' !important;
 }
 .app-main-heading{
   font-size:32px;
