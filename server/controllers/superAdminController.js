@@ -545,3 +545,4 @@ export const deleteFavouriteMasjeed = CatchAsyncError(async (req, res, next) => 
     return next(new ErrorHandler(error.message, 400));
   }
 });
+

@@ -7,6 +7,7 @@ import { adminStaffTable } from "./adminStaffTable.js";
 import { messageTable } from "./messageTable.js";
 import { favouriteMasjeedsTable } from "./favouritemasjeeds.js";
 
+
 const tableToCreate = [
   { tableName: "Super Admin", sql: createSuperAdminTable },
   {
@@ -33,6 +34,7 @@ const tableToCreate = [
     tableName: "Favourite Masjeeds Table",
     sql: favouriteMasjeedsTable,
   },
+ 
 ];
 
 export const createTables = () => {

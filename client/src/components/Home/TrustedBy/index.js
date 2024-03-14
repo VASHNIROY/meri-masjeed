@@ -5,15 +5,15 @@ function TrustedBy(){
     const masjidUsageList = [
         {
             count:"100 +",
-            category:"Masjid"
+            category:"Masjids"
         },
         {
             count:"10 +",
-            category:"Country"
+            category:"Countries"
         },
         {
             count:"40 +",
-            category:"City"
+            category:"Cities"
         }
     ]
 

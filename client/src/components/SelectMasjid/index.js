@@ -104,6 +104,9 @@ function SelectMasjid() {
   const [cities, setCities] = useState([]);
   const [masjids, setMasjids] = useState([]);
 
+  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const url = process.env.REACT_APP_BASE_URL;
 
   const fetchCountries = async () => {
@@ -116,6 +119,7 @@ function SelectMasjid() {
       const response = await fetch(api, options);
       const data = await response.json();
       setCountries(data.data);
+      setFilteredCountries(data.data)
     } catch (error) {
       console.error("Error fetching countries:", error);
     }
@@ -209,6 +213,16 @@ function SelectMasjid() {
     }
   };
 
+   const handleSearch = (e) => {
+     const query = e.target.value.toLowerCase();
+     setSearchQuery(query);
+     const filtered = countries.filter((country) =>
+       country.country.toLowerCase().includes(query)
+     );
+     setFilteredCountries(filtered);
+   };
+
+
   return (
     <div className="select-masjid-main-container">
       <div className="select-masjid-sub-container">
@@ -224,12 +238,14 @@ function SelectMasjid() {
           type="search"
           className="select-masjid-seach-input"
           placeholder="Search by masjid"
+          value={searchQuery}
+          onChange={handleSearch}
         />
         {selectedCountry === "" && (
           <ul className="select-masjid-list-container">
             <li className="app-para-text">Select Country</li>
 
-            {countries.map((each) => (
+            {filteredCountries.map((each) => (
               <li
                 className="app-para-text select-masjid-category-hover"
                 key={each.country}

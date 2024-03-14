@@ -51,3 +51,5 @@ superadminrouter.post(
   isAuthenticatedSuperAdmin,
   deleteFavouriteMasjeed
 );
+
+
