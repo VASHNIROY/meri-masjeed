@@ -91,6 +91,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./index.css";
 import { useEffect, useState } from "react";
 import SingleMasjidTime from "../SingleMasjidTime";
+import NotFound from "../NotFound";
 
 function SelectMasjid() {
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -225,6 +226,7 @@ function SelectMasjid() {
 
   return (
     <div className="select-masjid-main-container">
+      {countries ? 
       <div className="select-masjid-sub-container">
         <div className="select-masjid-heading-container">
           <h1 className="app-main-heading">Welcome</h1>
@@ -302,7 +304,7 @@ function SelectMasjid() {
           </ul>
         )}
         {/* {selectedMasjid && <SingleMasjidTime id={selectedMasjid}/>} */}
-      </div>
+      </div>:<NotFound/>}
     </div>
   );
 }

@@ -727,6 +727,7 @@ export const deleteFavouriteMasjeed = CatchAsyncError(
 );
 
 export const turnonRamzan = CatchAsyncError(async (req, res, next) => {
+  console.log(".called")
   try {
     pool.getConnection((err, connection) => {
       if (err) {
@@ -757,6 +758,7 @@ export const turnonRamzan = CatchAsyncError(async (req, res, next) => {
 });
 
 export const turnoffRamzan = CatchAsyncError(async (req, res, next) => {
+  console.log(".called");
   try {
     const masjeedId = req.params.id;
     pool.getConnection((err, connection) => {

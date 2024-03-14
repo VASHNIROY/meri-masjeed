@@ -38,6 +38,8 @@ const getSelectedRowsToExport = ({ apiRef }) => {
 function SingleMasjidTime() {
   const { id } = useParams();
 
+  const toggle = true
+
   const [masjidTimingList, setMasjidTimingList] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -45,6 +47,9 @@ function SingleMasjidTime() {
    const [showBanner, setShowBanner] = useState(false);
    const [names, setNames] = useState([]);
    const [remainingMinutes, setRemainingMinutes] = useState(0);
+
+   const [sehar, setSehar] = useState("");
+   const [iftar, setIftar] = useState("");
 
    const [todayDate,setTodayDate] = useState("")
 
@@ -229,8 +234,7 @@ function SingleMasjidTime() {
    })
 
 
-   const [masjidName, setMasjidName] = useState("");
-   const [masjidEmail, setMasjidEmail] = useState("");
+   
 
    
   
@@ -240,7 +244,7 @@ function SingleMasjidTime() {
        method: "GET",
        
      };
-     const api = `${url}getmasjeeddetails`;
+     const api = `${url}getramzantimings`;
      try {
        const response = await fetch(api, options);
 
@@ -257,10 +261,13 @@ function SingleMasjidTime() {
        console.log(data, "kapil");
        const masjeedData = data.data[0];
 
-       console.log(masjeedData, "data");
+       console.log(masjeedData, "data data");
 
-       setMasjidEmail(masjeedData.email);
-       setMasjidName(masjeedData.masjeedname);
+       const seharTime = masjeedData.sehar.split(":").slice(0, 2).join(":");
+       const iftarTime = masjeedData.iftar.split(":").slice(0, 2).join(":");
+
+       setSehar(seharTime);
+       setIftar(iftarTime);
      } catch (error) {
        console.error("Error fetching data:", error);
      }
@@ -307,10 +314,11 @@ function SingleMasjidTime() {
             >
               {todayDate}
             </h1>
+            {toggle &&
             <div className="ramzan-timings-container">
-              <h1 className="ramzan-sehar-time">Sehar : 5:15 AM</h1>
-              <h1 className="ramzan-iftar-time">Iftar : 6:30 PM</h1>
-            </div>
+              {sehar && <h1 className="ramzan-sehar-time">Sehar : {sehar} AM</h1>}
+              {iftar && <h1 className="ramzan-iftar-time">Iftar : {iftar} PM</h1>}
+            </div>}
           </div>
           <div className="select-masjid-time-flex-container">
             <Clock
