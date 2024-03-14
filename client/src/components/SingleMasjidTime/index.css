@@ -65,6 +65,28 @@
   font-weight:600;
   
 }
+
+.ramzan-timings-container{
+  display:flex;
+  justify-content: space-around;
+  align-self: center;
+}
+
+.ramzan-sehar-time{
+  color:  #00c87a; 
+  font-size: 48px;
+  font-weight: bold;
+}
+.ramzan-iftar-time{
+  color:  #9d64e2; 
+  font-size: 48px;
+  font-weight: bold;
+}
+.message-icon-box{
+  font-size:24px;
+  cursor:pointer;
+}
+
 @keyframes marquee {
   0% {
     transform: translate(100%, 0);
