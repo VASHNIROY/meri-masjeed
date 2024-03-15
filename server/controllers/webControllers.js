@@ -485,8 +485,8 @@ export const getRamzanTimings = CatchAsyncError(async (req, res, next) => {
           res.status(200).json({
             success: true,
             message: "Timings Fetched Successfully",
-            data: filteredResults
-        });
+            data: filteredResults,
+          });
         });
       });
     });
@@ -494,4 +494,31 @@ export const getRamzanTimings = CatchAsyncError(async (req, res, next) => {
     console.log("Error:", error);
     return next(new ErrorHandler(error.message, 400));
   }
+});
+
+export const storeRecentMasjeed = CatchAsyncError(async (req, res, next) => {
+  const { imei, masjeedid } = req.body;
+  const insertimeiQuery =
+    "INSERT INTO recentmasjeeds(imei,recentmasjeedid) VALUEs(?,?)";
+
+  pool.getConnection((err, connection) => {
+    if (err) {
+      return next(new ErrorHandler("Database Connection Error", 500));
+    }
+
+    connection.query(insertimeiQuery, [imei, masjeedid], (insertError) => {
+      connection.release();
+
+      if (insertError) {
+        console.error(
+          "Error inserting filename into the database:",
+          insertError
+        );
+      }
+
+      res
+        .status(200)
+        .json({ success: true, message: "File uploaded successfully" });
+    });
+  });
 });

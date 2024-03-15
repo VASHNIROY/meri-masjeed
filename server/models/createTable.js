@@ -9,7 +9,7 @@ import { favouriteMasjeedsTable } from "./favouritemasjeeds.js";
 import { pool } from "../utils/db.js";
 import { ramzanTable } from "./ramzantimings.js";
 import { ramzanFile } from "./ramzanfile.js";
-
+import { recentmasjeedtable } from "./recentMasjeedTable.js";
 
 const tableToCreate = [
   { tableName: "Super Admin", sql: createSuperAdminTable },
@@ -45,7 +45,10 @@ const tableToCreate = [
     tableName: "Ramzan file table",
     sql: ramzanFile,
   },
- 
+  {
+    tableName: "Recent masjeed table",
+    sql: recentmasjeedtable,
+  },
 ];
 
 // export const createTables = () => {

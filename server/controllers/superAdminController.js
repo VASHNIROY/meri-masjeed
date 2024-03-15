@@ -473,7 +473,10 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
         connection.query(selectQuery, [masjeedId], (selectError, results) => {
           if (selectError) {
             connection.release();
-            console.error("Error fetching prayerdetails from the database:", selectError);
+            console.error(
+              "Error fetching prayerdetails from the database:",
+              selectError
+            );
             return next(new ErrorHandler("Internal Server Error", 500));
           }
           if (results.length === 0) {
@@ -523,88 +526,146 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
 
           connection.query(updateMasjeedStatusQuery, (updateError) => {
             if (updateError) {
-              console.error("Error while updating masjeed status:", updateError);
+              console.error(
+                "Error while updating masjeed status:",
+                updateError
+              );
               connection.release();
               return next(new ErrorHandler("Internal Server Error", 500));
             }
 
-            connection.query(masjeedDetailsQuery, [masjeedId], (gettingErr, masjeedDetails) => {
-              if (gettingErr) {
-                console.error("Error while fetching masjeed details:", gettingErr);
-                connection.release();
-                return next(new ErrorHandler("Internal Server Error", 500));
-              }
-
-              if (masjeedDetails.length === 0) {
-                connection.release();
-                return next(new ErrorHandler("masjeed not found", 404));
-              }
-
-              const { adminname, email, phonenumber } = masjeedDetails[0];
-              const password = "123456";
-
-              bcrypt.hash(password, 10, (hashError, hashedPassword) => {
-                if (hashError) {
-                  console.error("Error while hashing password:", hashError);
+            connection.query(
+              masjeedDetailsQuery,
+              [masjeedId],
+              (gettingErr, masjeedDetails) => {
+                if (gettingErr) {
+                  console.error(
+                    "Error while fetching masjeed details:",
+                    gettingErr
+                  );
                   connection.release();
                   return next(new ErrorHandler("Internal Server Error", 500));
                 }
 
-                connection.query(addadminQuery, [adminname, email, hashedPassword, 1, phonenumber], (addAdminError) => {
-                  if (addAdminError) {
-                    console.error("Error while adding admin:", addAdminError);
+                if (masjeedDetails.length === 0) {
+                  connection.release();
+                  return next(new ErrorHandler("masjeed not found", 404));
+                }
+
+                const { adminname, email, phonenumber } = masjeedDetails[0];
+                const password = "123456";
+
+                bcrypt.hash(password, 10, (hashError, hashedPassword) => {
+                  if (hashError) {
+                    console.error("Error while hashing password:", hashError);
                     connection.release();
                     return next(new ErrorHandler("Internal Server Error", 500));
                   }
 
-                  const transporter = nodemailerConfig();
-                  const mailOptions = {
-                    from: process.env.SMTP_MAIL,
-                    to: email,
-                    subject: "Welcome to Mymasjeed. Aprroved Your Request",
-                    html: `
+                  connection.query(
+                    addadminQuery,
+                    [adminname, email, hashedPassword, 1, phonenumber],
+                    (addAdminError) => {
+                      if (addAdminError) {
+                        console.error(
+                          "Error while adding admin:",
+                          addAdminError
+                        );
+                        connection.release();
+                        return next(
+                          new ErrorHandler("Internal Server Error", 500)
+                        );
+                      }
+
+                      const transporter = nodemailerConfig();
+                      const mailOptions = {
+                        from: process.env.SMTP_MAIL,
+                        to: email,
+                        subject: "Welcome to Mymasjeed. Aprroved Your Request",
+                        html: `
                       <p>Dear ${adminname},</p>
                       <p>Thank you for registering with My Masjeed. We are delighted to have you as part of our community, and we want to extend a warm welcome to you.</p>
                       <p>This is your email ${email} and password is 123456</p>
                     `,
-                  };
+                      };
 
-                  transporter.sendMail(mailOptions, (emailError, info) => {
-                    if (emailError) {
-                      console.error("Error while sending email:", emailError);
-                      connection.release();
-                      return next(new ErrorHandler("Email could not be sent", 500));
-                    }
-
-                    mergedData.forEach((row) => {
-                      const {
-                        Month, Day, "Fajr Adhan": FajrAdhan, Shouruq, "Dhuhr Adhan": DhuhrAdhan,
-                        "Asr Adhan": AsrAdhan, "Maghrib Adhan": MaghribAdhan, "Isha Adhan": IshaAdhan,
-                        "Fajr Iqamah": FajrIqamah, "Dhuhr Iqamah": DhuhrIqamah, "Asr Iqamah": AsrIqamah,
-                        "Maghrib Iqamah": MaghribIqamah, "Isha Iqamah": IshaIqamah, "Jumah Adhan": JumahAdhan,
-                        "Jumah Khutba duration": JumahKhutbaDuration
-                      } = row;
-
-                      connection.query(
-                        insertQuery,
-                        [masjeedId, Day, Month, FajrAdhan, Shouruq, DhuhrAdhan, AsrAdhan, MaghribAdhan, IshaAdhan,
-                          FajrIqamah, DhuhrIqamah, AsrIqamah, MaghribIqamah, IshaIqamah, JumahAdhan, JumahKhutbaDuration],
-                        (insertError) => {
-                          if (insertError) {
-                            console.error("Error inserting data into prayertimingstable:", insertError);
-                            connection.release();
-                            return next(new ErrorHandler("Internal Server Error", 500));
-                          }
+                      transporter.sendMail(mailOptions, (emailError, info) => {
+                        if (emailError) {
+                          console.error(
+                            "Error while sending email:",
+                            emailError
+                          );
+                          connection.release();
+                          return next(
+                            new ErrorHandler("Email could not be sent", 500)
+                          );
                         }
-                      );
-                    });
 
-                    connection.release();
-                    res.json({ success: true, message: "Accepted Successfully" });
-                  });
+                        mergedData.forEach((row) => {
+                          const {
+                            Month,
+                            Day,
+                            "Fajr Adhan": FajrAdhan,
+                            Shouruq,
+                            "Dhuhr Adhan": DhuhrAdhan,
+                            "Asr Adhan": AsrAdhan,
+                            "Maghrib Adhan": MaghribAdhan,
+                            "Isha Adhan": IshaAdhan,
+                            "Fajr Iqamah": FajrIqamah,
+                            "Dhuhr Iqamah": DhuhrIqamah,
+                            "Asr Iqamah": AsrIqamah,
+                            "Maghrib Iqamah": MaghribIqamah,
+                            "Isha Iqamah": IshaIqamah,
+                            "Jumah Adhan": JumahAdhan,
+                            "Jumah Khutba duration": JumahKhutbaDuration,
+                          } = row;
+
+                          connection.query(
+                            insertQuery,
+                            [
+                              masjeedId,
+                              Day,
+                              Month,
+                              FajrAdhan,
+                              Shouruq,
+                              DhuhrAdhan,
+                              AsrAdhan,
+                              MaghribAdhan,
+                              IshaAdhan,
+                              FajrIqamah,
+                              DhuhrIqamah,
+                              AsrIqamah,
+                              MaghribIqamah,
+                              IshaIqamah,
+                              JumahAdhan,
+                              JumahKhutbaDuration,
+                            ],
+                            (insertError) => {
+                              if (insertError) {
+                                console.error(
+                                  "Error inserting data into prayertimingstable:",
+                                  insertError
+                                );
+                                connection.release();
+                                return next(
+                                  new ErrorHandler("Internal Server Error", 500)
+                                );
+                              }
+                            }
+                          );
+                        });
+
+                        connection.release();
+                        res.json({
+                          success: true,
+                          message: "Accepted Successfully",
+                        });
+                      });
+                    }
+                  );
                 });
-              });
-            });
+              }
+            );
           });
         });
       });
@@ -613,7 +674,6 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler(error.message, 400));
   }
 });
-
 
 export const rejectMasjeed = CatchAsyncError(async (req, res, next) => {
   const masjeedid = req.params.id;
@@ -907,7 +967,7 @@ export const deleteFavouriteMasjeed = CatchAsyncError(
 );
 
 export const turnonRamzan = CatchAsyncError(async (req, res, next) => {
-  console.log(".called")
+  console.log(".called");
   try {
     pool.getConnection((err, connection) => {
       if (err) {
@@ -968,7 +1028,6 @@ export const turnoffRamzan = CatchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler(error.message, 400));
   }
 });
-
 
 export const uploadRamzanExcel = CatchAsyncError(async (req, res, next) => {
   try {
