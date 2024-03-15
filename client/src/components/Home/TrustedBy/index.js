@@ -4,14 +4,17 @@ function TrustedBy(){
 
     const masjidUsageList = [
         {
+            id:"1",
             count:"100 +",
             category:"Masjids"
         },
         {
+            id:"2",
             count:"10 +",
             category:"Countries"
         },
         {
+            id:"3",
             count:"40 +",
             category:"Cities"
         }
@@ -24,10 +27,10 @@ function TrustedBy(){
             {
                 masjidUsageList.map((each)=>{
                     return(
-                        <div className="trusted-by-card">
+                        <li className="trusted-by-card" key={each.id}>
                             <h1 className="app-main-heading">{each.count}</h1>
                             <p className="app-para-text">{each.category}</p>
-                        </div>
+                        </li>
                     )
                 })
             }

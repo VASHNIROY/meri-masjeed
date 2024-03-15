@@ -73,14 +73,14 @@ const HomeCarousel = () => {
     <div className="home-carousel-main-container">
         <Slider {...settings} className="home-carousel-sub-container">
           {TestimonialList.map((each) => (
-            <div className="testimonial-card" style={{width:"100%",display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <li className="testimonial-card" key={each.id} style={{width:"100%",display:"flex",flexDirection:"column",alignItems:"center"}}>
               <span className="testimonial-icon">{each.icon}</span>
               <p className="app-para-text">{each.review}</p>
               <div className="testmonial-flex-container">
                 <img src={each.image} alt="logo" className="testmonial-image" />
                 <p className="app-description">{each.name}</p>
               </div>
-            </div>
+            </li>
           ))}
         </Slider>
       

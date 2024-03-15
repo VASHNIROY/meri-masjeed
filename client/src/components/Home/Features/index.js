@@ -11,7 +11,7 @@ function Features(){
                     {
                         FeatureList.map((each)=>{
                             return(
-                                <div className="features-card">
+                                <li className="features-card" key={each.id}>
                                     <div className="features-icon-container">
                                         <span className="features-icon">{each.icon}</span>
                                     </div>
@@ -19,7 +19,7 @@ function Features(){
                                         <h1 className="app-main-heading-3">{each.title}</h1>
                                         <p className="app-pare-text">{each.description}</p>
                                     </div>
-                                </div>
+                                </li>
                             )
                         })
                     }

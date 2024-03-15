@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.8a943af5.css",
-    "main.js": "/static/js/main.0105be91.js",
+    "main.css": "/static/css/main.76c95349.css",
+    "main.js": "/static/js/main.a2a482b2.js",
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.8079aba9.chunk.js",
     "reactPlayerSoundCloud.js": "/static/js/reactPlayerSoundCloud.6964de56.chunk.js",
     "reactPlayerVimeo.js": "/static/js/reactPlayerVimeo.b27262ed.chunk.js",
@@ -16,17 +16,27 @@
     "reactPlayerFilePlayer.js": "/static/js/reactPlayerFilePlayer.318e25c8.chunk.js",
     "reactPlayerPreview.js": "/static/js/reactPlayerPreview.8f3d40e0.chunk.js",
     "static/js/787.d755ecfa.chunk.js": "/static/js/787.d755ecfa.chunk.js",
+    "static/media/kidsvideo-2.mp4": "/static/media/kidsvideo-2.79da088ac596eb34f7c9.mp4",
+    "static/media/kidsvideo-1.mp4": "/static/media/kidsvideo-1.354d843d8940752bc8cf.mp4",
     "static/media/masjidLogo-1.png": "/static/media/masjidLogo-1.87c6c90a1102f10bb0f9.png",
+    "static/media/merimasjidbg-1.png": "/static/media/merimasjidbg-1.60425a0dc7fe59e762be.png",
+    "static/media/merimasjidbg-4.png": "/static/media/merimasjidbg-4.79eb6648daf48d7a9c23.png",
     "static/media/notfound.jpg": "/static/media/notfound.87049462a1ae4986277e.jpg",
+    "static/media/mobileImage2.png": "/static/media/mobileImage2.04ad39915e0594f7b2ad.png",
+    "static/media/prayertiming-2.PNG": "/static/media/prayertiming-2.4ab40673c5efeec348e6.PNG",
+    "static/media/prayertiming-1.PNG": "/static/media/prayertiming-1.9f29bd4786516b3ff12a.PNG",
+    "static/media/meri-masjeed-excel.xlsx": "/static/media/meri-masjeed-excel.5184ace907c7c87c863b.xlsx",
     "static/media/masjidImage.png": "/static/media/masjidImage.18b7fc213241a663bec4.png",
+    "static/media/prayertiming-5.PNG": "/static/media/prayertiming-5.18431d9b87dea4947b39.PNG",
+    "static/media/prayertiming-3.PNG": "/static/media/prayertiming-3.b9270eb04a39a8688e70.PNG",
     "static/media/logo.svg": "/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "static/media/slick.svg": "/static/media/slick.2630a3e3eab21c607e21.svg",
     "static/media/slick.eot": "/static/media/slick.a4e97f5a2a64f0ab1323.eot",
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.8a943af5.css.map": "/static/css/main.8a943af5.css.map",
-    "main.0105be91.js.map": "/static/js/main.0105be91.js.map",
+    "main.76c95349.css.map": "/static/css/main.76c95349.css.map",
+    "main.a2a482b2.js.map": "/static/js/main.a2a482b2.js.map",
     "reactPlayerYouTube.8079aba9.chunk.js.map": "/static/js/reactPlayerYouTube.8079aba9.chunk.js.map",
     "reactPlayerSoundCloud.6964de56.chunk.js.map": "/static/js/reactPlayerSoundCloud.6964de56.chunk.js.map",
     "reactPlayerVimeo.b27262ed.chunk.js.map": "/static/js/reactPlayerVimeo.b27262ed.chunk.js.map",
@@ -43,7 +53,7 @@
     "787.d755ecfa.chunk.js.map": "/static/js/787.d755ecfa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8a943af5.css",
-    "static/js/main.0105be91.js"
+    "static/css/main.76c95349.css",
+    "static/js/main.a2a482b2.js"
   ]
 }

@@ -1,16 +1,16 @@
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap");
  
-body {
-  margin: 0;
-}
- 
-.App {
-  font-family: "Source Sans Pro", sans-serif;
+.clock-flex-container{
+  display:"flex";
+  flex-direction: column;
+  gap:30px;
+  width:30%;
 }
 .next-prayer-heading{
-    font-size:48px;
+    font-size:28px;
     font-weight:600;
-    color:#194373;
+    color:#666;
+    margin-bottom:10px;
 }
 .clock-container {
   position: relative;
@@ -165,4 +165,9 @@ body {
     background-color:#194373;
     color:#fff;
     font-weight:600;
+}
+@media(max-width:768px){
+.clock-flex-container{
+  width:90%;
+}
 }

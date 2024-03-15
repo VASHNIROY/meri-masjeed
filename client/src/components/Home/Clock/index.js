@@ -69,7 +69,7 @@ const Clock = ({ masjidTimingList, onShowBannerChange }) => {
   const minute = time.getMinutes();
   const second = time.getSeconds();
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+    <div className="clock-flex-container">
       
       {remainingMinutes !== 0 && (
         <div className="next-prayer-heading">

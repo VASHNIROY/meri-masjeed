@@ -203,7 +203,7 @@ function SingleMasjidTime() {
        setRemainingMinutes(remaining);
        console.log(remaining, "remaining");
 
-       if (remaining > 0 && remaining < 2) {
+       if (remaining > 0 && remaining < 4) {
          console.log("kapil");
          setShowBanner(true);
          const bannerTimeout = setTimeout(() => {
@@ -310,68 +310,74 @@ function SingleMasjidTime() {
                 margin: "0px",
                 fontWeight: "600",
                 textAlign: "center",
+                color:"#666"
               }}
             >
               {todayDate}
             </h1>
-            {toggle &&
-            <div className="ramzan-timings-container">
-              {sehar && <h1 className="ramzan-sehar-time">Sehar : {sehar} AM</h1>}
-              {iftar && <h1 className="ramzan-iftar-time">Iftar : {iftar} PM</h1>}
-            </div>}
           </div>
           <div className="select-masjid-time-flex-container">
             <Clock
               masjidTimingList={masjidTimingList}
               onShowBannerChange={handleShowBannerChange}
             />
-            {masjidTimingList.length > 0 && (
-              <Box
-                sx={{
-                  marginTop: "20px",
-
-                  display: "flex",
-                  justifyContent: "space-between",
-                  "& .super-app-theme--header": {
-                    backgroundColor: "#194373",
-                    color: "#fff",
-                  },
-                  "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within":
-                    {
-                      outline: "none !important", // Remove the focus outline
-                      border: "none !important", // Remove the border when the cell is focused
-                      boxShadow: "none !important", // Remove any box shadow
+            <div className="single-masjid-list-main-container">
+              {masjidTimingList.length > 0 && (
+                <Box
+                  sx={{
+                    
+                    width:"100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    "& .super-app-theme--header": {
+                      backgroundColor: "#194373",
+                      color: "#fff",
                     },
-                  "& .even-row:hover, & .odd-row:hover": {
-                    backgroundColor: "#f2f2f2", // Remove the background color on hover
-                  },
-                }}
-              >
-                <DataGrid
-                  rows={masjidTimingList}
-                  columns={columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {},
+                    "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within":
+                      {
+                        outline: "none !important", // Remove the focus outline
+                        border: "none !important", // Remove the border when the cell is focused
+                        boxShadow: "none !important", // Remove any box shadow
+                      },
+                    "& .even-row:hover, & .odd-row:hover": {
+                      backgroundColor: "#f2f2f2", // Remove the background color on hover
                     },
                   }}
-                  getRowId={getRowId}
-                  getRowClassName={getRowClassName}
-                  pageSizeOptions={[5, 10, 15, 20, 100]}
-                  disableSelectionOnClick // Add this line to disable cell selection
-                  selectionModel={{}}
-                  disableRowSelectionOnClick
-                  slots={{
-                    printOptions: {
-                      getRowsToExport: getSelectedRowsToExport,
-                      hideFooter: true,
-                      hideToolbar: true,
-                      includeCheckboxes: true,
-                    },
-                  }}
-                />
-              </Box>
-            )}
+                >
+                  <DataGrid
+                    rows={masjidTimingList}
+                    columns={columns}
+                    initialState={{
+                      pagination: {
+                        paginationModel: {},
+                      },
+                    }}
+                    getRowId={getRowId}
+                    getRowClassName={getRowClassName}
+                    pageSizeOptions={[5, 10, 15, 20, 100]}
+                    disableSelectionOnClick // Add this line to disable cell selection
+                    selectionModel={{}}
+                    disableRowSelectionOnClick
+                    slots={{
+                      printOptions: {
+                        getRowsToExport: getSelectedRowsToExport,
+                        hideFooter: true,
+                        hideToolbar: true,
+                        includeCheckboxes: true,
+                      },
+                    }}
+                  />
+                </Box>
+              )}
+            </div>
+            <div className="ramzan-timings-container">
+              {sehar && (
+                <h1 className="ramzan-sehar-time">Sehar : {sehar} AM</h1>
+              )}
+              {iftar && (
+                <h1 className="ramzan-iftar-time">Iftar : {iftar} PM</h1>
+              )}
+            </div>
           </div>
         </div>
       )}
