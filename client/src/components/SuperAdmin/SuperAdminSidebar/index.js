@@ -14,6 +14,7 @@ import MasidRegisterForm from "../MasjidRegisterForm";
 import MasjidRequestList from "../MasjidRequestList";
 import AllMasjids from "../AllMasjid";
 import Cookies from "js-cookie";
+import SuperAdminNavbar from "../SuperAdminNavbar";
 
 function SuperAdminSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -142,7 +143,7 @@ function SuperAdminSidebar() {
           minHeight: "100vh",
         }}
       >
-        <AdminNavbar />
+        <SuperAdminNavbar />
 
         {parseInt(status) === 1 ? (
           <AllMasjids />

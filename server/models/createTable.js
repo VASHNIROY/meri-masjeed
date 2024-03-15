@@ -7,6 +7,9 @@ import { adminStaffTable } from "./adminStaffTable.js";
 import { messageTable } from "./messageTable.js";
 import { favouriteMasjeedsTable } from "./favouritemasjeeds.js";
 import { pool } from "../utils/db.js";
+import { ramzanTable } from "./ramzantimings.js";
+import { ramzanFile } from "./ramzanfile.js";
+
 
 const tableToCreate = [
   { tableName: "Super Admin", sql: createSuperAdminTable },
@@ -34,6 +37,15 @@ const tableToCreate = [
     tableName: "Favourite Masjeeds Table",
     sql: favouriteMasjeedsTable,
   },
+  {
+    tableName: "Ramzon table",
+    sql: ramzanTable,
+  },
+  {
+    tableName: "Ramzan file table",
+    sql: ramzanFile,
+  },
+ 
 ];
 
 // export const createTables = () => {

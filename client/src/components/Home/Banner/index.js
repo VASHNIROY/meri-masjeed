@@ -1,5 +1,7 @@
 import './index.css'
 
+import masjidBanner from '../../utils/merimasjidbg-1.png'
+
 function Banner(){
     return(
         <div className="banner-main-container">

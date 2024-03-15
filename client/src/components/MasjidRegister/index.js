@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./index.css";
 import Navbar from "../Navbar";
 import Toast from "../utils/Toast";
+import ExcelDownloadLink from "../ExcelDownload";
 
 const MasidRegister = () => {
   const [formData, setFormData] = useState({
@@ -370,6 +371,7 @@ const MasidRegister = () => {
               will ask you later. Max size should be 1mb. File formats are XLSX,
               CSV)
             </label>
+            <ExcelDownloadLink/>
             <div className="file-input-container">
               <input
                 type="file"

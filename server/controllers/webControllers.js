@@ -428,3 +428,70 @@ export const getWebMessages = CatchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Internal Server Error", 500));
   }
 });
+
+export const getRamzanTimings = CatchAsyncError(async (req, res, next) => {
+  try {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        return next(new ErrorHandler("Database Connection Error", 500));
+      }
+
+      const checkRamzanStatus = `SELECT ramzanstatus from masjeed LIMIT 1`;
+
+      connection.query(checkRamzanStatus, (selectErr, output) => {
+        if (selectErr) {
+          console.error("Error fetching ramzan status", selectErr);
+          return next(new ErrorHandler("Internal Server Error", 500));
+        }
+        console.log(output);
+
+        if (output[0].ramzanstatus === 0) {
+          return next(new ErrorHandler("status Not Found", 404));
+        }
+
+        const selectRamzanQuery = `SELECT * FROM ramzan`;
+
+        connection.query(selectRamzanQuery, (selectErr, results) => {
+          connection.release(); // Release the connection back to the pool
+
+          if (selectErr) {
+            console.error("Error fetching ramzan timings:", selectErr);
+            return next(new ErrorHandler("Internal Server Error", 500));
+          }
+
+          if (results.length === 0) {
+            return next(new ErrorHandler("Timings Not Found", 404));
+          }
+
+          console.log(results);
+          const today = new Date(); // Get current date and time
+          const todayDate = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate()
+          ); // Get date without time
+
+          const filteredResults = results.filter((item) => {
+            // Check if the date part of the 'date' property matches today's date
+            const itemDate = new Date(item.date); // Convert the 'date' property to a Date object
+            const itemDateWithoutTime = new Date(
+              itemDate.getFullYear(),
+              itemDate.getMonth(),
+              itemDate.getDate()
+            ); // Get date without time
+            return itemDateWithoutTime.getTime() === todayDate.getTime(); // Compare the dates
+          });
+
+          res.status(200).json({
+            success: true,
+            message: "Timings Fetched Successfully",
+            data: filteredResults
+        });
+        });
+      });
+    });
+  } catch (error) {
+    console.log("Error:", error);
+    return next(new ErrorHandler(error.message, 400));
+  }
+});

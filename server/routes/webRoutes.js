@@ -8,6 +8,7 @@ import {
   databaseCountries,
   databaseMasjeeds,
   databaseStates,
+  getRamzanTimings,
   getWebMessages,
   todaySchedule,
 } from "../controllers/webControllers.js";
@@ -42,3 +43,7 @@ webRouter.get("/getCities", databaseCities);
 webRouter.get("/getwebmasjeeds", databaseMasjeeds);
 
 webRouter.post("/getwebmessages", getWebMessages);
+
+webRouter.get("/getramzantimings", getRamzanTimings);
+
+

@@ -8,7 +8,7 @@ function HomeInformation() {
         <div className="home-information-left-container">
           <h1 className="app-main-heading">Large Info Screens</h1>
           <p className="app-para-text">
-            My-Masjid is the Large Screen Display solution for your Masjid to
+            Meri-Masjid is the Large Screen Display solution for your Masjid to
             display and track the daily salah times on the Masjid premises and
             on mobile phones. Once loaded in the browser it can work offline
             without need of an internet connection!
@@ -87,7 +87,7 @@ function HomeInformation() {
           The discreet sound feedbacks free you from looking at any device. You can concentrate and devote yourself more to your prayers.
           </p>
           <p className="app-para-text">
-          The My-Masjid solution reminds to turn off mobile phones as a sliding image:
+          The meri-Masjid solution reminds to turn off mobile phones as a sliding image:
           </p>
           <p className="app-para-text">
           3 times before Adhan

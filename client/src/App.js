@@ -27,6 +27,7 @@ import SuperAdminProtectedRoute from "./components/SuperadminProtectedRoute";
 import Clock from "./components/Home/Clock";
 import NotFound from "./components/NotFound";
 import MasidRegisterMobile from "./components/MasjidRegisterMobile";
+import ExcelDownloadLink from "./components/ExcelDownload";
 
 function App() {
   return (
@@ -99,6 +100,7 @@ function App() {
 
       <Route path="/clock" element={<Clock />} />
       <Route path="*" element={<NotFound />} />
+      <Route path="/excel" element={<ExcelDownloadLink />} />
     </Routes>
   );
 }

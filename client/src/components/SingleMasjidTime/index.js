@@ -22,6 +22,7 @@ import { useParams } from "react-router-dom";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import Clock from "../Home/Clock";
 import Toast from "../utils/Toast";
+import { MdOutlineMessage } from "react-icons/md";
 
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
@@ -37,6 +38,8 @@ const getSelectedRowsToExport = ({ apiRef }) => {
 function SingleMasjidTime() {
   const { id } = useParams();
 
+  const toggle = true
+
   const [masjidTimingList, setMasjidTimingList] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -44,6 +47,11 @@ function SingleMasjidTime() {
    const [showBanner, setShowBanner] = useState(false);
    const [names, setNames] = useState([]);
    const [remainingMinutes, setRemainingMinutes] = useState(0);
+
+   const [sehar, setSehar] = useState("");
+   const [iftar, setIftar] = useState("");
+
+   const [todayDate,setTodayDate] = useState("")
 
 
   const url = process.env.REACT_APP_BASE_URL;
@@ -219,6 +227,58 @@ function SingleMasjidTime() {
      setShowBanner(value);
    };
 
+   useEffect(()=>{
+      const date = new Date();
+      const TodayDateandYear = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+      setTodayDate(TodayDateandYear);
+   })
+
+
+   
+
+   
+  
+
+   const fetchRamzanData = async () => {
+     const options = {
+       method: "GET",
+       
+     };
+     const api = `${url}getramzantimings`;
+     try {
+       const response = await fetch(api, options);
+
+       if (!response.ok) {
+         throw new Error(`Request failed with status: ${response.status}`);
+       }
+
+       const data = await response.json();
+       Toast.fire({
+         icon: "success",
+         title: data.message,
+       });
+
+       console.log(data, "kapil");
+       const masjeedData = data.data[0];
+
+       console.log(masjeedData, "data data");
+
+       const seharTime = masjeedData.sehar.split(":").slice(0, 2).join(":");
+       const iftarTime = masjeedData.iftar.split(":").slice(0, 2).join(":");
+
+       setSehar(seharTime);
+       setIftar(iftarTime);
+     } catch (error) {
+       console.error("Error fetching data:", error);
+     }
+   };
+
+   useEffect(() => {
+     fetchRamzanData();
+   }, []);
+   
+   
+
 
   return (
     <>
@@ -226,14 +286,40 @@ function SingleMasjidTime() {
         <Spinner />
       ) : (
         <div className="select-masjid-warning-container">
+          {/* <div style={{display:"flex", justifyContent:"flex-end", margin:"40px 40px 0px 0px"}}>
+            <MdOutlineMessage className="message-icon-box"/>
+          </div> */}
           {showBanner && (
             <div className="warningScroll">
               <div className="warning-scroll-image-container">
-              <img src={mobileImage} alt="" className="warning-scroll-image"/>
+                <img
+                  src={mobileImage}
+                  alt=""
+                  className="warning-scroll-image"
+                />
               </div>
-              <p className="warning-text">Please Switch off the mobile phones</p>
+              <p className="warning-text">
+                Please Switch off the mobile phones
+              </p>
             </div>
           )}
+          <div>
+            <h1
+              style={{
+                fontSize: "48px",
+                margin: "0px",
+                fontWeight: "600",
+                textAlign: "center",
+              }}
+            >
+              {todayDate}
+            </h1>
+            {toggle &&
+            <div className="ramzan-timings-container">
+              {sehar && <h1 className="ramzan-sehar-time">Sehar : {sehar} AM</h1>}
+              {iftar && <h1 className="ramzan-iftar-time">Iftar : {iftar} PM</h1>}
+            </div>}
+          </div>
           <div className="select-masjid-time-flex-container">
             <Clock
               masjidTimingList={masjidTimingList}
