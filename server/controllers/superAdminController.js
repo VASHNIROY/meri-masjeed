@@ -525,12 +525,13 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
           });
 
           connection.query(updateMasjeedStatusQuery, (updateError) => {
+            connection.release();
+
             if (updateError) {
               console.error(
                 "Error while updating masjeed status:",
                 updateError
               );
-              connection.release();
               return next(new ErrorHandler("Internal Server Error", 500));
             }
 
@@ -538,12 +539,13 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
               masjeedDetailsQuery,
               [masjeedId],
               (gettingErr, masjeedDetails) => {
+                connection.release();
+
                 if (gettingErr) {
                   console.error(
                     "Error while fetching masjeed details:",
                     gettingErr
                   );
-                  connection.release();
                   return next(new ErrorHandler("Internal Server Error", 500));
                 }
 
@@ -556,9 +558,10 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
                 const password = "123456";
 
                 bcrypt.hash(password, 10, (hashError, hashedPassword) => {
+                  connection.release();
+
                   if (hashError) {
                     console.error("Error while hashing password:", hashError);
-                    connection.release();
                     return next(new ErrorHandler("Internal Server Error", 500));
                   }
 
@@ -566,12 +569,13 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
                     addadminQuery,
                     [adminname, email, hashedPassword, 1, phonenumber],
                     (addAdminError) => {
+                      connection.release();
+
                       if (addAdminError) {
                         console.error(
                           "Error while adding admin:",
                           addAdminError
                         );
-                        connection.release();
                         return next(
                           new ErrorHandler("Internal Server Error", 500)
                         );
@@ -590,12 +594,13 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
                       };
 
                       transporter.sendMail(mailOptions, (emailError, info) => {
+                        connection.release();
+
                         if (emailError) {
                           console.error(
                             "Error while sending email:",
                             emailError
                           );
-                          connection.release();
                           return next(
                             new ErrorHandler("Email could not be sent", 500)
                           );
@@ -641,12 +646,13 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
                               JumahKhutbaDuration,
                             ],
                             (insertError) => {
+                              connection.release();
+
                               if (insertError) {
                                 console.error(
                                   "Error inserting data into prayertimingstable:",
                                   insertError
                                 );
-                                connection.release();
                                 return next(
                                   new ErrorHandler("Internal Server Error", 500)
                                 );

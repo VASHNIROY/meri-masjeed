@@ -498,15 +498,72 @@ export const getRamzanTimings = CatchAsyncError(async (req, res, next) => {
 
 export const storeRecentMasjeed = CatchAsyncError(async (req, res, next) => {
   const { imei, masjeedid } = req.body;
-  const insertimeiQuery =
-    "INSERT INTO recentmasjeeds(imei,recentmasjeedid) VALUEs(?,?)";
+  const checkImeiQuery = "SELECT * FROM recentmasjeeds WHERE imei = ?";
+  pool.getConnection((err, connection) => {
+    if (err) {
+      return next(new ErrorHandler("Database Connection Error", 500));
+    }
+
+    connection.query(checkImeiQuery, [imei], (selectErr, status) => {
+      connection.release();
+      if (selectErr) {
+        console.error("Error checking details from the database:", fetchError);
+        return next(new ErrorHandler("Internal Server Error", 500));
+      }
+
+      console.log("status", status.length);
+
+      if (status.length > 0) {
+        const updateRecentMasjeedQuery =
+          "UPDATE recentmasjeeds SET recentmasjeedid = ? WHERE imei = ?";
+
+        connection.query(
+          updateRecentMasjeedQuery,
+          [masjeedid, imei],
+          (updateErr, updateStatus) => {
+            if (updateErr) {
+              return next(new ErrorHandler("Internal Server Error", 500));
+            }
+
+            res.status(200).json({
+              success: true,
+              message: "Data updated successfully",
+            });
+          }
+        );
+      } else {
+        const insertimeiQuery =
+          "INSERT INTO recentmasjeeds(imei,recentmasjeedid) VALUEs(?,?)";
+
+        connection.query(insertimeiQuery, [imei, masjeedid], (insertError) => {
+          if (insertError) {
+            console.error(
+              "Error inserting filename into the database:",
+              insertError
+            );
+            return next(new ErrorHandler("Internal Server Error", 500));
+          }
+
+          res
+            .status(200)
+            .json({ success: true, message: "data inserted successfully" });
+        });
+      }
+    });
+  });
+});
+
+export const getRecentMasjeed = CatchAsyncError(async (req, res, next) => {
+  const { imei } = req.body;
+  const getrecentmasjeedQuery =
+    "SELECT recentmasjeedid from recentmasjeeds WHERE imei = ?";
 
   pool.getConnection((err, connection) => {
     if (err) {
       return next(new ErrorHandler("Database Connection Error", 500));
     }
 
-    connection.query(insertimeiQuery, [imei, masjeedid], (insertError) => {
+    connection.query(getrecentmasjeedQuery, [imei], (insertError, results) => {
       connection.release();
 
       if (insertError) {
@@ -514,11 +571,44 @@ export const storeRecentMasjeed = CatchAsyncError(async (req, res, next) => {
           "Error inserting filename into the database:",
           insertError
         );
+        return next(new ErrorHandler("Internal Server Error", 500));
       }
 
-      res
-        .status(200)
-        .json({ success: true, message: "File uploaded successfully" });
+      if (results.length === 0) {
+        return next(new ErrorHandler("imei Not Found", 404));
+      }
+
+      const masjeedid = results[0].recentmasjeedid;
+
+      console.log("masjeedid", masjeedid);
+
+      const masjeedDetailsQuery = "SELECT * FROM masjeed WHERE id = ?";
+
+      connection.query(
+        masjeedDetailsQuery,
+        [masjeedid],
+        (fetchError, output) => {
+          if (fetchError) {
+            console.error(
+              "Error fetching prayer details from the database:",
+              fetchError
+            );
+            return next(new ErrorHandler("Internal Server Error", 500));
+          }
+
+          if (output.length === 0) {
+            return next(new ErrorHandler("Masjeed Not Found", 404));
+          }
+
+          output = output[0];
+
+          res.json({
+            success: true,
+            message: "fetched Majeed details",
+            data: output,
+          });
+        }
+      );
     });
   });
 });

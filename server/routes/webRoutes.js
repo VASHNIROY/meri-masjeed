@@ -9,7 +9,9 @@ import {
   databaseMasjeeds,
   databaseStates,
   getRamzanTimings,
+  getRecentMasjeed,
   getWebMessages,
+  storeRecentMasjeed,
   todaySchedule,
 } from "../controllers/webControllers.js";
 import { getmessages } from "../controllers/adminController.js";
@@ -46,4 +48,5 @@ webRouter.post("/getwebmessages", getWebMessages);
 
 webRouter.get("/getramzantimings", getRamzanTimings);
 
-
+webRouter.post("/getrecentmasjeed", getRecentMasjeed);
+webRouter.post("/storerecentmasjeed", storeRecentMasjeed);
