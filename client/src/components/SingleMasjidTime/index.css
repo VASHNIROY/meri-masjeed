@@ -9,7 +9,10 @@
     min-height:70vh;
     width:100%;
     flex-wrap:wrap;
-    gap:100px;
+    gap:30px;
+}
+.single-masjid-list-main-container{
+  width:30%;
 }
 .single-masjid-header{
     width:100%;
@@ -68,23 +71,39 @@
 
 .ramzan-timings-container{
   display:flex;
-  justify-content: space-around;
-  align-self: center;
+  flex-direction: column;
+  gap:20px;
+  width:30%;
+  
 }
 
 .ramzan-sehar-time{
-  color:  #00c87a; 
-  font-size: 48px;
+  /* color:  #00c87a;  */
+  color:#194373;
+  font-size: 36px;
   font-weight: bold;
 }
 .ramzan-iftar-time{
-  color:  #9d64e2; 
-  font-size: 48px;
+  /* color:  #9d64e2;  */
+  font-size: 36px;
   font-weight: bold;
+  color:#194373;
 }
 .message-icon-box{
   font-size:24px;
   cursor:pointer;
+}
+@media(max-width:768px){
+  .select-masjid-time-flex-container{
+    flex-direction: column-reverse;
+  }
+  .single-masjid-list-main-container{
+    width:90%;
+  }
+  .ramzan-timings-container{
+    width:90%;
+    align-items: center;
+  }
 }
 
 @keyframes marquee {
