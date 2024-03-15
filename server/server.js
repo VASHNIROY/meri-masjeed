@@ -23,12 +23,6 @@ app.listen(port, () => {
   console.log(`Listening on port: ${port}`);
 });
 
-<<<<<<< HEAD
-connection.connect((err) => {
-  if (err) throw err;
-  console.log("connected to DB");
-  //createTables();
-=======
 // Use the connection pool to execute table creation queries
 pool.getConnection((err, connection) => {
   if (err) {
@@ -40,5 +34,4 @@ pool.getConnection((err, connection) => {
   createTables();
 
   connection.release(); // Release the connection back to the pool
->>>>>>> 517d8722fcbb85a6468cf263f887691854e8834b
 });
