@@ -1,15 +1,39 @@
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap");
  
 .clock-flex-container{
-  display:"flex";
+  display:flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap:30px;
-  width:30%;
+  width:40%;
+  background-color: #f2f2f2;
+  min-height: 98vh;
+}
+.clock-masjid-logo-container{
+  width:60px;
+  height:60px;
+}
+.clock-masjid-logo{
+  width:100%;
+}
+
+.clock-masjid-heading{
+  font-size:24px;
+    font-weight:600;
+    color:#000;
+    margin-bottom:4px;
+}
+.clock-masjid-description{
+  font-size:20px;
+    font-weight:500;
+    color:#333;
+    margin-bottom:4px;
 }
 .next-prayer-heading{
-    font-size:28px;
+    font-size:32px;
     font-weight:600;
-    color:#666;
+    color:#194373;
     margin-bottom:10px;
 }
 .clock-container {
@@ -17,6 +41,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  
 }
  
 .clock {
@@ -28,6 +53,8 @@
   font-size: 24px;
   color: #444;
   text-align: center;
+  background-color: #fff;
+  z-index:1;
 }
  
 .clock::after {
@@ -53,6 +80,7 @@
   left: 49%;
   transform-origin: bottom;
 }
+
  
 .min_hand {
   position: absolute;
@@ -63,6 +91,8 @@
   left: 49%;
   transform-origin: bottom;
 }
+
+
  
 .sec_hand {
   position: absolute;
@@ -73,6 +103,8 @@
   left: 50%;
   transform-origin: bottom;
 }
+
+
  
 .clock span {
   position: absolute;
@@ -160,6 +192,7 @@
   border-radius: 5px;
   padding: 0 10px;
   z-index: -99;
+  margin:0px 0px 20px 0px;
 }
 .active-time{
     background-color:#194373;

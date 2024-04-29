@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 
+import masjidLogo from '../../utils/masjidLogo-1.png'
+
 const Clock = ({ masjidTimingList, onShowBannerChange }) => {
   const [time, setTime] = useState(new Date());
   const [showBanner, setShowBanner] = useState(false);
@@ -70,7 +72,18 @@ const Clock = ({ masjidTimingList, onShowBannerChange }) => {
   const second = time.getSeconds();
   return (
     <div className="clock-flex-container">
-      
+      <div style={{display:"flex", justifyContent:"space-between",alignItems:"center"}}>
+        <div className="clock-masjid-logo-container">
+          <img src={masjidLogo} alt="" className="clock-masjid-logo" />
+        </div>
+        <div>
+          <h1 className="clock-masjid-heading">Thottumpuram Juma Masjid</h1>
+          <p className="clock-masjid-description">
+            Thottumpuram, Kanchinada, Pangode PO 695609
+          </p>
+        </div>
+      </div>
+
       {remainingMinutes !== 0 && (
         <div className="next-prayer-heading">
           {`Next prayer in ${Math.floor(remainingMinutes / 60)} hours ${
