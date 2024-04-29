@@ -525,12 +525,13 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
           });
 
           connection.query(updateMasjeedStatusQuery, (updateError) => {
+            connection.release();
+
             if (updateError) {
               console.error(
                 "Error while updating masjeed status:",
                 updateError
               );
-              connection.release();
               return next(new ErrorHandler("Internal Server Error", 500));
             }
 
@@ -538,12 +539,13 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
               masjeedDetailsQuery,
               [masjeedId],
               (gettingErr, masjeedDetails) => {
+                connection.release();
+
                 if (gettingErr) {
                   console.error(
                     "Error while fetching masjeed details:",
                     gettingErr
                   );
-                  connection.release();
                   return next(new ErrorHandler("Internal Server Error", 500));
                 }
 
@@ -556,9 +558,10 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
                 const password = "123456";
 
                 bcrypt.hash(password, 10, (hashError, hashedPassword) => {
+                  connection.release();
+
                   if (hashError) {
                     console.error("Error while hashing password:", hashError);
-                    connection.release();
                     return next(new ErrorHandler("Internal Server Error", 500));
                   }
 
@@ -566,12 +569,13 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
                     addadminQuery,
                     [adminname, email, hashedPassword, 1, phonenumber],
                     (addAdminError) => {
+                      connection.release();
+
                       if (addAdminError) {
                         console.error(
                           "Error while adding admin:",
                           addAdminError
                         );
-                        connection.release();
                         return next(
                           new ErrorHandler("Internal Server Error", 500)
                         );
@@ -590,12 +594,13 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
                       };
 
                       transporter.sendMail(mailOptions, (emailError, info) => {
+                        connection.release();
+
                         if (emailError) {
                           console.error(
                             "Error while sending email:",
                             emailError
                           );
-                          connection.release();
                           return next(
                             new ErrorHandler("Email could not be sent", 500)
                           );
@@ -641,12 +646,13 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
                               JumahKhutbaDuration,
                             ],
                             (insertError) => {
+                              connection.release();
+
                               if (insertError) {
                                 console.error(
                                   "Error inserting data into prayertimingstable:",
                                   insertError
                                 );
-                                connection.release();
                                 return next(
                                   new ErrorHandler("Internal Server Error", 500)
                                 );
@@ -733,53 +739,53 @@ export const rejectMasjeed = CatchAsyncError(async (req, res, next) => {
   }
 });
 
-export const addMasjeedToFavourite = CatchAsyncError(async (req, res, next) => {
-  try {
-    const { id } = req.body;
+// export const addMasjeedToFavourite = CatchAsyncError(async (req, res, next) => {
+//   try {
+//     const { id } = req.body;
 
-    // Check if the id already exists in the favouritemasjeeds table
-    const checkExistenceQuery =
-      "SELECT * FROM favouritemasjeeds WHERE favouritemasjeddid = ?";
-    pool.getConnection((err, connection) => {
-      if (err) {
-        // Handle connection error
-        console.error("Error acquiring connection:", err);
-        return next(new ErrorHandler("Database Connection Error", 500));
-      }
+//     // Check if the id already exists in the favouritemasjeeds table
+//     const checkExistenceQuery =
+//       "SELECT * FROM favouritemasjeeds WHERE favouritemasjeddid = ?";
+//     pool.getConnection((err, connection) => {
+//       if (err) {
+//         // Handle connection error
+//         console.error("Error acquiring connection:", err);
+//         return next(new ErrorHandler("Database Connection Error", 500));
+//       }
 
-      connection.query(checkExistenceQuery, [id], (selectErr, results) => {
-        connection.release(); // Release the connection back to the pool
+//       connection.query(checkExistenceQuery, [id], (selectErr, results) => {
+//         connection.release(); // Release the connection back to the pool
 
-        if (selectErr) {
-          console.error("Error checking existence:", selectErr);
-          return next(new ErrorHandler("Internal Server Error", 500));
-        }
+//         if (selectErr) {
+//           console.error("Error checking existence:", selectErr);
+//           return next(new ErrorHandler("Internal Server Error", 500));
+//         }
 
-        if (results.length > 0) {
-          return next(
-            new ErrorHandler("Masjeed already added to favourites", 400)
-          );
-        }
+//         if (results.length > 0) {
+//           return next(
+//             new ErrorHandler("Masjeed already added to favourites", 400)
+//           );
+//         }
 
-        // If the id doesn't exist, insert it into the favouritemasjeeds table
-        const insertMasjeedIdQuery =
-          "INSERT INTO favouritemasjeeds(favouritemasjeddid) VALUES (?)";
-        connection.query(insertMasjeedIdQuery, [id], (error) => {
-          if (error) {
-            console.error("Error adding masjeed to favourites:", error);
-            return next(new ErrorHandler("Internal Server Error", 500));
-          }
-          res.status(201).json({
-            success: true,
-            message: "Added to Favourite List",
-          });
-        });
-      });
-    });
-  } catch (error) {
-    return next(new ErrorHandler(error.message, 400));
-  }
-});
+//         // If the id doesn't exist, insert it into the favouritemasjeeds table
+//         const insertMasjeedIdQuery =
+//           "INSERT INTO favouritemasjeeds(favouritemasjeddid) VALUES (?)";
+//         connection.query(insertMasjeedIdQuery, [id], (error) => {
+//           if (error) {
+//             console.error("Error adding masjeed to favourites:", error);
+//             return next(new ErrorHandler("Internal Server Error", 500));
+//           }
+//           res.status(201).json({
+//             success: true,
+//             message: "Added to Favourite List",
+//           });
+//         });
+//       });
+//     });
+//   } catch (error) {
+//     return next(new ErrorHandler(error.message, 400));
+//   }
+// });
 
 // export const getFavouriteMasjeeds = CatchAsyncError(async (req, res, next) => {
 //   try {
@@ -839,132 +845,60 @@ export const addMasjeedToFavourite = CatchAsyncError(async (req, res, next) => {
 //   }
 // });
 
-export const getFavouriteMasjeeds = CatchAsyncError(async (req, res, next) => {
-  try {
-    // Acquire a connection from the pool
-    pool.getConnection((err, connection) => {
-      if (err) {
-        // Handle connection error
-        console.error("Error acquiring connection:", err);
-        return next(new ErrorHandler("Database Connection Error", 500));
-      }
 
-      const favouriteMasjeedsQuery = "SELECT * FROM favouritemasjeeds";
 
-      // Execute the query to get favourite masjeed IDs
-      connection.query(
-        favouriteMasjeedsQuery,
-        (selectErr, favouriteMasjeeds) => {
-          if (selectErr) {
-            connection.release(); // Release the connection back to the pool
-            console.error("Error fetching masjeeds from favourites", selectErr);
-            return next(new ErrorHandler("Internal Server Error", 500));
-          }
+// export const deleteFavouriteMasjeed = CatchAsyncError(
+//   async (req, res, next) => {
+//     try {
+//       const { id } = req.body;
 
-          // Check if there are no favourite masjeeds
-          if (favouriteMasjeeds.length === 0) {
-            connection.release(); // Release the connection back to the pool
-            return next(new ErrorHandler("Masjeeds Not Found", 404));
-          }
+//       // Check if the favouritemasjeedid exists
+//       const checkExistenceQuery =
+//         "SELECT * FROM favouritemasjeeds WHERE favouritemasjeddid = ?";
 
-          // Fetch masjeed details for each favourite masjeed ID
-          let masjeedPromises = favouriteMasjeeds.map((favourite) => {
-            return new Promise((resolve, reject) => {
-              connection.query(
-                "SELECT * FROM masjeed WHERE id = ?",
-                [favourite.favouritemasjeddid],
-                (error, masjeedDetails) => {
-                  if (error) {
-                    console.error("Error fetching data:", error);
-                    reject(new ErrorHandler("Internal Server Error", 500));
-                  } else {
-                    resolve({
-                      ...favourite,
-                      masjeedDetails: masjeedDetails[0],
-                    });
-                  }
-                }
-              );
-            });
-          });
+//       pool.getConnection((err, connection) => {
+//         if (err) {
+//           // Handle connection error
+//           console.error("Error acquiring connection:", err);
+//           return next(new ErrorHandler("Database Connection Error", 500));
+//         }
+//         connection.query(checkExistenceQuery, [id], (selectErr, results) => {
+//           connection.release(); // Release the connection back to the pool
 
-          // Resolve all masjeed promises
-          Promise.all(masjeedPromises)
-            .then((results) => {
-              // Release the connection back to the pool
-              connection.release();
+//           if (selectErr) {
+//             console.error("Error checking existence:", selectErr);
+//             return next(new ErrorHandler("Internal Server Error", 500));
+//           }
 
-              res.json({
-                success: true,
-                message: "Fetched masjeed",
-                data: results,
-              });
-            })
-            .catch((error) => {
-              // Handle error if any promise fails
-              connection.release();
-              return next(new ErrorHandler(error.message, 500));
-            });
-        }
-      );
-    });
-  } catch (error) {
-    return next(new ErrorHandler(error.message, 400));
-  }
-});
+//           if (results.length === 0) {
+//             return next(
+//               new ErrorHandler("Masjeed not found in favourites", 404)
+//             );
+//           }
 
-export const deleteFavouriteMasjeed = CatchAsyncError(
-  async (req, res, next) => {
-    try {
-      const { id } = req.body;
-
-      // Check if the favouritemasjeedid exists
-      const checkExistenceQuery =
-        "SELECT * FROM favouritemasjeeds WHERE favouritemasjeddid = ?";
-
-      pool.getConnection((err, connection) => {
-        if (err) {
-          // Handle connection error
-          console.error("Error acquiring connection:", err);
-          return next(new ErrorHandler("Database Connection Error", 500));
-        }
-        connection.query(checkExistenceQuery, [id], (selectErr, results) => {
-          connection.release(); // Release the connection back to the pool
-
-          if (selectErr) {
-            console.error("Error checking existence:", selectErr);
-            return next(new ErrorHandler("Internal Server Error", 500));
-          }
-
-          if (results.length === 0) {
-            return next(
-              new ErrorHandler("Masjeed not found in favourites", 404)
-            );
-          }
-
-          // If the favouritemasjeedid exists, delete it from the favouritemasjeeds table
-          const deleteQuery =
-            "DELETE FROM favouritemasjeeds WHERE favouritemasjeddid = ?";
-          connection.query(deleteQuery, [id], (deleteErr, _) => {
-            if (deleteErr) {
-              console.error(
-                "Error deleting masjeed from favourites:",
-                deleteErr
-              );
-              return next(new ErrorHandler("Internal Server Error", 500));
-            }
-            res.status(200).json({
-              success: true,
-              message: "Masjeed removed from favourites",
-            });
-          });
-        });
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 400));
-    }
-  }
-);
+//           // If the favouritemasjeedid exists, delete it from the favouritemasjeeds table
+//           const deleteQuery =
+//             "DELETE FROM favouritemasjeeds WHERE favouritemasjeddid = ?";
+//           connection.query(deleteQuery, [id], (deleteErr, _) => {
+//             if (deleteErr) {
+//               console.error(
+//                 "Error deleting masjeed from favourites:",
+//                 deleteErr
+//               );
+//               return next(new ErrorHandler("Internal Server Error", 500));
+//             }
+//             res.status(200).json({
+//               success: true,
+//               message: "Masjeed removed from favourites",
+//             });
+//           });
+//         });
+//       });
+//     } catch (error) {
+//       return next(new ErrorHandler(error.message, 400));
+//     }
+//   }
+// );
 
 export const turnonRamzan = CatchAsyncError(async (req, res, next) => {
   console.log(".called");

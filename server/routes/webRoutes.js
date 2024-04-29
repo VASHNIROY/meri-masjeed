@@ -4,15 +4,18 @@ import path from "path";
 
 import {
   addMasjeed,
+  addToFavourite,
   databaseCities,
   databaseCountries,
   databaseMasjeeds,
   databaseStates,
+  getFavouriteMasjeeds,
   getRamzanTimings,
+  getRecentMasjeed,
   getWebMessages,
+  storeRecentMasjeed,
   todaySchedule,
 } from "../controllers/webControllers.js";
-import { getmessages } from "../controllers/adminController.js";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -46,4 +49,8 @@ webRouter.post("/getwebmessages", getWebMessages);
 
 webRouter.get("/getramzantimings", getRamzanTimings);
 
+webRouter.post("/getrecentmasjeed", getRecentMasjeed);
+webRouter.post("/storerecentmasjeed", storeRecentMasjeed);
 
+webRouter.post("/addtofavourite", addToFavourite);
+webRouter.post("/getfavouritemasjeeds", getFavouriteMasjeeds);
