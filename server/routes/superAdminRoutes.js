@@ -2,7 +2,10 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import {
+  addMasjeedToFavourite,
   approveMasjeed,
+  deleteFavouriteMasjeed,
+  getFavouriteMasjeeds,
   masjeedsList,
   newMasjeeds,
   rejectMasjeed,
@@ -50,7 +53,6 @@ superadminrouter.put(
   rejectMasjeed
 );
 
-
 // superadminrouter.put("/toggleramzan", isAuthenticatedSuperAdmin, toggleRamzan);
 
 superadminrouter.post(
@@ -66,3 +68,21 @@ superadminrouter.post(
 );
 
 superadminrouter.post("/turnonramzan", isAuthenticatedSuperAdmin, turnonRamzan);
+
+superadminrouter.post(
+  "/addtofavourite",
+  isAuthenticatedSuperAdmin,
+  addMasjeedToFavourite
+);
+
+superadminrouter.post(
+  "/getfavouritemasjeeds",
+  isAuthenticatedSuperAdmin,
+  getFavouriteMasjeeds
+);
+
+superadminrouter.post(
+  "/deleteFavouriteMasjeed",
+  isAuthenticatedSuperAdmin,
+  deleteFavouriteMasjeed
+);

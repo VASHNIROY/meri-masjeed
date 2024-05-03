@@ -4,14 +4,14 @@ import path from "path";
 
 import {
   addMasjeed,
-  addToFavourite,
+  addWebToFavourite,
   databaseCities,
   databaseCountries,
   databaseMasjeeds,
   databaseStates,
-  getFavouriteMasjeeds,
   getRamzanTimings,
   getRecentMasjeed,
+  getWebFavouriteMasjeeds,
   getWebMessages,
   storeRecentMasjeed,
   todaySchedule,
@@ -52,5 +52,5 @@ webRouter.get("/getramzantimings", getRamzanTimings);
 webRouter.post("/getrecentmasjeed", getRecentMasjeed);
 webRouter.post("/storerecentmasjeed", storeRecentMasjeed);
 
-webRouter.post("/addtofavourite", addToFavourite);
-webRouter.post("/getfavouritemasjeeds", getFavouriteMasjeeds);
+webRouter.post("/addwebtofavourite", addWebToFavourite);
+webRouter.post("/getwebfavouritemasjeeds", getWebFavouriteMasjeeds);

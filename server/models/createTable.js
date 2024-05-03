@@ -10,6 +10,7 @@ import { pool } from "../utils/db.js";
 import { ramzanTable } from "./ramzantimings.js";
 import { ramzanFile } from "./ramzanfile.js";
 import { recentmasjeedtable } from "./recentMasjeedTable.js";
+import { superadminfavouriteMasjeedsTable } from "./superadminfavouritemasjeeds.js";
 
 const tableToCreate = [
   { tableName: "Super Admin", sql: createSuperAdminTable },
@@ -48,6 +49,10 @@ const tableToCreate = [
   {
     tableName: "Recent masjeed table",
     sql: recentmasjeedtable,
+  },
+  {
+    tableName: "Super admin favourite masjeed table",
+    sql: superadminfavouriteMasjeedsTable,
   },
 ];
 

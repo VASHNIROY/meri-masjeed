@@ -770,7 +770,7 @@ export const getRecentMasjeed = CatchAsyncError(async (req, res, next) => {
   });
 });
 
-export const addToFavourite = CatchAsyncError(async (req, res, next) => {
+export const addWebToFavourite = CatchAsyncError(async (req, res, next) => {
   try {
     const { deviceid, masjeedid } = req.query;
 
@@ -841,7 +841,7 @@ export const addToFavourite = CatchAsyncError(async (req, res, next) => {
   }
 });
 
-export const getFavouriteMasjeeds = CatchAsyncError(async (req, res, next) => {
+export const getWebFavouriteMasjeeds = CatchAsyncError(async (req, res, next) => {
   try {
     // Acquire a connection from the pool
     const { deviceid } = req.query;
