@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 
-import masjidLogo from '../../utils/masjidLogo-1.png'
+import masjidLogo from "../../utils/masjidLogo-1.png";
 
-const Clock = ({ masjidTimingList, onShowBannerChange }) => {
+const Clock = ({ masjidTimingList, masjeedDetails, onShowBannerChange }) => {
   const [time, setTime] = useState(new Date());
   const [showBanner, setShowBanner] = useState(false);
   const [names, setNames] = useState([]);
   const [remainingMinutes, setRemainingMinutes] = useState(0);
+
+  console.log("masjeeddetails", masjeedDetails);
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -57,7 +59,7 @@ const Clock = ({ masjidTimingList, onShowBannerChange }) => {
         const bannerTimeout = setTimeout(() => {
           setShowBanner(false);
           onShowBannerChange(false);
-        }, 5*60*1000);
+        }, 5 * 60 * 1000);
 
         return () => clearTimeout(bannerTimeout);
       }
@@ -72,14 +74,25 @@ const Clock = ({ masjidTimingList, onShowBannerChange }) => {
   const second = time.getSeconds();
   return (
     <div className="clock-flex-container">
-      <div style={{display:"flex", justifyContent:"space-between",alignItems:"center"}}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <div className="clock-masjid-logo-container">
           <img src={masjidLogo} alt="" className="clock-masjid-logo" />
         </div>
         <div>
-          <h1 className="clock-masjid-heading">Thottumpuram Juma Masjid</h1>
+          <h1 className="clock-masjid-heading">
+            {" "}
+            {masjeedDetails.masjeedname}
+          </h1>
           <p className="clock-masjid-description">
-            Thottumpuram, Kanchinada, Pangode PO 695609
+            {masjeedDetails.address},{masjeedDetails.city},{" "}
+            {masjeedDetails.state},{masjeedDetails.country},{" "}
+            {masjeedDetails.postalcode}
           </p>
         </div>
       </div>

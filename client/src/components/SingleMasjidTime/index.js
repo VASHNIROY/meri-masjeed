@@ -8,7 +8,7 @@ import { MdAddToPhotos } from "react-icons/md";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 
 import Spinner from "../Loader";
-import mobileImage from '../utils/mobileImage2.png'
+import mobileImage from "../utils/mobileImage2.png";
 
 import {
   GridToolbar,
@@ -38,21 +38,20 @@ const getSelectedRowsToExport = ({ apiRef }) => {
 function SingleMasjidTime() {
   const { id } = useParams();
 
-  const toggle = true
+  const toggle = true;
 
   const [masjidTimingList, setMasjidTimingList] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [time, setTime] = useState(new Date());
-   const [showBanner, setShowBanner] = useState(false);
-   const [names, setNames] = useState([]);
-   const [remainingMinutes, setRemainingMinutes] = useState(0);
+  const [showBanner, setShowBanner] = useState(false);
+  const [names, setNames] = useState([]);
+  const [remainingMinutes, setRemainingMinutes] = useState(0);
 
-   const [sehar, setSehar] = useState("");
-   const [iftar, setIftar] = useState("");
-
-   const [todayDate,setTodayDate] = useState("")
-
+  const [sehar, setSehar] = useState("");
+  const [iftar, setIftar] = useState("");
+  const [masjiddetails, setMasjidDetails] = useState({});
+  const [todayDate, setTodayDate] = useState("");
 
   const url = process.env.REACT_APP_BASE_URL;
 
@@ -82,6 +81,7 @@ function SingleMasjidTime() {
       });
       console.log(data, "kapil");
       setMasjidTimingList(data.todayTimings);
+      setMasjidDetails(data.results);
       console.log(data.todayTimings, "kkkkk");
     } catch (error) {
       setLoading(false);
@@ -171,114 +171,105 @@ function SingleMasjidTime() {
 
   console.log(masjidTimingList, "masjidTimingList");
 
+  useEffect(() => {
+    if (masjidTimingList && masjidTimingList.length > 0) {
+      const updatedNames = masjidTimingList.map(({ name, starttime }) => {
+        const [hours, minutes] = starttime.split(":");
+        return {
+          text: name,
+          dynamicHours: parseInt(hours, 10),
+          dynamicMinutes: parseInt(minutes, 10),
+        };
+      });
+      setNames(updatedNames);
+    }
+  }, [masjidTimingList]);
 
-   useEffect(() => {
-     if (masjidTimingList && masjidTimingList.length > 0) {
-       const updatedNames = masjidTimingList.map(({ name, starttime }) => {
-         const [hours, minutes] = starttime.split(":");
-         return {
-           text: name,
-           dynamicHours: parseInt(hours, 10),
-           dynamicMinutes: parseInt(minutes, 10),
-         };
-       });
-       setNames(updatedNames);
-     }
-   }, [masjidTimingList]);
+  useEffect(() => {
+    const currentMinutes = time.getHours() * 60 + time.getMinutes();
+    const nextPrayerIndex = names.findIndex(
+      ({ dynamicHours, dynamicMinutes }) =>
+        currentMinutes < dynamicHours * 60 + dynamicMinutes
+    );
 
-   useEffect(() => {
-     const currentMinutes = time.getHours() * 60 + time.getMinutes();
-     const nextPrayerIndex = names.findIndex(
-       ({ dynamicHours, dynamicMinutes }) =>
-         currentMinutes < dynamicHours * 60 + dynamicMinutes
-     );
+    if (nextPrayerIndex !== -1) {
+      const nextPrayerTime = names[nextPrayerIndex];
+      const remaining =
+        nextPrayerTime.dynamicHours * 60 +
+        nextPrayerTime.dynamicMinutes -
+        currentMinutes;
 
-     if (nextPrayerIndex !== -1) {
-       const nextPrayerTime = names[nextPrayerIndex];
-       const remaining =
-         nextPrayerTime.dynamicHours * 60 +
-         nextPrayerTime.dynamicMinutes -
-         currentMinutes;
+      setRemainingMinutes(remaining);
+      console.log(remaining, "remaining");
 
-       setRemainingMinutes(remaining);
-       console.log(remaining, "remaining");
+      if (remaining > 0 && remaining < 4) {
+        console.log("kapil");
+        setShowBanner(true);
+        const bannerTimeout = setTimeout(() => {
+          setShowBanner(false);
+        }, 1000);
 
-       if (remaining > 0 && remaining < 4) {
-         console.log("kapil");
-         setShowBanner(true);
-         const bannerTimeout = setTimeout(() => {
-           setShowBanner(false);
-         }, 1000);
+        return () => clearTimeout(bannerTimeout);
+      }
+    }
 
-         return () => clearTimeout(bannerTimeout);
-       }
-     }
+    setShowBanner(false); // If remainingMinutes is not 1, hide the banner
+  }, [time, names]);
 
-     setShowBanner(false); // If remainingMinutes is not 1, hide the banner
-   }, [time, names]);
+  const hour = time.getHours();
+  const minute = time.getMinutes();
+  const second = time.getSeconds();
 
-   const hour = time.getHours();
-   const minute = time.getMinutes();
-   const second = time.getSeconds();
+  console.log(showBanner, "showBanner");
 
-   console.log(showBanner,"showBanner")
+  const handleShowBannerChange = (value) => {
+    setShowBanner(value);
+  };
 
-   const handleShowBannerChange = (value) => {
-     setShowBanner(value);
-   };
+  useEffect(() => {
+    const date = new Date();
+    const TodayDateandYear = `${date.getDate()}-${
+      date.getMonth() + 1
+    }-${date.getFullYear()}`;
+    setTodayDate(TodayDateandYear);
+  });
 
-   useEffect(()=>{
-      const date = new Date();
-      const TodayDateandYear = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
-      setTodayDate(TodayDateandYear);
-   })
+  const fetchRamzanData = async () => {
+    const options = {
+      method: "GET",
+    };
+    const api = `${url}getramzantimings`;
+    try {
+      const response = await fetch(api, options);
 
+      if (!response.ok) {
+        throw new Error(`Request failed with status: ${response.status}`);
+      }
 
-   
+      const data = await response.json();
+      Toast.fire({
+        icon: "success",
+        title: data.message,
+      });
 
-   
-  
+      console.log(data, "kapil");
+      const masjeedData = data.data[0];
 
-   const fetchRamzanData = async () => {
-     const options = {
-       method: "GET",
-       
-     };
-     const api = `${url}getramzantimings`;
-     try {
-       const response = await fetch(api, options);
+      console.log(masjeedData, "data data");
 
-       if (!response.ok) {
-         throw new Error(`Request failed with status: ${response.status}`);
-       }
+      const seharTime = masjeedData.sehar.split(":").slice(0, 2).join(":");
+      const iftarTime = masjeedData.iftar.split(":").slice(0, 2).join(":");
 
-       const data = await response.json();
-       Toast.fire({
-         icon: "success",
-         title: data.message,
-       });
+      setSehar(seharTime);
+      setIftar(iftarTime);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-       console.log(data, "kapil");
-       const masjeedData = data.data[0];
-
-       console.log(masjeedData, "data data");
-
-       const seharTime = masjeedData.sehar.split(":").slice(0, 2).join(":");
-       const iftarTime = masjeedData.iftar.split(":").slice(0, 2).join(":");
-
-       setSehar(seharTime);
-       setIftar(iftarTime);
-     } catch (error) {
-       console.error("Error fetching data:", error);
-     }
-   };
-
-   useEffect(() => {
-     fetchRamzanData();
-   }, []);
-   
-   
-
+  useEffect(() => {
+    fetchRamzanData();
+  }, []);
 
   return (
     <>
@@ -286,7 +277,6 @@ function SingleMasjidTime() {
         <Spinner />
       ) : (
         <div className="select-masjid-warning-container">
-         
           {/* <div>
             <h1
               style={{
@@ -303,20 +293,20 @@ function SingleMasjidTime() {
           <div className="select-masjid-time-flex-container">
             <Clock
               masjidTimingList={masjidTimingList}
+              masjeedDetails = {masjiddetails}
               onShowBannerChange={handleShowBannerChange}
             />
             <div className="single-masjid-list-main-container">
               {masjidTimingList.length > 0 && (
                 <Box
                   sx={{
-                    
-                    width:"100%",
+                    width: "100%",
                     display: "flex",
                     justifyContent: "space-between",
                     "& .super-app-theme--header": {
                       backgroundColor: "#194373",
                       color: "#fff",
-                      fontSize:"30px"
+                      fontSize: "30px",
                     },
                     "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within":
                       {
@@ -324,13 +314,13 @@ function SingleMasjidTime() {
                         border: "none !important", // Remove the border when the cell is focused
                         boxShadow: "none !important", // Remove any box shadow
                       },
-                      "& .even-row, & .odd-row": {
+                    "& .even-row, & .odd-row": {
                       backgroundColor: "#fff",
-                      fontSize:"24px" // Remove the background color on hover
+                      fontSize: "24px", // Remove the background color on hover
                     },
                     "& .even-row:hover, & .odd-row:hover": {
                       backgroundColor: "#f2f2f2",
-                      cursor:"pointer" // Remove the background color on hover
+                      cursor: "pointer", // Remove the background color on hover
                     },
                   }}
                 >
