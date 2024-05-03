@@ -443,7 +443,6 @@ export const getRamzanTimings = CatchAsyncError(async (req, res, next) => {
           console.error("Error fetching ramzan status", selectErr);
           return next(new ErrorHandler("Internal Server Error", 500));
         }
-        console.log(output);
 
         if (output[0].ramzanstatus === 0) {
           return next(new ErrorHandler("status Not Found", 404));
@@ -463,7 +462,6 @@ export const getRamzanTimings = CatchAsyncError(async (req, res, next) => {
             return next(new ErrorHandler("Timings Not Found", 404));
           }
 
-          console.log(results);
           const today = new Date(); // Get current date and time
           const todayDate = new Date(
             today.getFullYear(),
@@ -481,6 +479,10 @@ export const getRamzanTimings = CatchAsyncError(async (req, res, next) => {
             ); // Get date without time
             return itemDateWithoutTime.getTime() === todayDate.getTime(); // Compare the dates
           });
+
+          if (filteredResults.length === 0){
+            return next(new ErrorHandler("status Not Found", 404));
+          }
 
           res.status(200).json({
             success: true,
@@ -841,80 +843,85 @@ export const addWebToFavourite = CatchAsyncError(async (req, res, next) => {
   }
 });
 
-export const getWebFavouriteMasjeeds = CatchAsyncError(async (req, res, next) => {
-  try {
-    // Acquire a connection from the pool
-    const { deviceid } = req.query;
+export const getWebFavouriteMasjeeds = CatchAsyncError(
+  async (req, res, next) => {
+    try {
+      // Acquire a connection from the pool
+      const { deviceid } = req.query;
 
-    pool.getConnection((err, connection) => {
-      if (err) {
-        // Handle connection error
-        console.error("Error acquiring connection:", err);
-        return next(new ErrorHandler("Database Connection Error", 500));
-      }
-
-      const favouriteMasjeedsQuery =
-        "SELECT * FROM favouritemasjeeds WHERE deviceid = ?";
-
-      // Execute the query to get favourite masjeed IDs
-      connection.query(
-        favouriteMasjeedsQuery,
-        [deviceid],
-        (selectErr, favouriteMasjeeds) => {
-          if (selectErr) {
-            connection.release(); // Release the connection back to the pool
-            console.error("Error fetching masjeeds from favourites", selectErr);
-            return next(new ErrorHandler("Internal Server Error", 500));
-          }
-
-          // Check if there are no favourite masjeeds
-          if (favouriteMasjeeds.length === 0) {
-            connection.release(); // Release the connection back to the pool
-            return next(new ErrorHandler("Masjeeds Not Found", 404));
-          }
-
-          // Fetch masjeed details for each favourite masjeed ID
-          let masjeedPromises = favouriteMasjeeds.map((favourite) => {
-            return new Promise((resolve, reject) => {
-              connection.query(
-                "SELECT * FROM masjeed WHERE id = ?",
-                [favourite.favouritemasjeddid],
-                (error, masjeedDetails) => {
-                  if (error) {
-                    console.error("Error fetching data:", error);
-                    reject(new ErrorHandler("Internal Server Error", 500));
-                  } else {
-                    resolve({
-                      ...favourite,
-                      masjeedDetails: masjeedDetails[0],
-                    });
-                  }
-                }
-              );
-            });
-          });
-
-          // Resolve all masjeed promises
-          Promise.all(masjeedPromises)
-            .then((results) => {
-              // Release the connection back to the pool
-              connection.release();
-
-              res.json({
-                success: true,
-                message: "Fetched masjeed",
-                data: results,
-              });
-            })
-            .catch((error) => {
-              // Handle error if any promise fails
-              connection.release();
-              return next(new ErrorHandler(error.message, 500));
-            });
+      pool.getConnection((err, connection) => {
+        if (err) {
+          // Handle connection error
+          console.error("Error acquiring connection:", err);
+          return next(new ErrorHandler("Database Connection Error", 500));
         }
-      );
-    });
-  } catch (error) {
-    return next(new ErrorHandler(error.message, 400));
+
+        const favouriteMasjeedsQuery =
+          "SELECT * FROM favouritemasjeeds WHERE deviceid = ?";
+
+        // Execute the query to get favourite masjeed IDs
+        connection.query(
+          favouriteMasjeedsQuery,
+          [deviceid],
+          (selectErr, favouriteMasjeeds) => {
+            if (selectErr) {
+              connection.release(); // Release the connection back to the pool
+              console.error(
+                "Error fetching masjeeds from favourites",
+                selectErr
+              );
+              return next(new ErrorHandler("Internal Server Error", 500));
+            }
+
+            // Check if there are no favourite masjeeds
+            if (favouriteMasjeeds.length === 0) {
+              connection.release(); // Release the connection back to the pool
+              return next(new ErrorHandler("Masjeeds Not Found", 404));
+            }
+
+            // Fetch masjeed details for each favourite masjeed ID
+            let masjeedPromises = favouriteMasjeeds.map((favourite) => {
+              return new Promise((resolve, reject) => {
+                connection.query(
+                  "SELECT * FROM masjeed WHERE id = ?",
+                  [favourite.favouritemasjeddid],
+                  (error, masjeedDetails) => {
+                    if (error) {
+                      console.error("Error fetching data:", error);
+                      reject(new ErrorHandler("Internal Server Error", 500));
+                    } else {
+                      resolve({
+                        ...favourite,
+                        masjeedDetails: masjeedDetails[0],
+                      });
+                    }
+                  }
+                );
+              });
+            });
+
+            // Resolve all masjeed promises
+            Promise.all(masjeedPromises)
+              .then((results) => {
+                // Release the connection back to the pool
+                connection.release();
+
+                res.json({
+                  success: true,
+                  message: "Fetched masjeed",
+                  data: results,
+                });
+              })
+              .catch((error) => {
+                // Handle error if any promise fails
+                connection.release();
+                return next(new ErrorHandler(error.message, 500));
+              });
+          }
+        );
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
   }
-});
+);
