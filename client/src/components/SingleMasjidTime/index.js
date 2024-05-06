@@ -220,8 +220,6 @@ function SingleMasjidTime() {
   const minute = time.getMinutes();
   const second = time.getSeconds();
 
-  console.log(showBanner, "showBanner");
-
   const handleShowBannerChange = (value) => {
     setShowBanner(value);
   };
@@ -241,6 +239,7 @@ function SingleMasjidTime() {
     const api = `${url}getramzantimings`;
     try {
       const response = await fetch(api, options);
+      console.log(response, "kapil");
 
       if (!response.ok) {
         throw new Error(`Request failed with status: ${response.status}`);
@@ -293,7 +292,7 @@ function SingleMasjidTime() {
           <div className="select-masjid-time-flex-container">
             <Clock
               masjidTimingList={masjidTimingList}
-              masjeedDetails = {masjiddetails}
+              masjeedDetails={masjiddetails}
               onShowBannerChange={handleShowBannerChange}
             />
             <div className="single-masjid-list-main-container">
