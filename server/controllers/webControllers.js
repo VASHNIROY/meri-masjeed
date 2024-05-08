@@ -406,23 +406,27 @@ export const getWebMessages = CatchAsyncError(async (req, res, next) => {
       if (err) {
         return next(new ErrorHandler("Database Connection Error", 500));
       }
-      connection.query(getmasjeedmessagesQuery, [masjeedid], (error, results) => {
-        connection.release(); // Release the connection back to the pool
+      connection.query(
+        getmasjeedmessagesQuery,
+        [masjeedid],
+        (error, results) => {
+          connection.release(); // Release the connection back to the pool
 
-        if (error) {
-          return next(new ErrorHandler("Internal Server Error", 500));
+          if (error) {
+            return next(new ErrorHandler("Internal Server Error", 500));
+          }
+
+          if (results.length === 0) {
+            return next(new ErrorHandler("Messages Not Found", 404));
+          }
+
+          res.json({
+            success: true,
+            message: "Messages Fetched",
+            data: results,
+          });
         }
-
-        if (results.length === 0) {
-          return next(new ErrorHandler("Messages Not Found", 404));
-        }
-
-        res.json({
-          success: true,
-          message: "Messages Fetched",
-          data: results,
-        });
-      });
+      );
     });
   } catch (error) {
     return next(new ErrorHandler("Internal Server Error", 500));
@@ -586,7 +590,6 @@ export const getRecentMasjeed = CatchAsyncError(async (req, res, next) => {
           }
 
           const masjeedid = results[0].recentmasjeedid;
-
 
           // const masjeedDetailsQuery = "SELECT * FROM masjeed WHERE id = ?";
 
@@ -899,7 +902,7 @@ export const getWebFavouriteMasjeeds = CatchAsyncError(
                     } else {
                       resolve({
                         ...favourite,
-                        masjeedDetails: masjeedDetails[0],
+                        ...masjeedDetails[0],
                       });
                     }
                   }
