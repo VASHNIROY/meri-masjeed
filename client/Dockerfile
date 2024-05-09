@@ -1,38 +1,41 @@
-# Use an official Apache image as a base image
+# Use Node.js LTS version as base image for building
+FROM node:18.19-alpine as builder
 
-FROM httpd:2.4-alpine
+# Set the working directory
+WORKDIR /app
 
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
+# Install dependencies
+RUN npm install --silent --legacy-peer-deps
 
-# Set the working directory inside the container
+# Copy the rest of the application code
+COPY . .
 
-WORKDIR /usr/local/apache2/htdocs
+# Build the React app
+RUN npm run build
 
+# Use Apache as base image for serving the static files
+FROM httpd:alpine
 
+# Copy the build output from the builder stage to serve
+COPY --from=builder /app/build /usr/local/apache2/htdocs/
 
-# Copy the built frontend files into the default Apache serving directory
+# Copy the .htaccess file from the Dockerfile directory to Apache document root
+COPY .htaccess /usr/local/apache2/htdocs/
 
-COPY build/ .
-
-# Enable mod_rewrite module for .htaccess support
-
-#RUN a2enmod rewrite
-
-
-# Enable mod_rewrite module for .htaccess support
-
-RUN sed -i '/LoadModule rewrite_module/s/^#//g' /usr/local/apache2/conf/httpd.conf
-
-
-
-# Set the AllowOverride directive to All for .htaccess support
-
-RUN sed -i '/<Directory "\/usr\/local\/apache2\/htdocs">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /usr/local/apache2/conf/httpd.conf
-
-
-
-# Expose the port that the Apache server will run on (port 80 by default)
-
+# Expose port 80
 EXPOSE 80
 
+# Enable the rewrite module in Apache configuration
+RUN sed -i '/LoadModule rewrite_module/s/^#//g' /usr/local/apache2/conf/httpd.conf
 
+# Set the AllowOverride directive to All for .htaccess support
+RUN sed -i '/<Directory "\/usr\/local\/apache2\/htdocs">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /usr/local/apache2/conf/httpd.conf
+
+# Set the working directory to Apache document root
+WORKDIR /usr/local/apache2/htdocs
+
+# Command to run Apache
+CMD ["httpd-foreground"]
