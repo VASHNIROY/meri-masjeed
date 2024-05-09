@@ -13,8 +13,7 @@ RUN npm install --silent --legacy-peer-deps
 # Copy the rest of the application code
 COPY . .
 
-# Build the React app with maximum available memory
-RUN NODE_OPTIONS=--max-old-space-size=$(($(grep -c ^processor /proc/cpuinfo) * $(getconf PAGE_SIZE) / (1024 * 1024))) npm run build
+
 
 
 # Use Apache as base image for serving the static files
