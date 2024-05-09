@@ -13,14 +13,18 @@ RUN npm install --silent --legacy-peer-deps
 # Copy the rest of the application code
 COPY . .
 
-
+# Build the application
+RUN npm run build
 
 
 # Use Apache as base image for serving the static files
 FROM httpd:alpine
 
+# Remove default index.html
+RUN rm /usr/local/apache2/htdocs/*
+
 # Copy the build output from the builder stage to serve
-COPY --from=builder /app/build /usr/local/apache2/htdocs/
+COPY --from=builder /app/build/ /usr/local/apache2/htdocs/
 
 # Copy the .htaccess file from the Dockerfile directory to Apache document root
 COPY .htaccess /usr/local/apache2/htdocs/
@@ -33,9 +37,6 @@ RUN sed -i '/LoadModule rewrite_module/s/^#//g' /usr/local/apache2/conf/httpd.co
 
 # Set the AllowOverride directive to All for .htaccess support
 RUN sed -i '/<Directory "\/usr\/local\/apache2\/htdocs">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /usr/local/apache2/conf/httpd.conf
-
-# Set the working directory to Apache document root
-WORKDIR /usr/local/apache2/htdocs
 
 # Command to run Apache
 CMD ["httpd-foreground"]
