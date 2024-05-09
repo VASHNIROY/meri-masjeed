@@ -14,8 +14,6 @@ RUN npm install --silent --legacy-peer-deps
 COPY . .
 
 
-
-
 # Use Apache as base image for serving the static files
 FROM httpd:alpine
 
