@@ -17,20 +17,26 @@ COPY . .
 RUN npm run build
 
 
-# Use Nginx as base image for serving the static files
-FROM nginx:alpine
+# Use Apache as base image for serving the static files
+FROM httpd:alpine
 
-# Remove default nginx website
-RUN rm -rf /usr/share/nginx/html/*
+# Remove default index.html
+RUN rm /usr/local/apache2/htdocs/*
 
 # Copy the build output from the builder stage to serve
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/build/ /usr/local/apache2/htdocs/
 
-# Copy the .htaccess file from the Dockerfile directory to Nginx configuration directory
-COPY .htaccess /etc/nginx/conf.d/
+# Copy the .htaccess file from the Dockerfile directory to Apache document root
+COPY .htaccess /usr/local/apache2/htdocs/
 
 # Expose port 80
 EXPOSE 80
 
-# Command to run Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Enable the rewrite module in Apache configuration
+RUN sed -i '/LoadModule rewrite_module/s/^#//g' /usr/local/apache2/conf/httpd.conf
+
+# Set the AllowOverride directive to All for .htaccess support
+RUN sed -i '/<Directory "\/usr\/local\/apache2\/htdocs">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /usr/local/apache2/conf/httpd.conf
+
+# Command to run Apache
+CMD ["httpd-foreground"]
