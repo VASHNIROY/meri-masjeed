@@ -33,6 +33,15 @@ export const addMasjeed = CatchAsyncError(async (req, res, next) => {
       return;
     }
 
+    const excelExtensions = ['.xls', '.xlsx'];
+
+    // Check if the uploaded file has a valid Excel extension
+    const isValidExcelFile = excelExtensions.some(ext => filename.endsWith(ext));
+    if (!isValidExcelFile) {
+      res.status(400).json({ error: "Please upload an Excel file" });
+      return;
+    }
+
     const verifyEmailQuery = `SELECT email FROM masjeed WHERE email = ?`;
     pool.getConnection((err, connection) => {
       if (err) {
