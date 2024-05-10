@@ -19,6 +19,8 @@ const SECRET_KEY = "uK8Tgvho1Y";
 export const adminLogin = CatchAsyncError(async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    console.log("details", email, password);
+
     const verifyemailQuery = "SELECT * from admin WHERE email = ?";
 
     pool.getConnection((err, connection) => {
