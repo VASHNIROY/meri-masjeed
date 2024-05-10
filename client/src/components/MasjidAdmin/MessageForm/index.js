@@ -162,6 +162,7 @@ const MessageForm = ({ onClose, fetchMessage }) => {
                   value={formData.expireDate}
                   onChange={handleInputChange}
                   className="masjid-message-input"
+                  required
                 />
               </label>
             </div>

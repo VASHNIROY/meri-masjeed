@@ -28,6 +28,7 @@ import Clock from "./components/Home/Clock";
 import NotFound from "./components/NotFound";
 import MasidRegisterMobile from "./components/MasjidRegisterMobile";
 import ExcelDownloadLink from "./components/ExcelDownload";
+import PrivacyPolicy from "./components/Home/PrivacyPolicy";
 
 function App() {
   return (
@@ -101,6 +102,7 @@ function App() {
       <Route path="/clock" element={<Clock />} />
       <Route path="*" element={<NotFound />} />
       <Route path="/excel" element={<ExcelDownloadLink />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
     </Routes>
   );
 }
