@@ -6,6 +6,7 @@ import {
   addTimingRowToHr,
   addmessage,
   adminLogin,
+  deleteadminmessage,
   editAdminStaffMember,
   editIqamah,
   forgotPassword,
@@ -93,3 +94,9 @@ adminRouter.post(
 );
 
 adminRouter.get("/getmessages", isAuthenticatedAdmin, getmessages);
+
+adminRouter.post(
+  "/deleteadminmessage",
+  isAuthenticatedAdmin,
+  deleteadminmessage
+);

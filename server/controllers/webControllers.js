@@ -406,6 +406,23 @@ export const getWebMessages = CatchAsyncError(async (req, res, next) => {
       if (err) {
         return next(new ErrorHandler("Database Connection Error", 500));
       }
+
+      const formatDate = (dateString) => {
+        if (!dateString) return ""; // Return empty string if dateString is null or undefined
+
+        const dateObj = new Date(dateString);
+        const day = dateObj.toLocaleString("en-US", { day: "2-digit" });
+        const month = dateObj.toLocaleString("en-US", { month: "short" });
+        const year = dateObj.toLocaleString("en-US", { year: "numeric" });
+        const hours = dateObj.toLocaleString("en-US", {
+          hour: "2-digit",
+          hour12: true,
+        });
+        const minutes = dateObj.toLocaleString("en-US", { minute: "2-digit" });
+
+        return `${day} ${month} ${year}, ${hours}:${minutes}`;
+      };
+
       connection.query(
         getmasjeedmessagesQuery,
         [masjeedid],
@@ -420,10 +437,17 @@ export const getWebMessages = CatchAsyncError(async (req, res, next) => {
             return next(new ErrorHandler("Messages Not Found", 404));
           }
 
+          const formattedResults = results.map((result) => ({
+            ...result,
+            startdate: formatDate(result.startdate),
+            expirydate: formatDate(result.expirydate),
+            enddate: formatDate(result.enddate),
+          }));
+
           res.json({
             success: true,
             message: "Messages Fetched",
-            data: results,
+            data: formattedResults,
           });
         }
       );
