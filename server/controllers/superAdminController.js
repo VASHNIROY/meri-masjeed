@@ -585,10 +585,11 @@ export const approveMasjeed = CatchAsyncError(async (req, res, next) => {
                       const mailOptions = {
                         from: process.env.SMTP_MAIL,
                         to: email,
-                        subject: "Welcome to Mymasjeed. Aprroved Your Request",
+                        subject:
+                          "Welcome to Meri masjeed. Aprroved Your Request",
                         html: `
                       <p>Dear ${adminname},</p>
-                      <p>Thank you for registering with My Masjeed. We are delighted to have you as part of our community, and we want to extend a warm welcome to you.</p>
+                      <p>Thank you for registering with Meri Masjeed. We are delighted to have you as part of our community, and we want to extend a warm welcome to you.</p>
                       <p>This is your email ${email} and password is 123456</p>
                     `,
                       };
@@ -715,10 +716,10 @@ export const rejectMasjeed = CatchAsyncError(async (req, res, next) => {
           const mailOptions = {
             from: process.env.SMTP_MAIL,
             to: email,
-            subject: "Welcome to Mymasjeed. Rejected Your Request",
+            subject: "Welcome to Meri Masjeed. Rejected Your Request",
             html: `
         <p>Dear ${name},</p>
-        <p>Thank you for requesting My Masjeed.Unfortunately your request has been rejected.</p>
+        <p>Thank you for requesting Meri Masjeed.Unfortunately your request has been rejected.</p>
         <p>Please contact the adminstrator for further details.</p>
       `,
           };
@@ -853,7 +854,6 @@ export const getFavouriteMasjeeds = CatchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler(error.message, 400));
   }
 });
-
 
 export const deleteFavouriteMasjeed = CatchAsyncError(
   async (req, res, next) => {
