@@ -33,6 +33,17 @@ export const addMasjeed = CatchAsyncError(async (req, res, next) => {
       return;
     }
 
+    const excelExtensions = [".xls", ".xlsx"];
+
+    // Check if the uploaded file has a valid Excel extension
+    const isValidExcelFile = excelExtensions.some((ext) =>
+      filename.endsWith(ext)
+    );
+    if (!isValidExcelFile) {
+      res.status(400).json({ error: "Please upload an Excel file" });
+      return;
+    }
+
     const verifyEmailQuery = `SELECT email FROM masjeed WHERE email = ?`;
     pool.getConnection((err, connection) => {
       if (err) {
@@ -406,6 +417,23 @@ export const getWebMessages = CatchAsyncError(async (req, res, next) => {
       if (err) {
         return next(new ErrorHandler("Database Connection Error", 500));
       }
+
+      const formatDate = (dateString) => {
+        if (!dateString) return ""; // Return empty string if dateString is null or undefined
+
+        const dateObj = new Date(dateString);
+        const day = dateObj.toLocaleString("en-US", { day: "2-digit" });
+        const month = dateObj.toLocaleString("en-US", { month: "short" });
+        const year = dateObj.toLocaleString("en-US", { year: "numeric" });
+        const hours = dateObj.toLocaleString("en-US", {
+          hour: "2-digit",
+          hour12: true,
+        });
+        const minutes = dateObj.toLocaleString("en-US", { minute: "2-digit" });
+
+        return `${day} ${month} ${year}, ${hours}:${minutes}`;
+      };
+
       connection.query(
         getmasjeedmessagesQuery,
         [masjeedid],
@@ -420,10 +448,17 @@ export const getWebMessages = CatchAsyncError(async (req, res, next) => {
             return next(new ErrorHandler("Messages Not Found", 404));
           }
 
+          const formattedResults = results.map((result) => ({
+            ...result,
+            startdate: formatDate(result.startdate),
+            expirydate: formatDate(result.expirydate),
+            enddate: formatDate(result.enddate),
+          }));
+
           res.json({
             success: true,
             message: "Messages Fetched",
-            data: results,
+            data: formattedResults,
           });
         }
       );

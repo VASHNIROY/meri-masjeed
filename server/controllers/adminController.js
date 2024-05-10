@@ -19,6 +19,8 @@ const SECRET_KEY = "uK8Tgvho1Y";
 export const adminLogin = CatchAsyncError(async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    console.log("details", email, password);
+
     const verifyemailQuery = "SELECT * from admin WHERE email = ?";
 
     pool.getConnection((err, connection) => {
@@ -1073,6 +1075,11 @@ export const addmessage = CatchAsyncError(async (req, res, next) => {
 
     const { title, startdate, expirydate, status, type, enddate } = req.body;
 
+    // Check if expirydate is present in the request body
+    if (!expirydate) {
+      return next(new ErrorHandler("Expiry date is required", 400));
+    }
+
     const getmasjeedidQuery = `SELECT id FROM masjeed WHERE email = ? AND status = 1`;
     pool.getConnection((err, connection) => {
       if (err) {
@@ -1182,62 +1189,50 @@ export const getmessages = CatchAsyncError(async (req, res, next) => {
   }
 });
 
-// export const addmessage = CatchAsyncError(async (req, res, next) => {
-//   try {
-//     const useremail = req.user.email;
+export const deleteadminmessage = CatchAsyncError(async (req, res, next) => {
+  try {
+    const { messageid } = req.query;
 
-//     let filename = req.file ? req.file.filename : null;
+    const getmessageidQuery = `SELECT id FROM message WHERE id = ?`;
 
-//     if (!filename) {
-//       filename = req.body.description;
-//     }
+    pool.getConnection((err, connection) => {
+      if (err) {
+        // Handle connection error
+        console.error("Error acquiring connection:", err);
+        return next(new ErrorHandler("Database Connection Error", 500));
+      }
 
-//     const { title, startdate, expirydate, status, type, enddate } = req.body;
-//     console.log(req.body,filename,"kapil")
+      connection.query(getmessageidQuery, [messageid], (error, results) => {
+        connection.release(); // Release the connection back to the pool
+        if (error) {
+          return next(new ErrorHandler("Internal Server Error", 500));
+        }
 
-//     const getmasjeedidQuery = `SELECT id FROM masjeed WHERE email = ? AND status = 1`;
+        if (results.length === 0) {
+          return next(new ErrorHandler("message Not Found", 404));
+        }
 
-//     connection.query(getmasjeedidQuery, [useremail], (error, results) => {
-//       if (error) {
-//         return next(new ErrorHandler(error.message, 500));
-//       }
+        const masjeedid = results[0].id;
 
-//       if (results.length === 0) {
-//         return next(new ErrorHandler("Masjeed Not Found", 404));
-//       }
+        const getmasjeedmessagesQuery = `DELETE FROM message WHERE id = ?`;
 
-//       const masjeedid = results[0].id;
+        connection.query(
+          getmasjeedmessagesQuery,
+          [masjeedid],
+          (error, results) => {
+            if (error) {
+              return next(new ErrorHandler("Internal Server Error", 500));
+            }
 
-//       const addMessageQuery = `INSERT INTO message (masjeedid, title, description, startdate, expirydate, status, type, enddate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-
-//       const startdate1 = startdate === "null" ? JSON.parse(startdate) : enddate;
-//       const enddate1 = enddate === "null" ? JSON.parse(enddate) : enddate;
-
-//       const expirydate1 =
-//         expirydate === "null" ? JSON.parse(expirydate) : expirydate;
-
-//       connection.query(
-//         addMessageQuery,
-//         [
-//           masjeedid,
-//           title,
-//           filename,
-//           startdate1,
-//           expirydate1,
-//           status,
-//           type,
-//           enddate1,
-//         ],
-//         (error, results) => {
-//           if (error) {
-//             return next(new ErrorHandler(error.message, 500));
-//           }
-
-//           res.json({ success: true, message: "Message Added" });
-//         }
-//       );
-//     });
-//   } catch (error) {
-//     return next(new ErrorHandler("Internal Server Error", 500));
-//   }
-// });
+            res.json({
+              success: true,
+              message: "Message Deleted",
+            });
+          }
+        );
+      });
+    });
+  } catch (error) {
+    return next(new ErrorHandler("Internal Server Error", 500));
+  }
+});
