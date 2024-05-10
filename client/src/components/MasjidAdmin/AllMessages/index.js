@@ -67,10 +67,15 @@ const AllMessages = () => {
   }, []);
 
   const handleDeleteClick = async (messageId) => {
+
+    console.log(typeof(messageId), messageId,"kappppppp");
+
+    console.log(`${url}deleteadminmessage?messageid=${messageId}`);
+
     const token = Cookies.get("user");
     const api = `${url}deleteadminmessage?messageid=${messageId}`;
     const options = {
-      method: "DELETE",
+      method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -156,6 +161,15 @@ const AllMessages = () => {
           return null;
         }
 
+        const cellStyle = {
+          cursor: "pointer",
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-word",  // Break words when needed
+         // Limit height to prevent excessive cell expansion
+         // Allow text to wrap
+          // Ensure long words are broken correctly
+        };
+
         const imageUrl = `${process.env.REACT_APP_IMAGE_URL}${description}`;
         console.log("Image URL:", imageUrl); 
 
@@ -202,7 +216,7 @@ const AllMessages = () => {
         }
 
         // Default: Render as plain text
-        return <span>{description}</span>;
+        return <span style={cellStyle}>{description}</span>;
       },
     },
     {
@@ -317,6 +331,17 @@ const AllMessages = () => {
     return params.row.id % 2 === 1 ? "even-row" : "odd-row";
   };
 
+  const getRowHeight = (params) => {
+    const lineHeight = 24; // Adjust based on your font size and line height
+    const defaultHeight = 50; // Default row height
+    const description = params.row.description || "";
+    const numLines = Math.ceil(description.length / 50); // Adjust 50 based on desired characters per line
+    const calculatedHeight = numLines * lineHeight + 30; // Calculate height with padding
+
+    return Math.max(defaultHeight, calculatedHeight); // Ensure minimum height
+  };
+
+
   return (
     <>
       <div className="masjid-message-container">
@@ -343,7 +368,7 @@ const AllMessages = () => {
               boxShadow: "none !important", // Remove any box shadow
             },
             "& .even-row:hover, & .odd-row:hover": {
-              backgroundColor: "#f2f2f2", // Remove the background color on hover
+              backgroundColor: "#f2f2f2",
             },
           }}
         >
@@ -356,6 +381,7 @@ const AllMessages = () => {
               },
             }}
             getRowId={getRowId}
+            rowHeight={getRowHeight}
             getRowClassName={getRowClassName}
             pageSizeOptions={[5, 10, 15, 20, 100]}
             disableSelectionOnClick // Add this line to disable cell selection
@@ -368,6 +394,7 @@ const AllMessages = () => {
                 includeCheckboxes: true,
               },
             }}
+            getRowHeight={() => "auto"}
           />
         </Box>
       </div>
