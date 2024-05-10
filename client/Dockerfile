@@ -1,38 +1,20 @@
-# Use an official Apache image as a base image
+# Use httpd Alpine image
+FROM httpd:alpine
 
-FROM httpd:2.4-alpine
+# Copy the build directory to the Apache document root
+COPY build/ /usr/local/apache2/htdocs/
 
+# Copy the .htaccess file to Apache document root
+COPY .htaccess /usr/local/apache2/htdocs/
 
-
-# Set the working directory inside the container
-
-WORKDIR /usr/local/apache2/htdocs
-
-
-
-# Copy the built frontend files into the default Apache serving directory
-
-COPY build/ .
-
-# Enable mod_rewrite module for .htaccess support
-
-#RUN a2enmod rewrite
-
-
-# Enable mod_rewrite module for .htaccess support
-
-RUN sed -i '/LoadModule rewrite_module/s/^#//g' /usr/local/apache2/conf/httpd.conf
-
-
-
-# Set the AllowOverride directive to All for .htaccess support
-
-RUN sed -i '/<Directory "\/usr\/local\/apache2\/htdocs">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /usr/local/apache2/conf/httpd.conf
-
-
-
-# Expose the port that the Apache server will run on (port 80 by default)
-
+# Expose port 80
 EXPOSE 80
 
+# Enable the rewrite module in Apache configuration
+RUN sed -i '/LoadModule rewrite_module/s/^#//g' /usr/local/apache2/conf/httpd.conf
 
+# Set the AllowOverride directive to All for .htaccess support
+RUN sed -i '/<Directory "\/usr\/local\/apache2\/htdocs">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /usr/local/apache2/conf/httpd.conf
+
+# Start Apache when the container starts
+CMD ["httpd-foreground"]

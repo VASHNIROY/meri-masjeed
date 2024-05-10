@@ -234,7 +234,7 @@ const MasidRegister = () => {
     <>
       <Navbar />
       <div className="masid-regiser-form">
-        <h1 className="masid-register-heading">Register your Masjid!</h1>
+        <h1 className="masid-register-heading">Register your Masjid here</h1>
       </div>
       <div className="masid-form-main-container">
         <form className="masid-form-container" onSubmit={handleSubmit}>
