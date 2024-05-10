@@ -29,6 +29,7 @@ import NotFound from "./components/NotFound";
 import MasidRegisterMobile from "./components/MasjidRegisterMobile";
 import ExcelDownloadLink from "./components/ExcelDownload";
 import PrivacyPolicy from "./components/Home/PrivacyPolicy";
+import PrivacyPolicyMobile from "./components/Home/PrivacyPolicyMobile";
 
 function App() {
   return (
@@ -103,6 +104,7 @@ function App() {
       <Route path="*" element={<NotFound />} />
       <Route path="/excel" element={<ExcelDownloadLink />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/privacy-policies" element={<PrivacyPolicyMobile />} />
     </Routes>
   );
 }

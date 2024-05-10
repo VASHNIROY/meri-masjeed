@@ -16,7 +16,7 @@ const PrivacyPolicy=()=>{
               anyone decided to use our Service.
             </p>
             <p className="privacy-text">
-              Asaaya Technologies built the My-Masjid (My Masjid, MyMasjid)
+              Asaaya Technologies built the meri-Masjid (meri Masjid, meriMasjid)
               apps. This SERVICE is provided by Asaaya Technologies and is
               intended for use as is.
             </p>
