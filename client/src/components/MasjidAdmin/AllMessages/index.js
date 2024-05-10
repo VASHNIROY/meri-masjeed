@@ -4,6 +4,7 @@ import "./index.css";
 import MessageForm from "../MessageForm";
 import { Box, Modal } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { MdDeleteOutline } from "react-icons/md";
 
 import {
   GridToolbar,
@@ -65,55 +66,179 @@ const AllMessages = () => {
     fetchData();
   }, []);
 
+  const handleDeleteClick = async (messageId) => {
+    const token = Cookies.get("user");
+    const api = `${url}deleteadminmessage?messageid=${messageId}`;
+    const options = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const response = await fetch(api, options);
+      if (!response.ok) {
+        throw new Error(`Failed to delete message with ID ${messageId}`);
+      }
+      const data = await response.json();
+      Toast.fire({
+        icon: "success",
+        title: data.message,
+      });
+      // Refetch messages after deletion
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      Toast.fire({
+        icon: "error",
+        title: "Failed to delete message",
+      });
+    }
+  };
+
+  const handleImageClick = (imageUrl) => {
+    console.log(imageUrl,"kapil")
+    window.open(imageUrl, "_blank"); // Open the image in a new tab/window
+    // Alternatively, use a modal or a lightbox library to display the image
+  };
+
   const columns = [
     {
       field: "id",
       headerName: "ID",
-      minWidth: 90,
+      minWidth: 30,
       headerClassName: "super-app-theme--header",
-      align: "center",
-      headerAlign: "center",
+      align: "left",
+      headerAlign: "left",
       flex: 1,
     },
     {
       field: "type",
       headerName: "Type",
-      headerAlign: "center",
+      headerAlign: "left",
       headerClassName: "super-app-theme--header",
-      minWidth: 150,
-      align: "center",
-      flex: 1,
+      minWidth: 50,
+      align: "left",
+    
     },
     {
       field: "title",
       headerName: "Title",
       headerClassName: "super-app-theme--header",
+      minWidth: 250,
+      align: "left",
+      headerAlign: "left",
+      
+    },
+    // {
+    //   field: "description",
+    //   headerName: "Description",
+    //   type: "number",
+    //   headerClassName: "super-app-theme--header",
+    //   minWidth: 110,
+    //   align: "center",
+    //   headerAlign: "center",
+    //   flex: 1,
+    // },
+    {
+      field: "description",
+      headerName: "Description",
+      headerClassName: "super-app-theme--header",
+      minWidth: 250,
+      align: "left",
+      headerAlign: "left",
+     
+      renderCell: (params) => {
+        const description = params.value;
+
+        if (!description) {
+          return null;
+        }
+
+        const imageUrl = `${process.env.REACT_APP_IMAGE_URL}${description}`;
+        console.log("Image URL:", imageUrl); 
+
+        // Check if the description is an image URL
+        if (
+          description.endsWith(".jpg") ||
+          description.endsWith(".jpeg") ||
+          description.endsWith(".png")
+        ) {
+          return (
+            // <img
+            //   src={imageUrl}
+            //   alt="Description"
+            //   style={{ cursor: "pointer" }}
+            //   onClick={() => handleImageClick(imageUrl)}
+            // />
+            <p
+              style={{ cursor: "pointer", color: "#194373" }}
+              onClick={() => handleImageClick(imageUrl)}
+              className="m-0"
+            >
+              {imageUrl}
+            </p>
+          );
+        }
+
+        // Check if the description is an audio URL
+        if (description.endsWith(".mp3")) {
+      
+          return (
+            <p
+              style={{ cursor: "pointer", color: "#194373" }}
+              onClick={() =>
+                window.open(
+                  `${process.env.REACT_APP_IMAGE_URL}${description}`,
+                  "_blank"
+                )
+              }
+              className="m-0"
+            >
+              {description}
+            </p>
+          );
+        }
+
+        // Default: Render as plain text
+        return <span>{description}</span>;
+      },
+    },
+    {
+      field: "expirydate",
+      headerName: "Expiry Date",
+      type: "number",
+      headerClassName: "super-app-theme--header",
       minWidth: 150,
       align: "center",
       headerAlign: "center",
       flex: 1,
-    },
-    {
-      field: "description",
-      headerName: "Description",
-      type: "number",
-      headerClassName: "super-app-theme--header",
-      minWidth: 110,
-      align: "center",
-      headerAlign: "center",
-      flex: 1,
+      valueGetter: (params) => {
+        if (!params.value) return "";
+        const startTime = new Date(params.value);
+        const options = {
+          timeZone: "Asia/Kolkata",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        };
+        return startTime.toLocaleString("en-IN", options);
+      },
     },
     {
       field: "startdate",
       headerName: "Start Date",
       type: "number",
       headerClassName: "super-app-theme--header",
-      minWidth: 110,
+      minWidth: 150,
       align: "center",
       headerAlign: "center",
       flex: 1,
       valueGetter: (params) => {
-         if (!params.value) return "";
+        if (!params.value) return "";
         const startTime = new Date(params.value);
         const options = {
           timeZone: "Asia/Kolkata",
@@ -136,7 +261,7 @@ const AllMessages = () => {
       headerAlign: "center",
       flex: 1,
       valueGetter: (params) => {
-         if (!params.value) return "";
+        if (!params.value) return "";
         const startTime = new Date(params.value);
         const options = {
           timeZone: "Asia/Kolkata",
@@ -150,41 +275,40 @@ const AllMessages = () => {
       },
     },
 
-    // {
-    //   field: "actions",
-    //   type: "actions",
-    //   headerName: "Actions",
-    //   minWidth: 100,
-    //   cellClassName: "actions",
-    //   align: "center",
-    //   headerAlign: "center",
-    //   headerClassName: "super-app-theme--header",
-    //   flex: 1,
-    //   getActions: ({ id }) => {
-    //     const row = masjidList.find((r) => r.id === id);
-    //     console.log(row, "rowrow");
-    //     const isActive = row && row.status === 1;
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      minWidth: 100,
+      cellClassName: "actions",
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "super-app-theme--header",
+      flex: 1,
+      getActions: ({ id }) => {
+        const row = messages.find((r) => r.id === id);
+        console.log(row, "rowrow");
+        const isActive = row && row.status === 1;
 
-    //     return [
-    //       <GridActionsCellItem
-    //         icon={<FaCheck style={{ color: "#00cc00", fontSize: "22px" }} />}
-    //         label="Edit"
-    //         className="edit-list-icon"
-    //         onClick={() => handleEnableClick(id)}
-    //         color="yellow"
-    //       />,
-    //       <GridActionsCellItem
-    //           icon={
-    //             <FaTimes style={{ color: "#ff0000", fontSize: "24px" }} />
-    //           }
-    //           label="Disable"
-    //           onClick={() => handleDeleteClick(id)}
-    //           color="red"
-    //         />
-
-    //     ];
-    //   },
-    // },
+        return [
+          // <GridActionsCellItem
+          //   icon={<FaCheck style={{ color: "#00cc00", fontSize: "22px" }} />}
+          //   label="Edit"
+          //   className="edit-list-icon"
+          //   onClick={() => handleEnableClick(id)}
+          //   color="yellow"
+          // />,
+          <GridActionsCellItem
+            icon={
+              <MdDeleteOutline style={{ color: "#ff0000", fontSize: "24px" }} />
+            }
+            label="Disable"
+            onClick={() => handleDeleteClick(id)}
+            color="red"
+          />,
+        ];
+      },
+    },
   ];
 
   const getRowId = (row) => row.id;
