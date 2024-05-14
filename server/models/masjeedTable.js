@@ -13,5 +13,4 @@ export const createMasjeedTable = `
             status INT,
         prayerdetails VARCHAR(255) NOT NULL,
         ramzanstatus INT DEFAULT 0
-
   );`;
