@@ -117,13 +117,17 @@ import './index.css'
 import { Link } from 'react-router-dom';
 import ReactPlayer from "react-player";
 import { IoCheckmark } from "react-icons/io5";
-import kidvideo from '../../utils/kidsvideo-1.mp4'
-import kidvideo_2 from "../../utils/kidsvideo-2.mp4";
+// import kidvideo from '../../utils/kidsvideo-1.mp4'
+// import kidvideo_2 from "../../utils/kidsvideo-2.mp4";
 
-import prayertiming_1 from '../../utils/prayertiming-1.PNG'
-import prayertiming_2 from "../../utils/prayertiming-2.PNG";
-import prayertiming_3 from "../../utils/prayertiming-3.PNG";
-import prayertiming_4 from "../../utils/prayertiming-5.PNG";
+// import prayertiming_1 from '../../utils/prayertiming-1.PNG'
+// import prayertiming_2 from "../../utils/prayertiming-2.PNG";
+// import prayertiming_3 from "../../utils/prayertiming-3.PNG";
+// import prayertiming_4 from "../../utils/prayertiming-5.PNG";
+
+import { kidvideo,kidvideo_2 } from "../../utils/imageURL";
+
+import { prayertiming_1,prayertiming_2,prayertiming_3 } from "../../utils/imageURL";
  
 function HomeInfo () {
     return (
@@ -140,10 +144,11 @@ function HomeInfo () {
                   With Meri-Masjid your masjid is able to manage messages to the
                   community and your masjid’s exact Adhan and Iqamah timings.
                   The timings and messages are available on both mobile phones
-                  and on large screens in the masjid. meri-masjid is free of cost.
+                  and on large screens in the masjid. meri-masjid is free of
+                  cost.
                   <span>
                     <Link
-                      to="/MasidForm"
+                      to="/register"
                       style={{ textDecoration: "none", color: "#60c2d3" }}
                     >
                       Register{" "}
@@ -155,7 +160,7 @@ function HomeInfo () {
               <div className="salah-masid-right-container">
                 <img
                   className="salah-image"
-                  src="https://my-masjid.com/wp-content/uploads/2021/01/image-14.png"
+                  src="https://res.cloudinary.com/dwsrrlpjl/image/upload/v1715675964/chudqef1oi2kd0n33lno.png"
                   alt=""
                 />
               </div>
@@ -220,11 +225,11 @@ function HomeInfo () {
                 </p>
               </div>
               <div className="masid-card3">
-                <div className="masid-card-image-container" >
+                <div className="masid-card-image-container">
                   <img
                     className="masid-card-image"
-                    style={{height:"100%"}}
-                    src={prayertiming_4}
+                    style={{ height: "100%" }}
+                    src={prayertiming_3}
                     alt=""
                   />
                 </div>
@@ -250,12 +255,7 @@ function HomeInfo () {
           </h1>
           <div className="masid-androd-container">
             <div className="masid-android-video">
-              <ReactPlayer
-                width="100%"
-               
-                url={kidvideo_2}
-                controls
-              />
+              <ReactPlayer width="100%" url={kidvideo_2} controls />
             </div>
             <div className="app-para-text">
               <ul

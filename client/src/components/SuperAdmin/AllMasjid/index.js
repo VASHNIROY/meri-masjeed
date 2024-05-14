@@ -60,7 +60,7 @@ function AllMasjids() {
   const url = process.env.REACT_APP_BASE_URL;
 
   const fetchData = async () => {
-    const token = Cookies.get("user");
+    const token = Cookies.get("superuser");
     setLoading(true);
 
     const options = {

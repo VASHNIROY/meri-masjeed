@@ -36,7 +36,7 @@ const SuperAdminSignIn = () => {
         const data = await response.json();
         const token = data.jwt_token;
 
-        Cookies.set("user", token);
+        Cookies.set("superuser", token);
         Toast.fire({
           icon: "success",
           title: data.message,

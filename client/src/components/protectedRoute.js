@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
   useEffect(() => {
     
-    const token = Cookies.get("user")
+    const token = Cookies.get("adminuser")
 
     if (!token) {
       navigate("/login");

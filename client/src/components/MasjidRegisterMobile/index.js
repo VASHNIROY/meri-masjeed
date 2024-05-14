@@ -290,6 +290,7 @@ const MasidRegisterMobile = () => {
               onChange={handleCountryChange}
               className="masid-form-input"
               name="country"
+              required
             >
               <option value="">Select Country</option>
               {countries.map((country) => (
@@ -306,6 +307,7 @@ const MasidRegisterMobile = () => {
               onChange={handleStateChange}
               className="masid-form-input"
               name="state"
+              required
             >
               <option value="">Select State</option>
               {states.map((state) => (
@@ -322,6 +324,7 @@ const MasidRegisterMobile = () => {
               onChange={handleCityChange}
               className="masid-form-input"
               name="city"
+              required
             >
               <option value="">Select City</option>
               {cities.map((city) => (

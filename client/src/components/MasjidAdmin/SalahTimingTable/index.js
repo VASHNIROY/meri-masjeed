@@ -35,7 +35,7 @@ function SalahTimingTable() {
   const [loading, setLoading] = useState(false);
 
   const url = process.env.REACT_APP_BASE_URL;
-  const token = Cookies.get("user");
+  const token = Cookies.get("adminuser");
 
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowBlur) {

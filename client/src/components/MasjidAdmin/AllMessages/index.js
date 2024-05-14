@@ -31,7 +31,7 @@ const AllMessages = () => {
   };
 
   const fetchData = async () => {
-    const token = Cookies.get("user");
+    const token = Cookies.get("adminuser");
 
     console.log(token);
 
@@ -72,7 +72,7 @@ const AllMessages = () => {
 
     console.log(`${url}deleteadminmessage?messageid=${messageId}`);
 
-    const token = Cookies.get("user");
+    const token = Cookies.get("adminuser");
     const api = `${url}deleteadminmessage?messageid=${messageId}`;
     const options = {
       method: "POST",

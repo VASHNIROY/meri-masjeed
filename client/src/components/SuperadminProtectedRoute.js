@@ -6,7 +6,7 @@ const SuperAdminProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
   useEffect(() => {
     
-    const token = Cookies.get("user")
+    const token = Cookies.get("superuser")
 
     if (!token) {
       navigate("/superadminlogin");

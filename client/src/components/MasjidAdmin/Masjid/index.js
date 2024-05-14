@@ -169,7 +169,8 @@
 
 import React, { useEffect, useState } from "react";
 import "./index.css";
-import logo from "../../utils/masjidImage.png";
+//import logo from "../../utils/masjidImage.png";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import Toast from "../../utils/Toast";
 import Cookies from "js-cookie";
@@ -334,7 +335,7 @@ const MosqueForm = () => {
     }
   };
 
-  const token = Cookies.get("user");
+  const token = Cookies.get("adminuser");
   const fetchData = async () => {
     const options = {
       method: "GET",

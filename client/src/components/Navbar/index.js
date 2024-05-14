@@ -10,7 +10,9 @@ import { RxCross2 } from "react-icons/rx";
 
 import './index.css'
 
-import masjidLogo from '../utils/masjidLogo-1.png'
+//import masjidLogo from '../utils/masjidLogo-1.png'
+
+import { masjidLogo } from '../utils/imageURL';
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(false)
