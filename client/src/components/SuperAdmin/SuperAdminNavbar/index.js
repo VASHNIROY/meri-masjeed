@@ -1,20 +1,21 @@
 import './index.css'
 
 
-import masjidLogo from "../../utils/masjidLogo-1.png";
+//import masjidLogo from "../../utils/masjidLogo-1.png";
 import { BiSolidToggleRight } from "react-icons/bi";
 import { BiSolidToggleLeft } from "react-icons/bi";
 import { useState } from 'react';
 import Cookies from 'js-cookie';
 import SelectMasjid from '../../SelectMasjid';
 import SingleMasjidTime from '../../SingleMasjidTime';
+import { masjidLogo } from '../../utils/imageURL';
 
 function SuperAdminNavbar() {
 
     const [toggle,setToggle] = useState(true)
 
     const url = process.env.REACT_APP_BASE_URL;
-    const token = Cookies.get("user");
+    const token = Cookies.get("superuser");
     console.log(url)
  
     const handleRightToggleClick = () => {

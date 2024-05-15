@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 
-import masjidLogo from "../../utils/masjidLogo-1.png";
+//import masjidLogo from "../../utils/masjidLogo-1.png";
+import { masjidLogo } from "../../utils/imageURL";
 
 const Clock = ({ masjidTimingList, masjeedDetails, onShowBannerChange }) => {
   const [time, setTime] = useState(new Date());

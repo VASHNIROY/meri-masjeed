@@ -529,6 +529,7 @@ const MasjidRegisterForm = () => {
               onChange={handleCountryChange}
               className="masid-form-input"
               name="country"
+              required
             >
               <option value="">Select Country</option>
               {countries.map((country) => (
@@ -545,6 +546,7 @@ const MasjidRegisterForm = () => {
               onChange={handleStateChange}
               className="masid-form-input"
               name="state"
+              required
             >
               <option value="">Select State</option>
               {states.map((state) => (
@@ -561,6 +563,7 @@ const MasjidRegisterForm = () => {
               onChange={handleCityChange}
               className="masid-form-input"
               name="city"
+              required
             >
               <option value="">Select City</option>
               {cities.map((city) => (
@@ -600,7 +603,7 @@ const MasjidRegisterForm = () => {
               will ask you later. Max size should be 1mb. File formats are XLSX,
               CSV)
             </label>
-            <ExcelDownloadLink/>
+            <ExcelDownloadLink />
             <div className="file-input-container">
               <input
                 type="file"

@@ -58,7 +58,7 @@ function MasjidRequestList() {
   console.log("kapil");
 
   const fetchData = async () => {
-    const token = Cookies.get("user");
+    const token = Cookies.get("superuser");
     setLoading(true);
 
     console.log(token);
@@ -95,7 +95,7 @@ function MasjidRequestList() {
     const row = masjidList.find((r) => r.id === id);
 
     const enableRow = async () => {
-      const token = Cookies.get("user");
+      const token = Cookies.get("superuser");
       console.log(token, "enable");
       const enableUrl = `${url}approvemasjeed/${id}`;
       const options = {
@@ -131,7 +131,7 @@ function MasjidRequestList() {
     const row = masjidList.find((r) => r.id === id);
 
     const DeleteRow = async () => {
-      const token = Cookies.get("user");
+      const token = Cookies.get("superuser");
       const disableUrl = `${url}rejectmasjeed/${id}`;
       const options = {
         method: "PUT",

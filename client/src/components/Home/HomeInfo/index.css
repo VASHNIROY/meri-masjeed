@@ -13,7 +13,8 @@
   .salah-masid-container {
     display: flex;
     justify-content: center;
-    gap:40px;
+    align-items: center;
+    gap:100px;
   }
    
   .salah-masid-left-container {
@@ -26,6 +27,7 @@
     text-align: center;
     margin: 20px 0px 40px 0px;
     display: flex;
+    
     justify-content: center;
     width:100%;
   }
@@ -39,7 +41,7 @@
   }
    
   .salah-masid-right-container {
-    width:40%;
+    width:30%;
   }
    
   .salah-image {

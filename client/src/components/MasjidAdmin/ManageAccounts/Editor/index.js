@@ -24,7 +24,7 @@ const NewEditor = ({ onClose }) => {
     onClose();
   };
 
-  const token = Cookies.get("user");
+  const token = Cookies.get("adminuser");
 
   const handleSubmit = async () => {
     try {

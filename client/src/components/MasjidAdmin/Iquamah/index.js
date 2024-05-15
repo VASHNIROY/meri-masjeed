@@ -24,7 +24,7 @@ const Iqamah = () => {
     });
   };
 
-  const token = Cookies.get("user");
+  const token = Cookies.get("adminuser");
   const fetchData = async () => {
     const options = {
       method: "GET",

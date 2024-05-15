@@ -10,7 +10,7 @@ function AdminNavbar(){
     const [masjidEmail,setMasjidEmail] = useState("")
 
      const url = process.env.REACT_APP_BASE_URL;
-    const token = Cookies.get("user");
+    const token = Cookies.get("adminuser");
 
       const fetchData = async () => {
         const options = {

@@ -25,10 +25,10 @@ const EditButton = ({ onClose, user, fetchStaff }) => {
     onClose();
   };
 
-  const token = Cookies.get("user");
+  const token = Cookies.get("adminuser");
 
   const fetchData = async () => {
-    const token = Cookies.get("user");
+    const token = Cookies.get("adminuser");
 
     console.log("token", token);
 
